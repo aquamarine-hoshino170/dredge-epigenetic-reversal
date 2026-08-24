@@ -4,7 +4,7 @@ import sys
 from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor
 
 def export_markdown_report(report: dict, filename: str = "report.md"):
-    md_content = f"""# Epigenetic Entropy Reversal Scientific Report
+    md_content = rf"""# Epigenetic Entropy Reversal Scientific Report
 **Engine:** `{report['metadata']['engine']}`  
 **Analyzed CpG Coordinates:** {report['metadata']['cpg_loci_analyzed']:,} loci  
 **Integration Steps:** {report['metadata']['integration_steps']} | **TET2 Catalytic Rate:** {report['metadata']['tet2_catalytic_efficiency']}
@@ -30,7 +30,7 @@ def main():
         prog="aquamarine-dredge",
         description="DREDGE Enterprise: Computational Epigenetics Pipeline for Academic & Clinical Research"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 1.3.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 1.3.1")
     parser.add_argument("--run", action="store_true", help="Execute single-sample research simulation")
     parser.add_argument("--trial", type=int, default=0, help="Run Cohort Trial with N subjects (e.g. --trial 10)")
     parser.add_argument("--input", type=str, default=None, help="Input genomic BED file path")
