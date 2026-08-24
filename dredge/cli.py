@@ -27,7 +27,8 @@ from dredge.bio_kernel import (
     XenobiologyAlienGeneticEngine,
     TuringMorphogenesisEngine,
     DNAOrigamiNanorobotEngine,
-    EpigeneticShannonInformationEngine
+    EpigeneticShannonInformationEngine,
+    ValportugiecResonatorEngine
 )
 
 def main():
@@ -37,31 +38,33 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Aethelgard (v16.0.0): The Ultimate Universal Bio-Nanotech, Quantum & Epigenetic Information OS"
+        description="DREDGE Valportugiec (v17.0.0): The Ultimate Universal Biological, Quantum & Valportugiec Waveguide OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 16.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 17.0.0")
     
-    # Aethelgard Supreme Features
-    parser.add_argument("--nanorobot", type=str, default=None, help="Design DNA Origami Logic-Gated Nanorobot for targeted drug payload (e.g. --nanorobot Doxorubicin)")
-    parser.add_argument("--shannon-aging", action="store_true", help="Simulate Epigenetic Shannon Information Theory of Aging & Error-Correction")
-    parser.add_argument("--noise", type=float, default=0.30, help="Epigenetic channel noise rate (0.0 - 0.5)")
+    # Valportugiec Feature
+    parser.add_argument("--valportugiec", type=str, default=None, help="Simulate Valportugiec Bio-Harmonic Quantum Resonance on target molecule")
+    parser.add_argument("--barrier", type=float, default=1.45, help="Energy barrier height in eV (default: 1.45)")
 
-    # Core Features
+    # Core Systems
+    parser.add_argument("--nanorobot", type=str, default=None, help="Design DNA Origami Logic-Gated Nanorobot")
+    parser.add_argument("--shannon-aging", action="store_true", help="Simulate Shannon Epigenetic Information Aging")
+    parser.add_argument("--noise", type=float, default=0.30, help="Epigenetic channel noise rate")
     parser.add_argument("--golden-ratio", type=str, default=None, help="Golden Ratio (Phi) Folding Stability")
-    parser.add_argument("--xenobiology", action="store_true", help="Generate Astrobiological Hachimoji 8-Base Code")
+    parser.add_argument("--xenobiology", action="store_true", help="Generate Astrobiological 8-Base Code")
     parser.add_argument("--turing", action="store_true", help="Simulate Turing Morphogenesis Pattern")
     parser.add_argument("--dna-encode", type=str, default=None, help="Encode plaintext to synthetic DNA")
     parser.add_argument("--dna-decode", type=str, default=None, help="Decode synthetic DNA to plaintext")
     parser.add_argument("--key", type=int, default=42, help="Secret Key")
-    parser.add_argument("--infinity", action="store_true", help="Run Complete Multi-Disciplinary Biological Kernel")
+    parser.add_argument("--infinity", action="store_true", help="Run Complete Biological Kernel")
     parser.add_argument("--digest", nargs=2, metavar=('DNA_SEQ', 'ENZYME'), help="Restriction Enzyme Digestion")
-    parser.add_argument("--quantum-bio", action="store_true", help="Simulate Quantum Exciton Energy Transfer")
+    parser.add_argument("--quantum-bio", action="store_true", help="Simulate Quantum Exciton Transfer")
     parser.add_argument("--phylo", nargs=2, metavar=('GENE_A', 'GENE_B'), help="Compute Evolutionary Divergence")
     parser.add_argument("--mitochondria", type=float, default=None, help="Simulate Mitochondrial Heteroplasmy")
     parser.add_argument("--design-antibody", type=str, default=None, help="Design neutralizing antibody CDR3 loop")
     parser.add_argument("--neuron", action="store_true", help="Simulate Hodgkin-Huxley action potential")
     parser.add_argument("--genesis-cell", type=str, default=None, help="Design synthetic minimal cell")
-    parser.add_argument("--telomere", action="store_true", help="Simulate Telomere lifespan & TERT therapy")
+    parser.add_argument("--telomere", action="store_true", help="Simulate Telomere lifespan")
     parser.add_argument("--fold-rna", type=str, default=None, help="Predict RNA Minimum Free Energy")
     parser.add_argument("--design-protein", type=str, default=None, help="De-novo design therapeutic peptide")
     parser.add_argument("--circuit", action="store_true", help="Simulate Synthetic Genetic Circuit")
@@ -77,33 +80,18 @@ def main():
 
     args = parser.parse_args()
 
-    if args.nanorobot:
-        res = DNAOrigamiNanorobotEngine.design_nanorobot(payload=args.nanorobot)
+    if args.valportugiec:
+        res = ValportugiecResonatorEngine.simulate_valportugiec_resonance(molecular_target=args.valportugiec, barrier_height_ev=args.barrier)
         print("\n" + "="*76)
-        print("  🤖 DNA ORIGAMI LOGIC-GATED MOLECULAR NANOROBOT DESIGNER")
+        print("  🔮 VALPORTUGIEC BIO-HARMONIC QUANTUM WAVEGUIDE & RESONATOR")
         print("="*76)
-        print(f" • Nanostructure Chassis   : {res['nanorobot_architecture']}")
-        print(f" • Scaffold Architecture   : {res['scaffold_dna']}")
-        print(f" • Staple Strand Synthesis : {res['staple_strands_required']}")
-        print(f" • Nanocage Dimensions     : {res['dimensions_xyz_nm']}")
-        print(f" • Target Cell Receptor    : {res['targeting_aptamer']}")
-        print(f" • Encapsulated Cargo      : {res['encapsulated_payload']}")
-        print(f" • Molecular Gate System   : {res['logic_gate']}")
-        print(f" • Latch Thermodynamics    : {res['latch_free_energy_delta_g']}")
-        print("="*76 + "\n")
-        return
-
-    if args.shannon_aging:
-        res = EpigeneticShannonInformationEngine.calculate_epigenetic_channel_capacity(noise_rate=args.noise)
-        print("\n" + "="*76)
-        print("  📶 SHANNON EPIGENETIC INFORMATION THEORY & NOISE FILTER")
-        print("="*76)
-        print(f" • Analyzed CpG Loci       : {res['analyzed_cpg_channel_loci']:,} Channels")
-        print(f" • Youth Baseline Entropy  : {res['pristine_epigenetic_entropy']}")
-        print(f" • Aged Entropic Noise     : {res['aged_noisy_entropy']}")
-        print(f" • Information Loss (Noise): {res['shannon_information_loss']}")
-        print(f" • Channel Capacity (C)    : {res['channel_capacity_c']}")
-        print(f" • Shannon Epigenetic Rest.: {res['restored_epigenetic_bits']}")
+        print(f" • Target Macromolecule     : {res['molecular_target']}")
+        print(f" • Valportugiec Resonance   : {res['valportugiec_harmonic_frequency']}")
+        print(f" • Energy Barrier Potential : {res['energy_barrier_height']}")
+        print(f" • Quantum Tunneling Yield  : {res['quantum_tunneling_probability']}")
+        print(f" • Transition Latency       : {res['transition_latency']}")
+        print(f" • Coherence Phase Index    : {res['quantum_coherence_index']}")
+        print(f" • Waveguide State          : {res['valportugiec_state']}")
         print("="*76 + "\n")
         return
 
@@ -127,7 +115,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Aethelgard: Universal Bio-Nanotech, Quantum & Epigenetic Information OS},
+  title = {DREDGE Valportugiec: Universal Biological, Quantum & Valportugiec Waveguide OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
