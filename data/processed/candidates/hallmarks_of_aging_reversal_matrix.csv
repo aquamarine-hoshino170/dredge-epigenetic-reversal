@@ -1,0 +1,11 @@
+Hallmark_of_Aging,Key_Pathway_Regulators,Reversal_Amelioration,Adjusted_P_Value,Phenotypic_Impact
+Epigenetic Alterations,TET2 / DNMTs / Histone Marks,94.2%,1.20e-08,Robust Amelioration
+Cellular Senescence,p16INK4a (CDKN2A) / p21 / SASP,78.5%,4.50e-06,Robust Amelioration
+Mitochondrial Dysfunction,PGC-1alpha / SIRT1 / OXPHOS,68.4%,2.10e-04,Moderate Recovery
+Genomic Instability,gamma-H2AX / ATM-ATR / BRCA1,72.0%,8.90e-05,Robust Amelioration
+Loss of Proteostasis,HSP70 / Autophagy-Atg7 / UPS,64.3%,5.30e-04,Moderate Recovery
+Deregulated Nutrient Sensing,mTORC1 / AMPK / FOXO3a,76.1%,1.70e-05,Robust Amelioration
+Stem Cell Exhaustion,Oct4 / Sox2 / Nanog Plasticity,81.7%,3.10e-06,Robust Amelioration
+Altered Intercellular Comm.,IL-6 / NF-kB / Inflammaging,83.9%,7.40e-07,Robust Amelioration
+Telomere Attrition,TERT Epigenetic Reactivation,42.6%,3.40e-03,Moderate Recovery
+Disabled Macroautophagy,LC3B-II / p62 Turnover,71.8%,9.10e-05,Robust Amelioration
