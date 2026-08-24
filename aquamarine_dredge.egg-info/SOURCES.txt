@@ -12,6 +12,7 @@ dredge/__init__.py
 dredge/bio_kernel.py
 dredge/cli.py
 dredge/core.py
+dredge/shell.py
 src/__init__.py
 tests/test_core.py
 tests/test_pipeline.py

@@ -1,7 +1,7 @@
 import argparse
-import json
 import sys
-from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor
+from dredge.shell import start_interactive_shell
+from dredge.core import DREDGEResearchPipeline
 from dredge.bio_kernel import (
     UniversalBioKernel, 
     SequenceAlignmentEngine, 
@@ -15,233 +15,51 @@ from dredge.bio_kernel import (
 )
 
 def main():
+    if len(sys.argv) == 1:
+        start_interactive_shell()
+        return
+
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Apex (v7.0.0): The Ultimate Universal Biological Operating System"
+        description="DREDGE Singularity (v8.0.0): The Ultimate Universal Biological OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 7.0.0")
-    
-    # De-Novo Design
-    parser.add_argument("--design-protein", type=str, default=None, help="De-novo design therapeutic protein sequence for target (e.g. TET2_REVERSAL, LONGEVITY_PEPTIDE)")
-
-    # Synthetic Biology & Epidemiology
-    parser.add_argument("--circuit", action="store_true", help="Simulate Synthetic Genetic Toggle Switch Circuit")
-    parser.add_argument("--iptg", type=float, default=2.0, help="IPTG Inducer Level")
-    parser.add_argument("--atc", type=float, default=0.0, help="aTc Inducer Level")
-    parser.add_argument("--outbreak", action="store_true", help="Simulate SEIR Viral Outbreak Transmission Dynamics")
-    parser.add_argument("--r0", type=float, default=2.8, help="Viral Basic Reproduction Number (R0)")
-    parser.add_argument("--pop", type=int, default=50000, help="Host Population Size")
-
-    # Discovery & Diagnostics
-    parser.add_argument("--discover", nargs="+", help="Analyze patient metabolic markers to discover syndromes")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 8.0.0")
+    parser.add_argument("--shell", action="store_true", help="Launch the Interactive Bio-Shell (REPL)")
+    parser.add_argument("--design-protein", type=str, default=None, help="De-novo design therapeutic protein sequence")
+    parser.add_argument("--circuit", action="store_true", help="Simulate Synthetic Genetic Toggle Switch")
+    parser.add_argument("--outbreak", action="store_true", help="Simulate SEIR Viral Outbreak")
+    parser.add_argument("--discover", nargs="+", help="Discover novel syndromes from symptoms")
     parser.add_argument("--diagnose", type=str, default=None, help="Diagnose disease risk via Gene Variant")
-
-    # Pharmacology & Docking
     parser.add_argument("--drug", type=str, default=None, help="Screen drug for Lipinski RO5 & ADMET")
     parser.add_argument("--dock", type=str, default=None, help="Simulate 3D Molecular Drug Docking")
-    parser.add_argument("--ligand", type=str, default="TET2-Activator-7X", help="Small Molecule Ligand")
-
-    # Central Dogma & CRISPR
     parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates")
     parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align DNA sequences")
     parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence Analysis")
-    
-    # Epigenomics & Benchmarks
     parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
     parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial")
-    parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
+    parser.add_argument("--benchmark", action="store_true", help="Run Hardware Benchmarks")
     parser.add_argument("--cite", action="store_true", help="Print BibTeX citation")
-    parser.add_argument("--sites", type=int, default=10000, help="CpG loci count")
-    parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux")
-    parser.add_argument("--steps", type=int, default=250, help="Integration steps")
 
     args = parser.parse_args()
 
-    if args.design_protein:
-        res = GenerativeProteinDesigner.design_therapeutic_peptide(target_function=args.design_protein)
-        print("\n" + "="*76)
-        print("  🧬 DE-NOVO GENERATIVE THERAPEUTIC PEPTIDE DESIGNER")
-        print("="*76)
-        print(f" • Target Function       : {res['target_function']}")
-        print(f" • Designed Sequence     : {res['peptide_sequence']}")
-        print(f" • Sequence Length       : {res['length_aa']} Amino Acids")
-        print(f" • Structural Topology   : {res['structural_motif']}")
-        print(f" • Predicted Binding ΔG  : {res['predicted_binding_potency']} kcal/mol")
-        print("="*76 + "\n")
+    if args.shell:
+        start_interactive_shell()
         return
 
-    if args.circuit:
-        res = SyntheticBiologyCircuit.simulate_toggle_switch(inducer_iptg=args.iptg, inducer_atc=args.atc)
-        print("\n" + "="*76)
-        print("  🧬 SYNTHETIC BIOLOGY: BISTABLE GENETIC CIRCUIT SIMULATOR")
-        print("="*76)
-        print(f" • Circuit Type        : {res['circuit_type']}")
-        print(f" • Input Inducers      : IPTG={args.iptg} mM | aTc={args.atc} ng/mL")
-        print(f" • LacI Repressor Conc : {res['final_lacI_level']} a.u.")
-        print(f" • TetR Repressor Conc : {res['final_tetR_level']} a.u.")
-        print(f" • Output Logic State  : {res['circuit_steady_state']}")
-        print("="*76 + "\n")
-        return
-
-    if args.outbreak:
-        res = EpidemiologicalViralEngine.simulate_outbreak(population=args.pop, r0=args.r0)
-        print("\n" + "="*76)
-        print("  🦠 EPIDEMIOLOGICAL VIRAL OUTBREAK & TRANSMISSION SIMULATOR")
-        print("="*76)
-        print(f" • Total Cohort Population   : {res['simulated_population']:,}")
-        print(f" • Basic Reproduction Number : R0 = {res['reproduction_number_R0']}")
-        print(f" • Peak Infection Day        : Day #{res['peak_outbreak_day']}")
-        print(f" • Peak Active Cases (Load)  : {res['peak_infected_count']:,}")
-        print(f" • Total Herd Immunized      : {res['herd_immunity_recovered']:,}")
-        print(f" • Global Attack Rate        : {res['attack_rate_pct']}% of population infected")
-        print("="*76 + "\n")
-        return
-
-    if args.discover:
-        res = NovelDiseaseDiscoveryEngine.discover_from_symptoms(args.discover)
-        print("\n" + "="*76)
-        print("  🧪 NOVEL ETIOLOGY, SYNDROME DISCOVERY & NUTRACEUTICAL RESCUE ENGINE")
-        print("="*76)
-        print(f" • Discovery Status     : {res['discovery_status']}")
-        print(f" • Syndrome / Disease   : {res['diagnosed_syndrome']}")
-        print(f" • Input Biomarkers     : {', '.join(res['matched_markers'])}")
-        print(f" • Molecular Etiology   : {res['etiology']}")
-        print(f" • Therapeutic Cure     : {res['prescribed_intervention']}")
-        print("="*76 + "\n")
-        return
-
-    if args.diagnose:
-        res = ClinicalDiagnosticEngine.diagnose_variant(args.diagnose)
-        print("\n" + "="*76)
-        print("  🏥 CLINICAL GENOMIC DIAGNOSTICS & DISEASE PREVENTION ENGINE")
-        print("="*76)
-        print(f" • Target Biomarker Gene  : {res['biomarker_gene']}")
-        print(f" • Associated Pathology   : {res['associated_pathology']}")
-        print(f" • Molecular Mechanism    : {res['molecular_mechanism']}")
-        print(f" • Clinical Risk Severity : {res['clinical_risk_severity'] if 'clinical_risk_severity' in res else res['clinical_severity']}")
-        print(f" • Preventive / Therapy   : {res['preventive_strategy']}")
-        print("="*76 + "\n")
-        return
-
+    # Fallback to single command runs
     if args.drug:
         res = PharmacologyScreener.analyze_molecule(args.drug)
-        print("\n" + "="*74)
-        print("  🔬 IN-SILICO PHARMACOKINETICS & LIPINSKI RULE-OF-FIVE SCREENER")
-        print("="*74)
-        print(f" • Compound Name          : {res['compound_name']}")
-        print(f" • Target / Drug Class    : {res['pharmacological_class']}")
-        print(f" • Molecular Weight (MW)  : {res['molecular_weight']}")
-        print(f" • Octanol-Water (LogP)   : {res['logp_lipophilicity']}")
-        print(f" • H-Bond Donors / Accept : {res['h_bond_donors']} / {res['h_bond_acceptors']}")
-        print(f" • Polar Surface (TPSA)   : {res['tpsa_polar_surface_area']}")
-        print(f" • Lipinski Rule of 5     : {res['lipinski_ro5_status']}")
-        print(f" • Est. Oral Absorption   : {res['predicted_oral_absorption']}")
-        print("="*74 + "\n")
-        return
-
-    if args.dock:
-        prot = args.dock.strip().upper()
-        res = MolecularDockingEngine.simulate_docking(prot, ligand_name=args.ligand)
-        print("\n" + "="*72)
-        print("  💊 3D IN-SILICO PROTEIN-LIGAND MOLECULAR DOCKING ENGINE")
-        print("="*72)
-        print(f" • Target Protein Length     : {res['target_residues']} Amino Acids")
-        print(f" • Candidate Small Molecule  : {res['ligand']}")
-        print(f" • Binding Affinity (ΔG)     : {res['binding_affinity_kcal_mol']} kcal/mol (High Potency)")
-        print(f" • Est. Dissociation (Kd)    : {res['dissociation_constant_uM']} µM")
-        print(f" • Optimal Pocket XYZ Center : {res['binding_pocket_center_xyz']}")
-        print("="*72 + "\n")
-        return
-
-    if args.align:
-        s1, s2 = args.align[0].upper(), args.align[1].upper()
-        a1, a2, score = SequenceAlignmentEngine.align_pairwise(s1, s2)
-        match_line = "".join(['|' if a1[i] == a2[i] and a1[i] != '-' else ' ' for i in range(len(a1))])
-        print("\n" + "="*70)
-        print("  🧬 NEEDLEMAN-WUNSCH GLOBAL SEQUENCE ALIGNMENT")
-        print("="*70)
-        print(f" Target 1 : {a1}")
-        print(f" Match    : {match_line}")
-        print(f" Target 2 : {a2}")
-        print(f" • Alignment Score : {score}")
-        print("="*70 + "\n")
-        return
-
-    if args.crispr:
-        targets = UniversalBioKernel.find_crispr_targets(args.crispr.strip())
-        print("\n" + "="*72)
-        print("  🎯 CRISPR-Cas9 gRNA TARGET DESIGNER (SpCas9 - 5'-NGG PAM)")
-        print("="*72)
-        if not targets:
-            print("[!] No standard NGG PAM sites found in the provided sequence.")
-        else:
-            print(f"[*] Found {len(targets)} candidate gRNA target site(s):\n")
-            for idx, t in enumerate(targets, 1):
-                print(f" Candidate #{idx:02d} | Pos: {t['position']:03d} | 20nt: {t['protospacer_20nt']} | PAM: {t['pam']}")
-                print(f"                | GC: {t['gc_content']}% | Efficiency Score: {t['on_target_score']}/100\n")
-        print("="*72 + "\n")
-        return
-
-    if args.analyze_seq:
-        dna = args.analyze_seq.strip()
-        rna = UniversalBioKernel.transcribe(dna)
-        rev_comp = UniversalBioKernel.reverse_complement(dna)
-        protein = UniversalBioKernel.translate(dna)
-        gc = UniversalBioKernel.calculate_gc_content(dna)
-        gravy = UniversalBioKernel.mean_hydrophobicity(protein)
-        print("\n" + "="*70)
-        print("  🧬 UNIVERSAL BIO-KERNEL: CENTRAL DOGMA PIPELINE")
-        print("="*70)
-        print(f" • Input DNA (5'->3')   : {dna}")
-        print(f" • Reverse Complement   : {rev_comp}")
-        print(f" • Transcribed mRNA     : {rna}")
-        print(f" • Translated Protein   : {protein}")
-        print(f" • GC-Content Stability : {gc}%")
-        print(f" • Mean Hydrophobicity  : {gravy} (GRAVY Index)")
-        print("="*70 + "\n")
-        return
-
-    if args.cite:
+        print(f"\n • Compound: {res['compound_name']} | Status: {res['lipinski_ro5_status']}\n")
+    elif args.diagnose:
+        res = ClinicalDiagnosticEngine.diagnose_variant(args.diagnose)
+        print(f"\n • Gene: {res['biomarker_gene']} | Pathology: {res['associated_pathology']}\n")
+    elif args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Apex: The Complete Universal Computational Biology Operating System},
+  title = {DREDGE Singularity: The Complete Universal Biological OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
-        return
-
-    pipeline = DREDGEResearchPipeline(n_sites=args.sites)
-
-    if args.benchmark:
-        print("\n" + "="*70)
-        print("  ⚡ DREDGE HARDWARE & VECTOR THROUGHPUT BENCHMARK")
-        print("="*70)
-        results = pipeline.benchmark_engine()
-        for res in results:
-            print(f" • Cohort Size: {res['loci']:,} Loci | Time: {res['time_sec']}s | Rate: {res['throughput_loci_per_sec']:,} Loci/sec")
-        print("[✓] Bio-Kernel vector throughput operational.\n")
-        return
-
-    if args.trial > 0:
-        print("\n" + "="*70)
-        print(f"  🔬 IN-SILICO CLINICAL TRIAL (Cohort Size: {args.trial} Subjects)")
-        print("="*70)
-        res = pipeline.run_cohort_trial(cohort_size=args.trial, steps=args.steps, tet2_flux=args.rate)
-        print(f" • Average Age Reversal Reclaimed : -{res['mean_years_rejuvenated']} ± {res['std_deviation']} Years")
-        print(f" • Clinical Range (Min / Max)     : -{res['min_reversal']} yrs / -{res['max_reversal']} yrs")
-        print(f"[✓] Multi-Cohort Statistical Convergence Confirmed.\n")
-        return
-
-    if args.run:
-        print("\n" + "="*70)
-        print("  🔬 AQUAMARINE DREDGE ENTERPRISE BIO-COMPUTING PIPELINE")
-        print("="*70)
-        report, _ = pipeline.run_rejuvenation_pipeline(steps=args.steps, tet2_flux=args.rate)
-        print(f"[*] Analyzed {report['metadata']['cpg_loci_analyzed']:,} CpG genomic loci.")
-        print(f" • Pre-Treatment Biological Age  : {report['biomarkers']['pre_treatment_biological_age']} years")
-        print(f" • Post-Treatment Biological Age : {report['biomarkers']['post_treatment_biological_age']} years")
-        print(f" • Net Rejuvenation Reclaimed    : -{report['biomarkers']['years_rejuvenated']} years")
-        print(f"[✓] Simulation report generated.\n")
     else:
         parser.print_help()
 
