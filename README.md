@@ -45,14 +45,18 @@ dredge_project/
 
 Quick Start
 1. Installation
-git clone [https://github.com/](https://github.com/)<YOUR-USERNAME>/dredge-epigenetic-reversal.git
+git clone [https://github.com/aquamarine-hoshino170/dredge-epigenetic-reversal.git](https://github.com/aquamarine-hoshino170/dredge-epigenetic-reversal.git)
 cd dredge-epigenetic-reversal
 pip install -r requirements.txt
-2. Run Clock Training & Reversal Simulation
-# Data preparation & model training
+
+2. Run Pipeline
+# Epigenetic Data Ingestion & NEC Model Training
 python src/nec_clock/preprocess_geo.py
 python src/nec_clock/train_nec_pytorch.py
 
-# Molecular screening & Reversal simulation
+# Target Preparation & Molecular Screening
+python src/docking/fetch_tet2.py
 python src/generator/dredge_engine.py
+
+# Reversal & Entropy Dynamics Simulation
 python src/nec_clock/simulate_reversal.py
