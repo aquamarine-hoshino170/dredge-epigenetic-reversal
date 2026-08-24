@@ -4,28 +4,16 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aquamarine-dredge"
-version = "1.2.0"
+version = "1.2.1"
 authors = [
   { name="Aquamarine Hoshino", email="aquamarine.hoshino170@github.io" },
 ]
 description = "In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation Pipeline by Aquamarine"
 readme = "README.md"
 requires-python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
-    "Topic :: Scientific/Engineering :: Bio-Informatics",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-]
 dependencies = [
-    "numpy",
-    "pandas"
+    "numpy"
 ]
-
-[project.optional-dependencies]
-ml = ["torch"]
-full = ["torch", "pytest", "streamlit"]
 
 [project.scripts]
 aquamarine-dredge = "dredge.cli:main"

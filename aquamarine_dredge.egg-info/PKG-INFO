@@ -1,24 +1,12 @@
 Metadata-Version: 2.4
 Name: aquamarine-dredge
-Version: 1.2.0
+Version: 1.2.1
 Summary: In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation Pipeline by Aquamarine
 Author-email: Aquamarine Hoshino <aquamarine.hoshino170@github.io>
-Classifier: Programming Language :: Python :: 3
-Classifier: License :: OSI Approved :: MIT License
-Classifier: Operating System :: OS Independent
-Classifier: Topic :: Scientific/Engineering :: Bio-Informatics
-Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: numpy
-Requires-Dist: pandas
-Provides-Extra: ml
-Requires-Dist: torch; extra == "ml"
-Provides-Extra: full
-Requires-Dist: torch; extra == "full"
-Requires-Dist: pytest; extra == "full"
-Requires-Dist: streamlit; extra == "full"
 Dynamic: license-file
 
 # 🧪 DREDGE: Molecular Dredger Environment
