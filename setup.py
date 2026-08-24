@@ -2,17 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name="aquamarine-dredge",
-    version="1.0.1",
+    version="1.0.2",
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
         "numpy",
         "pandas"
     ],
-    extras_require={
-        "ml": ["torch"],
-        "full": ["torch", "pytest", "streamlit"],
-    },
     entry_points={
         "console_scripts": [
             "aquamarine-dredge=dredge.cli:main",

@@ -1,0 +1,10 @@
+numpy
+pandas
+
+[full]
+torch
+pytest
+streamlit
+
+[ml]
+torch

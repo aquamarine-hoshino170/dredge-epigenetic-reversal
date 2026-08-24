@@ -1,0 +1,14 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+aquamarine_dredge.egg-info/PKG-INFO
+aquamarine_dredge.egg-info/SOURCES.txt
+aquamarine_dredge.egg-info/dependency_links.txt
+aquamarine_dredge.egg-info/entry_points.txt
+aquamarine_dredge.egg-info/requires.txt
+aquamarine_dredge.egg-info/top_level.txt
+dredge/__init__.py
+dredge/cli.py
+src/__init__.py
+tests/test_pipeline.py

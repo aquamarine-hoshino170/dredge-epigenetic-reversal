@@ -1,0 +1,3 @@
+[console_scripts]
+aquamarine-dredge = dredge.cli:main
+dredge = dredge.cli:main
