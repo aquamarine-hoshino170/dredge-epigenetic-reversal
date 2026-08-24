@@ -1,0 +1,6 @@
+Scaffold_ID,TET2_ΔG,DNMT1_ΔG,HDAC1_ΔG,DNMT1_Selectivity,HDAC1_Selectivity,Selectivity_Status
+DREDGE-05,-7.58 kcal/mol,-3.75 kcal/mol,-2.51 kcal/mol,645.2x,5240.6x,Highly Selective for TET2
+DREDGE-01,-7.08 kcal/mol,-3.46 kcal/mol,-2.29 kcal/mol,452.5x,3265.7x,Highly Selective for TET2
+DREDGE-02,-7.07 kcal/mol,-3.45 kcal/mol,-2.28 kcal/mol,452.5x,3265.7x,Highly Selective for TET2
+DREDGE-03,-6.9 kcal/mol,-3.35 kcal/mol,-2.21 kcal/mol,402.1x,2758.1x,Highly Selective for TET2
+DREDGE-04,-6.78 kcal/mol,-3.28 kcal/mol,-2.15 kcal/mol,369.5x,2492.3x,Highly Selective for TET2
