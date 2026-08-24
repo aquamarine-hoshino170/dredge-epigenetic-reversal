@@ -1,0 +1,6 @@
+Scaffold_ID,Binding_ΔG,Est_Ki_uM,QED_Score,HIA_Absorption,BBB_Profile,CYP_Metabolism,hERG_Safety,PAINS_Filter
+DREDGE-05,-7.58,2.75,0.646,60.1%,Moderate/Low (Peripheral Selective),Low Risk,Safe / Low Cardiac Risk,Clean (No Assay Interference)
+DREDGE-01,-7.08,6.4,0.919,62.7%,Moderate/Low (Peripheral Selective),Low Risk,Safe / Low Cardiac Risk,Clean (No Assay Interference)
+DREDGE-02,-7.07,6.51,0.721,62.7%,Moderate/Low (Peripheral Selective),Low Risk,Safe / Low Cardiac Risk,Clean (No Assay Interference)
+DREDGE-03,-6.9,8.67,0.769,64.1%,Moderate/Low (Peripheral Selective),Low Risk,Safe / Low Cardiac Risk,Clean (No Assay Interference)
+DREDGE-04,-6.78,10.62,0.916,64.1%,Moderate/Low (Peripheral Selective),Low Risk,Safe / Low Cardiac Risk,Clean (No Assay Interference)
