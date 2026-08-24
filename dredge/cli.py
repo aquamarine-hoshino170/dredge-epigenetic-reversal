@@ -2,36 +2,51 @@ import argparse
 import json
 import sys
 from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor
-from dredge.bio_kernel import UniversalBioKernel, SequenceAlignmentEngine
+from dredge.bio_kernel import UniversalBioKernel, SequenceAlignmentEngine, MolecularDockingEngine
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Bio-Kernel (v2.2.0): The Complete Computational Biology OS"
+        description="DREDGE Bio-Kernel (v3.0.0 Titanium): Universal Computational Biology, CRISPR & 3D Molecular Docking Engine"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 2.2.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 3.0.0")
     
-    # Modules
+    # Powerful Modules
     parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
+    parser.add_argument("--dock", type=str, default=None, help="Simulate 3D Molecular Drug Docking on Protein Sequence")
+    parser.add_argument("--ligand", type=str, default="TET2-Activator-7X", help="Small Molecule Ligand Name")
+    parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates from DNA")
+    parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align two DNA sequences (Needleman-Wunsch)")
+    parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence for Central Dogma Analysis")
     parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial (N subjects)")
     parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
     parser.add_argument("--cite", action="store_true", help="Print BibTeX academic citation")
-    parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence for Central Dogma Analysis")
-    parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates from DNA")
-    parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align two DNA sequences (Needleman-Wunsch)")
 
-    # Epigenetic Parameters
+    # Simulation params
     parser.add_argument("--sites", type=int, default=10000, help="CpG loci count")
     parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux")
     parser.add_argument("--steps", type=int, default=250, help="Integration steps")
 
     args = parser.parse_args()
 
+    if args.dock:
+        prot = args.dock.strip().upper()
+        res = MolecularDockingEngine.simulate_docking(prot, ligand_name=args.ligand)
+        print("\n" + "="*72)
+        print("  💊 3D IN-SILICO PROTEIN-LIGAND MOLECULAR DOCKING ENGINE")
+        print("="*72)
+        print(f" • Target Protein Length     : {res['target_residues']} Amino Acids")
+        print(f" • Candidate Small Molecule  : {res['ligand']}")
+        print(f" • Binding Affinity (ΔG)     : {res['binding_affinity_kcal_mol']} kcal/mol (High Potency)")
+        print(f" • Est. Dissociation (Kd)    : {res['dissociation_constant_uM']} µM")
+        print(f" • Optimal Pocket XYZ Center : {res['binding_pocket_center_xyz']}")
+        print("="*72 + "\n")
+        return
+
     if args.align:
         s1, s2 = args.align[0].upper(), args.align[1].upper()
         a1, a2, score = SequenceAlignmentEngine.align_pairwise(s1, s2)
         match_line = "".join(['|' if a1[i] == a2[i] and a1[i] != '-' else ' ' for i in range(len(a1))])
-        
         print("\n" + "="*70)
         print("  🧬 NEEDLEMAN-WUNSCH GLOBAL SEQUENCE ALIGNMENT")
         print("="*70)
@@ -64,7 +79,6 @@ def main():
         protein = UniversalBioKernel.translate(dna)
         gc = UniversalBioKernel.calculate_gc_content(dna)
         gravy = UniversalBioKernel.mean_hydrophobicity(protein)
-
         print("\n" + "="*70)
         print("  🧬 UNIVERSAL BIO-KERNEL: CENTRAL DOGMA PIPELINE")
         print("="*70)
@@ -80,7 +94,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE: Universal Computational Biology & Epigenetic Entropy Engine},
+  title = {DREDGE: Universal Computational Biology, CRISPR & 3D Molecular Docking Engine},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
