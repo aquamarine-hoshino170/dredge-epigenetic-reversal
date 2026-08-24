@@ -1,5 +1,5 @@
 """
-🧬 AQUAMARINE DREDGE: The Universal Computational Biology & Epigenetics Operating System
+🧬 AQUAMARINE DREDGE: The Universal Computational Biology & Life Creation Operating System
 """
 from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor, HorvathEpigeneticClock
 from dredge.bio_kernel import (
@@ -11,10 +11,13 @@ from dredge.bio_kernel import (
     NovelDiseaseDiscoveryEngine,
     SyntheticBiologyCircuit,
     EpidemiologicalViralEngine,
-    GenerativeProteinDesigner
+    GenerativeProteinDesigner,
+    SyntheticLifeGenesisEngine,
+    TelomereLongevityEngine,
+    RNAFoldingLatticeEngine
 )
 
-__version__ = "7.0.0"
+__version__ = "9.0.0"
 __all__ = [
     "DREDGEResearchPipeline",
     "GenomicBedProcessor",
@@ -27,5 +30,8 @@ __all__ = [
     "NovelDiseaseDiscoveryEngine",
     "SyntheticBiologyCircuit",
     "EpidemiologicalViralEngine",
-    "GenerativeProteinDesigner"
+    "GenerativeProteinDesigner",
+    "SyntheticLifeGenesisEngine",
+    "TelomereLongevityEngine",
+    "RNAFoldingLatticeEngine"
 ]
