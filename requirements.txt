@@ -7,3 +7,4 @@ rdkit
 requests
 pyarrow
 tqdm
+streamlit
