@@ -1,13 +1,10 @@
 import pytest
-from dredge.cli import main
+from dredge.core import WaddingtonPotentialEngine
 
-def test_imports():
-    import dredge
-    assert dredge.__version__ == "1.0.2"
-
-def test_cli_execution(capsys):
-    import sys
-    sys.argv = ["aquamarine-dredge", "--demo"]
-    main()
-    captured = capsys.readouterr()
-    assert "Demo Mode Loaded" in captured.out
+def test_waddington_engine_physics():
+    engine = WaddingtonPotentialEngine(n_cpg_sites=1000)
+    res = engine.simulate_tet2_reversal(steps=50, catalytic_rate=0.3)
+    
+    assert res['final_entropy_bits'] < res['initial_entropy_bits'], "Entropy must decrease under active TET2 modulation"
+    assert 0.0 <= res['methylation_mean'] <= 1.0
+    assert len(res['trajectory']) == 51

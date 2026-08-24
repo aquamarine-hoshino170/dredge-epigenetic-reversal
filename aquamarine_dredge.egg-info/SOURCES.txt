@@ -10,5 +10,7 @@ aquamarine_dredge.egg-info/requires.txt
 aquamarine_dredge.egg-info/top_level.txt
 dredge/__init__.py
 dredge/cli.py
+dredge/core.py
 src/__init__.py
+tests/test_core.py
 tests/test_pipeline.py
