@@ -1,5 +1,5 @@
 """
-🧬 AQUAMARINE DREDGE: The Universal Biological Synthesis & Biophysical OS (v10.0.0)
+🧬 AQUAMARINE DREDGE: The Universal Biological & Quantum Synthesis OS (v11.0.0 Omniverse)
 """
 from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor, HorvathEpigeneticClock
 from dredge.bio_kernel import (
@@ -16,10 +16,13 @@ from dredge.bio_kernel import (
     TelomereLongevityEngine,
     RNAFoldingLatticeEngine,
     MonoclonalAntibodyDesigner,
-    HodgkinHuxleyNeuronSimulator
+    HodgkinHuxleyNeuronSimulator,
+    QuantumBiologyEngine,
+    PhylogeneticEvolutionEngine,
+    MitochondrialBioenergeticsEngine
 )
 
-__version__ = "10.0.0"
+__version__ = "11.0.0"
 __all__ = [
     "DREDGEResearchPipeline",
     "GenomicBedProcessor",
@@ -37,5 +40,8 @@ __all__ = [
     "TelomereLongevityEngine",
     "RNAFoldingLatticeEngine",
     "MonoclonalAntibodyDesigner",
-    "HodgkinHuxleyNeuronSimulator"
+    "HodgkinHuxleyNeuronSimulator",
+    "QuantumBiologyEngine",
+    "PhylogeneticEvolutionEngine",
+    "MitochondrialBioenergeticsEngine"
 ]
