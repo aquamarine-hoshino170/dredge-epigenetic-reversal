@@ -1,0 +1,6 @@
+name,smiles,mw,logp,hbd,hba,rotb,sa_score,ro5_pass
+DREDGE-01,O=C(NO)C1=CC=C(O)C=C1,153.14,0.78,2,3,1,2.22,True
+DREDGE-02,C1=CC(=C(C=C1)O)C(=O)NCC2=CC=CC=C2,241.25,2.34,2,2,3,3.21,True
+DREDGE-03,O=C(O)C1=NC(=CS1)C2=CC=CC=C2,221.24,2.15,1,3,2,2.87,True
+DREDGE-04,CC(=O)NC1=CC=C(C=C1)O,151.16,0.91,2,2,1,2.21,True
+DREDGE-05,c1cc(O)c(C(=O)O)c(c1)NC(=O)c2ccccc2,271.27,2.56,2,3,3,3.41,True
