@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aquamarine-dredge"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
   { name="Aquamarine Hoshino", email="aquamarine.hoshino170@github.io" },
 ]
@@ -20,16 +20,17 @@ classifiers = [
 ]
 dependencies = [
     "numpy",
-    "pandas",
-    "torch",
-    "pytest",
-    "streamlit"
+    "pandas"
 ]
+
+[project.optional-dependencies]
+ml = ["torch"]
+full = ["torch", "pytest", "streamlit"]
 
 [project.urls]
 "Homepage" = "https://github.com/aquamarine-hoshino170/dredge-epigenetic-reversal"
 "Bug Tracker" = "https://github.com/aquamarine-hoshino170/dredge-epigenetic-reversal/issues"
 
 [project.scripts]
-aquamarine-dredge = "dredge_cli:main"
-dredge = "dredge_cli:main"
+aquamarine-dredge = "dredge.cli:main"
+dredge = "dredge.cli:main"
