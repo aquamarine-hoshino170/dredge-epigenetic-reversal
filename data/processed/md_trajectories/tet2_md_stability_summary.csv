@@ -1,0 +1,6 @@
+Scaffold_ID,Duration,Avg_RMSD_Angstrom,Avg_SASA_A2,Stability_Profile
+DREDGE-05,10.0 ns,1.304,896.89,Equilibrated / Highly Stable Complex
+DREDGE-01,10.0 ns,1.211,892.67,Equilibrated / Highly Stable Complex
+DREDGE-02,10.0 ns,1.193,891.46,Equilibrated / Highly Stable Complex
+DREDGE-03,10.0 ns,1.185,892.0,Equilibrated / Highly Stable Complex
+DREDGE-04,10.0 ns,1.233,892.68,Equilibrated / Highly Stable Complex
