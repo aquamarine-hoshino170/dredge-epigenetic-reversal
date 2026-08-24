@@ -570,9 +570,11 @@ class MonoclonalAntibodyDesigner:
         flexible_aa = ['G', 'S', 'A']
         
         cdr3 = ['C'] # Canonical starting Cysteine
+        pools = [aromatic_aa, charged_aa, flexible_aa]
         for _ in range(cdr3_length - 2):
-            pool = np.random.choice([aromatic_aa, charged_aa, flexible_aa], p=[0.4, 0.35, 0.25])
-            cdr3.append(np.random.choice(pool))
+            chosen_idx = int(np.random.choice([0, 1, 2], p=[0.4, 0.35, 0.25]))
+            chosen_pool = pools[chosen_idx]
+            cdr3.append(str(np.random.choice(chosen_pool)))
         cdr3.append('W') # Canonical ending Tryptophan
         
         cdr3_seq = "".join(cdr3)
