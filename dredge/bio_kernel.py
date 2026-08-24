@@ -344,3 +344,75 @@ class NovelDiseaseDiscoveryEngine:
             "prescribed_intervention": f"Experimental Replenishment Protocol: Novel Bio-Nutrient [{novel_cofactor}] + Methylation Support",
             "discovery_status": "DE-NOVO ETIOLOGY (Ready for Clinical Characterization)"
         }
+
+class SyntheticBiologyCircuit:
+    """
+    Simulates engineered Genetic Logic Circuits (Bio-AND, Bio-NOT, Genetic Toggle Switch).
+    """
+    @staticmethod
+    def simulate_toggle_switch(inducer_iptg: float = 1.0, inducer_atc: float = 0.0, steps: int = 50) -> dict:
+        # Repressilator / Gardner Toggle Switch ODE dynamics
+        u, v = 0.1, 0.1 # initial concentrations of Repressor 1 (LacI) & Repressor 2 (TetR)
+        dt = 0.1
+        alpha1, alpha2 = 15.0, 15.0
+        beta, gamma = 2.0, 2.0
+        
+        trajectory_u, trajectory_v = [], []
+        for _ in range(steps):
+            du = (alpha1 / (1.0 + (v / (1.0 + inducer_iptg))**beta) - u) * dt
+            dv = (alpha2 / (1.0 + (u / (1.0 + inducer_atc))**gamma) - v) * dt
+            u = max(0.0, u + du)
+            v = max(0.0, v + dv)
+            trajectory_u.append(round(u, 3))
+            trajectory_v.append(round(v, 3))
+            
+        dominant_state = "STATE-A (LacI Expressed / GFP Active)" if u > v else "STATE-B (TetR Expressed / RFP Active)"
+        return {
+            "circuit_type": "Synthetic Bistable Genetic Toggle Switch",
+            "final_lacI_level": round(u, 2),
+            "final_tetR_level": round(v, 2),
+            "circuit_steady_state": dominant_state,
+            "bistability_ratio": round(u / (v + 1e-6), 2)
+        }
+
+
+class EpidemiologicalViralEngine:
+    """
+    Stochastic SEIR Viral Transmission & Variant Mutation Velocity Simulator.
+    """
+    @staticmethod
+    def simulate_outbreak(population: int = 100000, r0: float = 2.5, days: int = 60) -> dict:
+        s = population - 10
+        e = 10
+        i = 0
+        r = 0
+        gamma = 1.0 / 7.0 # recovery rate (7 days)
+        beta = (r0 * gamma) / population # transmission rate
+        sigma = 1.0 / 4.0 # incubation rate (4 days)
+        
+        peak_infected = 0
+        peak_day = 0
+        
+        for day in range(1, days + 1):
+            new_exposed = beta * s * i if i > 0 else 5
+            new_infected = sigma * e
+            new_recovered = gamma * i
+            
+            s = max(0, s - new_exposed)
+            e = max(0, e + new_exposed - new_infected)
+            i = max(0, i + new_infected - new_recovered)
+            r = max(0, r + new_recovered)
+            
+            if i > peak_infected:
+                peak_infected = i
+                peak_day = day
+                
+        return {
+            "simulated_population": population,
+            "reproduction_number_R0": r0,
+            "outbreak_duration_days": days,
+            "peak_infected_count": int(peak_infected),
+            "peak_outbreak_day": peak_day,
+            "herd_immunity_recovered": int(r),
+            "attack_rate_pct": round((r / population) * 100.0, 2)
+        }

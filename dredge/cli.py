@@ -8,40 +8,77 @@ from dredge.bio_kernel import (
     MolecularDockingEngine, 
     PharmacologyScreener, 
     ClinicalDiagnosticEngine,
-    NovelDiseaseDiscoveryEngine
+    NovelDiseaseDiscoveryEngine,
+    SyntheticBiologyCircuit,
+    EpidemiologicalViralEngine
 )
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Bio-Kernel (v5.0.0 Genesis): Universal Computational Biology, CRISPR, Pharmacology, Diagnostics & Novel Disease Discovery OS"
+        description="DREDGE OmniBio (v6.0.0): The Ultimate Universal Biological Operating System"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 5.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 6.0.0")
     
+    # Synthetic Biology & Epidemiology
+    parser.add_argument("--circuit", action="store_true", help="Simulate Synthetic Genetic Toggle Switch Circuit")
+    parser.add_argument("--iptg", type=float, default=2.0, help="IPTG Inducer Level for Genetic Switch")
+    parser.add_argument("--atc", type=float, default=0.0, help="aTc Inducer Level for Genetic Switch")
+    parser.add_argument("--outbreak", action="store_true", help="Simulate SEIR Viral Outbreak Transmission Dynamics")
+    parser.add_argument("--r0", type=float, default=2.8, help="Viral Basic Reproduction Number (R0)")
+    parser.add_argument("--pop", type=int, default=50000, help="Host Population Size for Outbreak")
+
     # Discovery & Diagnostics
-    parser.add_argument("--discover", nargs="+", help="Analyze patient metabolic markers/symptoms to discover known or novel syndromes (e.g. --discover low_ascorbic_acid collagen_breakdown)")
-    parser.add_argument("--diagnose", type=str, default=None, help="Diagnose disease risk & prevention strategies via Gene Variant")
+    parser.add_argument("--discover", nargs="+", help="Analyze patient metabolic markers to discover syndromes")
+    parser.add_argument("--diagnose", type=str, default=None, help="Diagnose disease risk via Gene Variant")
 
     # Pharmacology & Docking
-    parser.add_argument("--drug", type=str, default=None, help="Screen small molecule drug for Lipinski RO5 & ADMET profile")
-    parser.add_argument("--dock", type=str, default=None, help="Simulate 3D Molecular Drug Docking on Protein Sequence")
-    parser.add_argument("--ligand", type=str, default="TET2-Activator-7X", help="Small Molecule Ligand Name")
+    parser.add_argument("--drug", type=str, default=None, help="Screen drug for Lipinski RO5 & ADMET")
+    parser.add_argument("--dock", type=str, default=None, help="Simulate 3D Molecular Drug Docking")
+    parser.add_argument("--ligand", type=str, default="TET2-Activator-7X", help="Small Molecule Ligand")
 
-    # Genomics, CRISPR & Epigenetics
-    parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates from DNA")
-    parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align two DNA sequences (Needleman-Wunsch)")
-    parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence for Central Dogma Analysis")
-    parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
-    parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial (N subjects)")
-    parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
-    parser.add_argument("--cite", action="store_true", help="Print BibTeX academic citation")
+    # Central Dogma & CRISPR
+    parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates")
+    parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align DNA sequences")
+    parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence Analysis")
     
-    # Simulation params
+    # Epigenomics & Benchmarks
+    parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
+    parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial")
+    parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
+    parser.add_argument("--cite", action="store_true", help="Print BibTeX citation")
     parser.add_argument("--sites", type=int, default=10000, help="CpG loci count")
     parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux")
     parser.add_argument("--steps", type=int, default=250, help="Integration steps")
 
     args = parser.parse_args()
+
+    if args.circuit:
+        res = SyntheticBiologyCircuit.simulate_toggle_switch(inducer_iptg=args.iptg, inducer_atc=args.atc)
+        print("\n" + "="*76)
+        print("  🧬 SYNTHETIC BIOLOGY: BISTABLE GENETIC CIRCUIT SIMULATOR")
+        print("="*76)
+        print(f" • Circuit Type        : {res['circuit_type']}")
+        print(f" • Input Inducers      : IPTG={args.iptg} mM | aTc={args.atc} ng/mL")
+        print(f" • LacI Repressor Conc : {res['final_lacI_level']} a.u.")
+        print(f" • TetR Repressor Conc : {res['final_tetR_level']} a.u.")
+        print(f" • Output Logic State  : {res['circuit_steady_state']}")
+        print("="*76 + "\n")
+        return
+
+    if args.outbreak:
+        res = EpidemiologicalViralEngine.simulate_outbreak(population=args.pop, r0=args.r0)
+        print("\n" + "="*76)
+        print("  🦠 EPIDEMIOLOGICAL VIRAL OUTBREAK & TRANSMISSION SIMULATOR")
+        print("="*76)
+        print(f" • Total Cohort Population   : {res['simulated_population']:,}")
+        print(f" • Basic Reproduction Number : R0 = {res['reproduction_number_R0']}")
+        print(f" • Peak Infection Day        : Day #{res['peak_outbreak_day']}")
+        print(f" • Peak Active Cases (Load)  : {res['peak_infected_count']:,}")
+        print(f" • Total Herd Immunized      : {res['herd_immunity_recovered']:,}")
+        print(f" • Global Attack Rate        : {res['attack_rate_pct']}% of population infected")
+        print("="*76 + "\n")
+        return
 
     if args.discover:
         res = NovelDiseaseDiscoveryEngine.discover_from_symptoms(args.discover)
@@ -150,7 +187,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE: Universal Computational Biology, CRISPR, Diagnostics & Disease Discovery Engine},
+  title = {DREDGE OmniBio: The Complete Universal Computational Biology Operating System},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
