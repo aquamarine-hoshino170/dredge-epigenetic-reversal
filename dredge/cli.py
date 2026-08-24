@@ -2,33 +2,57 @@ import argparse
 import json
 import sys
 from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor
-from dredge.bio_kernel import UniversalBioKernel, SequenceAlignmentEngine, MolecularDockingEngine, PharmacologyScreener
+from dredge.bio_kernel import (
+    UniversalBioKernel, 
+    SequenceAlignmentEngine, 
+    MolecularDockingEngine, 
+    PharmacologyScreener, 
+    ClinicalDiagnosticEngine
+)
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Bio-Kernel (v3.1.0): Universal Computational Biology, CRISPR & Pharmacology OS"
+        description="DREDGE Bio-Kernel (v4.0.0 Asclepius): Universal Computational Biology, CRISPR, Pharmacology & Clinical Diagnostics"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 3.1.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 4.0.0")
     
-    # Modules
+    # Clinical Diagnostics & Pathology
+    parser.add_argument("--diagnose", type=str, default=None, help="Diagnose disease risk & prevention strategies via Gene Variant (e.g. BRCA1, TP53, APOE4, KRAS, LDLR)")
+
+    # Pharmacology & Docking
     parser.add_argument("--drug", type=str, default=None, help="Screen small molecule drug for Lipinski RO5 & ADMET profile")
     parser.add_argument("--dock", type=str, default=None, help="Simulate 3D Molecular Drug Docking on Protein Sequence")
     parser.add_argument("--ligand", type=str, default="TET2-Activator-7X", help="Small Molecule Ligand Name")
+
+    # Genomics, CRISPR & Central Dogma
     parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates from DNA")
     parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align two DNA sequences (Needleman-Wunsch)")
     parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence for Central Dogma Analysis")
+    
+    # Epigenomics & Clinical Trials
     parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
     parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial (N subjects)")
     parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
     parser.add_argument("--cite", action="store_true", help="Print BibTeX academic citation")
-
-    # Simulation params
     parser.add_argument("--sites", type=int, default=10000, help="CpG loci count")
     parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux")
     parser.add_argument("--steps", type=int, default=250, help="Integration steps")
 
     args = parser.parse_args()
+
+    if args.diagnose:
+        res = ClinicalDiagnosticEngine.diagnose_variant(args.diagnose)
+        print("\n" + "="*76)
+        print("  🏥 CLINICAL GENOMIC DIAGNOSTICS & DISEASE PREVENTION ENGINE")
+        print("="*76)
+        print(f" • Target Biomarker Gene  : {res['biomarker_gene']}")
+        print(f" • Associated Pathology   : {res['associated_pathology']}")
+        print(f" • Molecular Mechanism    : {res['molecular_mechanism']}")
+        print(f" • Clinical Risk Severity : {res['clinical_risk_severity'] if 'clinical_risk_severity' in res else res['clinical_severity']}")
+        print(f" • Preventive / Therapy   : {res['preventive_strategy']}")
+        print("="*76 + "\n")
+        return
 
     if args.drug:
         res = PharmacologyScreener.analyze_molecule(args.drug)
@@ -111,7 +135,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE: Universal Computational Biology, CRISPR & Pharmacology Engine},
+  title = {DREDGE: Universal Computational Biology, CRISPR, Pharmacology & Clinical Diagnostics Engine},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
