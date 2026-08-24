@@ -1,64 +1,49 @@
 import argparse
+import json
 import sys
 import numpy as np
-from dredge.core import WaddingtonPotentialEngine
-
-def render_ascii_sparkline(data: list, height: int = 6, width: int = 40) -> str:
-    """Generates ASCII terminal graph of temporal trajectories."""
-    min_val, max_val = min(data), max(data)
-    if max_val == min_val:
-        return "── Flat Line ──"
-    
-    # Downsample
-    indices = np.linspace(0, len(data) - 1, width).astype(int)
-    sampled = [data[i] for i in indices]
-    
-    grid = [[" " for _ in range(width)] for _ in range(height)]
-    
-    for x, val in enumerate(sampled):
-        norm = (val - min_val) / (max_val - min_val)
-        y = int(norm * (height - 1))
-        grid[height - 1 - y][x] = "█"
-        
-    lines = ["".join(row) for row in grid]
-    return "\n".join(lines)
+from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE: Ultra-Tier Epigenetic Entropy Reversal & Horvath Biological Clock Calibration"
+        description="DREDGE Enterprise: Computational Epigenetics Pipeline for Academic & Clinical Research"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 1.1.0")
-    parser.add_argument("--run", action="store_true", help="Execute Ultra In-Silico TET2 Stochastic SDE Pipeline")
-    parser.add_argument("--sites", type=int, default=3000, help="CpG loci count (default: 3000)")
-    parser.add_argument("--rate", type=float, default=0.35, help="TET2 catalytic flux (default: 0.35)")
-    parser.add_argument("--steps", type=int, default=150, help="Simulation steps (default: 150)")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 1.2.0")
+    parser.add_argument("--run", action="store_true", help="Execute research simulation pipeline")
+    parser.add_argument("--generate-bed", action="store_true", help="Generate synthetic human CpG island BED dataset")
+    parser.add_argument("--sites", type=int, default=10000, help="CpG loci count (default: 10000)")
+    parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux (default: 0.45)")
+    parser.add_argument("--steps", type=int, default=250, help="Integration steps (default: 250)")
+    parser.add_argument("--export", type=str, default="dredge_report.json", help="Path to export report (JSON)")
 
     args = parser.parse_args()
 
+    if args.generate_bed:
+        bed_path = GenomicBedProcessor.generate_synthetic_cpg_bed(n_sites=args.sites)
+        print(f"[✓] Generated synthetic human genomic methylation profile: {bed_path}")
+        return
+
     if args.run:
-        print("\n" + "="*68)
-        print("  🧬 AQUAMARINE DREDGE ULTRA (v1.1.0)")
-        print("  Quantum-Stochastic Epigenetic Reversal & Horvath Clock Decelerator")
-        print("="*68)
-        print(f"[*] Simulating {args.sites:,} loci across Waddington Non-Equilibrium Field...")
+        print("\n" + "="*70)
+        print("  🔬 AQUAMARINE DREDGE ENTERPRISE BIO-COMPUTING PIPELINE")
+        print("  In-Silico Waddington Potential Landscape & Horvath Reversal")
+        print("="*70)
+        print(f"[*] Analyzing {args.sites:,} high-density CpG genomic loci...")
         
-        engine = WaddingtonPotentialEngine(n_cpg_sites=args.sites)
-        res = engine.simulate_tet2_reversal(steps=args.steps, catalytic_rate=args.rate)
+        pipeline = DREDGEResearchPipeline(n_sites=args.sites)
+        report, _ = pipeline.run_rejuvenation_pipeline(steps=args.steps, tet2_flux=args.rate)
         
-        print("\n--- HORVATH BIOLOGICAL CLOCK METRICS ---")
-        print(f"[+] Initial Biological Age  : {res['initial_age']:.2f} yrs")
-        print(f"[+] Rejuvenated State Age   : {res['final_age']:.2f} yrs")
-        print(f"[★] Biological Reversal     : -{res['age_reversal_years']:.2f} Years Reclaimed")
+        print("\n--- CLINICAL / RESEARCH BIOMARKER SUMMARY ---")
+        print(f" • Pre-Treatment Biological Age  : {report['biomarkers']['pre_treatment_biological_age']} years")
+        print(f" • Post-Treatment Biological Age : {report['biomarkers']['post_treatment_biological_age']} years")
+        print(f" • Net Rejuvenation Reclaimed    : -{report['biomarkers']['years_rejuvenated']} years")
+        print(f" • Shannon Information Entropy   : {report['biomarkers']['shannon_entropy_initial']} -> {report['biomarkers']['shannon_entropy_final']} bits")
+        print(f" • Global Entropy Reduction      : {report['biomarkers']['entropy_decay_percentage']}%")
         
-        print("\n--- INFORMATION ENTROPY DYNAMICS ---")
-        print(f"[+] Initial Entropy         : {res['initial_entropy']:.4f} bits")
-        print(f"[+] Reversibility Delta     : {res['entropy_reduction_pct']:.2f}%")
-        
-        print("\n--- ENTROPY DECAY TRAJECTORY (ASCII GRAPH) ---")
-        print(render_ascii_sparkline(res['entropy_traj']))
-        print("0 Step " + "─"*28 + f"> {args.steps} Steps (Reversed)")
-        print("\n[✓] TET2 Demethylation Operator Successfully Converged.\n")
+        with open(args.export, "w") as f:
+            json.dump(report, f, indent=2)
+        print(f"\n[✓] Publication-ready report exported successfully to: {args.export}\n")
     else:
         parser.print_help()
 
