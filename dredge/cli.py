@@ -20,7 +20,8 @@ from dredge.bio_kernel import (
     QuantumBiologyEngine,
     PhylogeneticEvolutionEngine,
     MitochondrialBioenergeticsEngine,
-    BioSpectralVisualizer
+    BioSpectralVisualizer,
+    BioFileIOAndMotifEngine
 )
 
 def main():
@@ -30,16 +31,15 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Infinity (v12.0.1): The Ultimate Universal Biological, Quantum & Synthesis OS"
+        description="DREDGE Transcendence (v13.0.0): Superior Universal Biological OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 12.0.1")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 13.0.0")
     
-    # Grand Infinity Summary
-    parser.add_argument("--infinity", action="store_true", help="Run the Complete Multi-Disciplinary Biological Kernel Diagnostics")
-    
-    # Modules
+    # Biopython Advanced Upgrades
+    parser.add_argument("--digest", nargs=2, metavar=('DNA_SEQ', 'ENZYME'), help="In-silico Restriction Enzyme Digestion (e.g. EcoRI, BamHI, HindIII)")
+    parser.add_argument("--infinity", action="store_true", help="Run Complete Multi-Disciplinary Biological Kernel")
     parser.add_argument("--quantum-bio", action="store_true", help="Simulate Quantum Exciton Energy Transfer")
-    parser.add_argument("--phylo", nargs=2, metavar=('GENE_A', 'GENE_B'), help="Compute Jukes-Cantor Evolutionary Divergence")
+    parser.add_argument("--phylo", nargs=2, metavar=('GENE_A', 'GENE_B'), help="Compute Evolutionary Divergence (MYA)")
     parser.add_argument("--mitochondria", type=float, default=None, help="Simulate Mitochondrial Heteroplasmy")
     parser.add_argument("--design-antibody", type=str, default=None, help="Design neutralizing antibody CDR3 loop")
     parser.add_argument("--neuron", action="store_true", help="Simulate Hodgkin-Huxley action potential")
@@ -60,28 +60,31 @@ def main():
 
     args = parser.parse_args()
 
+    if args.digest:
+        dna, enz = args.digest[0], args.digest[1]
+        res = BioFileIOAndMotifEngine.restriction_digest(dna, enzyme=enz)
+        print("\n" + "="*76)
+        print("  ✂️ RESTRICTION ENZYME IN-SILICO DIGESTION MATRIX")
+        print("="*76)
+        print(f" • Enzyme Name        : {res['enzyme']} (Target: 5'-{res['recognition_site']}-3')")
+        print(f" • Cleavage Cut Count : {res['cut_count']} Sites Found")
+        print(f" • Cleavage Positions : {res['cut_positions']}")
+        print(f" • Resulting Fragments: {res['fragment_lengths_bp']} bp bands")
+        print("="*76 + "\n")
+        return
+
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND INFINITY SYSTEM HEALTH & SPECTRUM")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND TRANSCENDENCE SYSTEM HEALTH & SPECTRUM")
         print("="*76)
-        
-        # 1. Quantum FMO
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
-        
-        # 2. Neural Firing
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
-        
-        # 3. Telomere Longevity
         t_res = TelomereLongevityEngine.simulate_cellular_lifespan()
         print(f" • [Aging & Telomere] : Hayflick Barrier = {t_res['hayflick_barrier_status']}")
-        
-        # 4. Minimal Synthetic Cell
         c_res = SyntheticLifeGenesisEngine.design_minimal_cell("Syn-Core")
         print(f" • [Synthetic Life]   : Genome Size = {c_res['total_genome_size_bp']:,} bp ({c_res['essential_gene_count']} genes)")
-        
-        # 5. Spectrum Display
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
         print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="QUANTUM-NEURAL WAVEFORM"))
         print("="*76 + "\n")
@@ -93,7 +96,7 @@ def main():
     elif args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Infinity: The Universal Biological & Quantum Synthesis OS},
+  title = {DREDGE Transcendence: The Universal Computational Biology & Synthesis OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")

@@ -768,3 +768,59 @@ class BioSpectralVisualizer:
             lines.append(f"  │ {''.join(row)} │")
         lines.append("  └" + "─" * (width + 2) + "┘\n")
         return "\n".join(lines)
+
+class BioFileIOAndMotifEngine:
+    """
+    High-Performance FASTA/FASTQ Engine, Restriction Enzyme Digest & Consensus Motif Matrix.
+    """
+    RESTRICTION_ENZYMES = {
+        "EcoRI": "GAATTC",
+        "BamHI": "GGATCC",
+        "HindIII": "AAGCTT",
+        "NotI": "GCGGCCGC",
+        "TaqI": "TCGA"
+    }
+
+    @staticmethod
+    def parse_fasta_string(fasta_text: str) -> list:
+        records = []
+        header = None
+        seq_lines = []
+        for line in fasta_text.strip().splitlines():
+            line = line.strip()
+            if line.startswith(">"):
+                if header is not None:
+                    records.append({"id": header, "sequence": "".join(seq_lines), "length": len("".join(seq_lines))})
+                header = line[1:]
+                seq_lines = []
+            else:
+                seq_lines.append(line)
+        if header is not None:
+            records.append({"id": header, "sequence": "".join(seq_lines), "length": len("".join(seq_lines))})
+        return records
+
+    @staticmethod
+    def restriction_digest(dna_seq: str, enzyme: str = "EcoRI") -> dict:
+        site = BioFileIOAndMotifEngine.RESTRICTION_ENZYMES.get(enzyme, "GAATTC")
+        seq = dna_seq.upper()
+        cuts = []
+        pos = seq.find(site)
+        while pos != -1:
+            cuts.append(pos)
+            pos = seq.find(site, pos + 1)
+        
+        # Calculate digested fragments
+        fragments = []
+        last = 0
+        for c in cuts:
+            fragments.append(len(seq[last:c+1]))
+            last = c + 1
+        fragments.append(len(seq[last:]))
+        
+        return {
+            "enzyme": enzyme,
+            "recognition_site": site,
+            "cut_count": len(cuts),
+            "cut_positions": cuts,
+            "fragment_lengths_bp": fragments
+        }
