@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dredge-epigenetic"
+version = "1.0.0"
+authors = [
+  { name="Aquamarine Hoshino", email="aquamarine.hoshino170@github.io" },
+]
+description = "In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation Pipeline"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "numpy",
+    "pandas",
+    "torch",
+    "pytest",
+    "streamlit"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/aquamarine-hoshino170/dredge-epigenetic-reversal"
+"Bug Tracker" = "https://github.com/aquamarine-hoshino170/dredge-epigenetic-reversal/issues"
+
+[project.scripts]
+dredge = "dredge_cli:main"
