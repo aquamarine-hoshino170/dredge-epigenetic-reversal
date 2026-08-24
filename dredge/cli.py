@@ -7,11 +7,11 @@ from dredge.bio_kernel import UniversalBioKernel
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Bio-Kernel (v2.0.0): The Universal Computational Biology & Epigenetics Engine"
+        description="DREDGE Bio-Kernel (v2.1.0): Universal Computational Biology, CRISPR & Epigenetics Engine"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 2.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 2.1.0")
     
-    # Epigenomics Flags
+    # Epigenomics
     parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
     parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial (N subjects)")
     parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
@@ -20,10 +20,26 @@ def main():
     parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux")
     parser.add_argument("--steps", type=int, default=250, help="Integration steps")
 
-    # Genomics & Proteomics Kernel Flags
-    parser.add_argument("--analyze-seq", type=str, default=None, help="Input raw DNA sequence for Full Dogma Analysis")
+    # Central Dogma & CRISPR
+    parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence for Central Dogma Analysis")
+    parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates from DNA")
 
     args = parser.parse_args()
+
+    if args.crispr:
+        targets = UniversalBioKernel.find_crispr_targets(args.crispr.strip())
+        print("\n" + "="*72)
+        print("  🎯 CRISPR-Cas9 gRNA TARGET DESIGNER (SpCas9 - 5'-NGG PAM)")
+        print("="*72)
+        if not targets:
+            print("[!] No standard NGG PAM sites found in the provided sequence.")
+        else:
+            print(f"[*] Found {len(targets)} candidate gRNA target site(s):\n")
+            for idx, t in enumerate(targets, 1):
+                print(f" Candidate #{idx:02d} | Pos: {t['position']:03d} | 20nt: {t['protospacer_20nt']} | PAM: {t['pam']}")
+                print(f"                | GC: {t['gc_content']}% | Efficiency Score: {t['on_target_score']}/100\n")
+        print("="*72 + "\n")
+        return
 
     if args.analyze_seq:
         dna = args.analyze_seq.strip()

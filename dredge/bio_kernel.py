@@ -1,9 +1,6 @@
 import numpy as np
 
 class UniversalBioKernel:
-    """
-    Core engine handling DNA, RNA, Protein Translation, and Biophysical Indices.
-    """
     CODON_TABLE = {
         'ATA':'I', 'ATC':'I', 'ATT':'I', 'ATG':'M',
         'ACA':'T', 'ACC':'T', 'ACG':'T', 'ACT':'T',
@@ -32,18 +29,15 @@ class UniversalBioKernel:
 
     @staticmethod
     def transcribe(dna_seq: str) -> str:
-        """DNA -> mRNA"""
         return dna_seq.upper().replace('T', 'U')
 
     @staticmethod
     def reverse_complement(dna_seq: str) -> str:
-        """Computes 3'-5' reverse complement."""
         comp = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'N': 'N'}
         return "".join(comp.get(base, 'N') for base in reversed(dna_seq.upper()))
 
     @staticmethod
     def translate(dna_seq: str) -> str:
-        """DNA -> Protein Amino Acid Chain"""
         seq = dna_seq.upper()
         protein = []
         for i in range(0, len(seq) - 2, 3):
@@ -56,13 +50,33 @@ class UniversalBioKernel:
 
     @staticmethod
     def calculate_gc_content(dna_seq: str) -> float:
-        """Calculates genomic GC-ratio stability."""
         seq = dna_seq.upper()
         gc = seq.count('G') + seq.count('C')
         return round((gc / len(seq)) * 100.0, 2) if seq else 0.0
 
     @staticmethod
     def mean_hydrophobicity(protein_seq: str) -> float:
-        """Kyte-Doolittle Hydrophobicity Index."""
         scores = [UniversalBioKernel.HYDROPHOBICITY.get(aa, 0.0) for aa in protein_seq]
         return round(float(np.mean(scores)), 3) if scores else 0.0
+
+    @staticmethod
+    def find_crispr_targets(dna_seq: str, pam: str = "GG") -> list:
+        """Scans sequence for SpCas9 20nt protospacer targets adjacent to NGG PAM."""
+        seq = dna_seq.upper()
+        targets = []
+        for i in range(len(seq) - 22):
+            # Check 20nt protospacer + 3nt PAM (NGG)
+            sub = seq[i:i+23]
+            protospacer = sub[:20]
+            pam_found = sub[21:23]
+            if pam_found == pam:
+                gc = UniversalBioKernel.calculate_gc_content(protospacer)
+                efficiency_score = round(100.0 - abs(50.0 - gc) * 1.5, 2)
+                targets.append({
+                    "position": i,
+                    "protospacer_20nt": protospacer,
+                    "pam": sub[20:],
+                    "gc_content": gc,
+                    "on_target_score": efficiency_score
+                })
+        return targets
