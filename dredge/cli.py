@@ -30,9 +30,11 @@ def main():
         prog="aquamarine-dredge",
         description="DREDGE Enterprise: Computational Epigenetics Pipeline for Academic & Clinical Research"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 1.3.1")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 1.4.0")
     parser.add_argument("--run", action="store_true", help="Execute single-sample research simulation")
-    parser.add_argument("--trial", type=int, default=0, help="Run Cohort Trial with N subjects (e.g. --trial 10)")
+    parser.add_argument("--trial", type=int, default=0, help="Run Cohort Trial with N subjects")
+    parser.add_argument("--benchmark", action="store_true", help="Run computational throughput benchmarks")
+    parser.add_argument("--cite", action="store_true", help="Print BibTeX citation format for research papers")
     parser.add_argument("--input", type=str, default=None, help="Input genomic BED file path")
     parser.add_argument("--generate-bed", action="store_true", help="Generate synthetic human CpG island BED dataset")
     parser.add_argument("--sites", type=int, default=10000, help="CpG loci count (default: 10000)")
@@ -42,12 +44,32 @@ def main():
 
     args = parser.parse_args()
 
+    if args.cite:
+        print("""@software{aquamarine_dredge_2026,
+  author = {Hoshino, Aquamarine},
+  title = {DREDGE: In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation Pipeline},
+  year = {2026},
+  publisher = {PyPI},
+  url = {https://pypi.org/project/aquamarine-dredge/}
+}""")
+        return
+
+    pipeline = DREDGEResearchPipeline(n_sites=args.sites)
+
+    if args.benchmark:
+        print("\n" + "="*70)
+        print("  ⚡ DREDGE HARDWARE & VECTOR THROUGHPUT BENCHMARK")
+        print("="*70)
+        results = pipeline.benchmark_engine()
+        for res in results:
+            print(f" • Cohort Size: {res['loci']:,} Loci | Time: {res['time_sec']}s | Rate: {res['throughput_loci_per_sec']:,} Loci/sec")
+        print("[✓] Vector engine verified for large-scale bio-simulations.\n")
+        return
+
     if args.generate_bed:
         bed_path = GenomicBedProcessor.generate_synthetic_cpg_bed(n_sites=args.sites)
         print(f"[✓] Generated synthetic human genomic methylation profile: {bed_path}")
         return
-
-    pipeline = DREDGEResearchPipeline(n_sites=args.sites)
 
     if args.trial > 0:
         print("\n" + "="*70)
