@@ -1,0 +1,5 @@
+Cell_Model,Lineage_Tissue,Genomic_Background,Post_Viability_Pct,Synthetic_Lethality_Score,Phenotypic_Response,Target_Selectivity
+AML_KG1_IDHmut,Acute Myeloid Leukemia,IDH2-R140Q / TET2 Silent,26.4%,0.736,Potent Synthetic Lethality (Apoptosis),Tumor Selective Target
+GBM_U87_GCIMP,Glioblastoma Multiforme,IDH1-R132H (G-CIMP+),36.5%,0.635,Potent Synthetic Lethality (Apoptosis),Tumor Selective Target
+CRC_HCT116_CIMP,Colorectal Carcinoma,MLH1-Hypermethylated,46.5%,0.535,Moderate Growth Inhibition,Therapeutic Window
+Somatic_Fibroblast,Healthy Somatic Control,Wild-Type (Purity Safe),95.8%,0.042,Rejuvenation / Safe (No Lethality),High Epigenetic Safety
