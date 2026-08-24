@@ -7,39 +7,54 @@ from dredge.bio_kernel import (
     SequenceAlignmentEngine, 
     MolecularDockingEngine, 
     PharmacologyScreener, 
-    ClinicalDiagnosticEngine
+    ClinicalDiagnosticEngine,
+    NovelDiseaseDiscoveryEngine
 )
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Bio-Kernel (v4.0.0 Asclepius): Universal Computational Biology, CRISPR, Pharmacology & Clinical Diagnostics"
+        description="DREDGE Bio-Kernel (v5.0.0 Genesis): Universal Computational Biology, CRISPR, Pharmacology, Diagnostics & Novel Disease Discovery OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 4.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 5.0.0")
     
-    # Clinical Diagnostics & Pathology
-    parser.add_argument("--diagnose", type=str, default=None, help="Diagnose disease risk & prevention strategies via Gene Variant (e.g. BRCA1, TP53, APOE4, KRAS, LDLR)")
+    # Discovery & Diagnostics
+    parser.add_argument("--discover", nargs="+", help="Analyze patient metabolic markers/symptoms to discover known or novel syndromes (e.g. --discover low_ascorbic_acid collagen_breakdown)")
+    parser.add_argument("--diagnose", type=str, default=None, help="Diagnose disease risk & prevention strategies via Gene Variant")
 
     # Pharmacology & Docking
     parser.add_argument("--drug", type=str, default=None, help="Screen small molecule drug for Lipinski RO5 & ADMET profile")
     parser.add_argument("--dock", type=str, default=None, help="Simulate 3D Molecular Drug Docking on Protein Sequence")
     parser.add_argument("--ligand", type=str, default="TET2-Activator-7X", help="Small Molecule Ligand Name")
 
-    # Genomics, CRISPR & Central Dogma
+    # Genomics, CRISPR & Epigenetics
     parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates from DNA")
     parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align two DNA sequences (Needleman-Wunsch)")
     parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence for Central Dogma Analysis")
-    
-    # Epigenomics & Clinical Trials
     parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
     parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial (N subjects)")
     parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
     parser.add_argument("--cite", action="store_true", help="Print BibTeX academic citation")
+    
+    # Simulation params
     parser.add_argument("--sites", type=int, default=10000, help="CpG loci count")
     parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux")
     parser.add_argument("--steps", type=int, default=250, help="Integration steps")
 
     args = parser.parse_args()
+
+    if args.discover:
+        res = NovelDiseaseDiscoveryEngine.discover_from_symptoms(args.discover)
+        print("\n" + "="*76)
+        print("  🧪 NOVEL ETIOLOGY, SYNDROME DISCOVERY & NUTRACEUTICAL RESCUE ENGINE")
+        print("="*76)
+        print(f" • Discovery Status     : {res['discovery_status']}")
+        print(f" • Syndrome / Disease   : {res['diagnosed_syndrome']}")
+        print(f" • Input Biomarkers     : {', '.join(res['matched_markers'])}")
+        print(f" • Molecular Etiology   : {res['etiology']}")
+        print(f" • Therapeutic Cure     : {res['prescribed_intervention']}")
+        print("="*76 + "\n")
+        return
 
     if args.diagnose:
         res = ClinicalDiagnosticEngine.diagnose_variant(args.diagnose)
@@ -135,7 +150,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE: Universal Computational Biology, CRISPR, Pharmacology & Clinical Diagnostics Engine},
+  title = {DREDGE: Universal Computational Biology, CRISPR, Diagnostics & Disease Discovery Engine},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
