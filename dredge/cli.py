@@ -25,7 +25,9 @@ from dredge.bio_kernel import (
     DNADigitalStorageCodec,
     GoldenRatioBioGeometryEngine,
     XenobiologyAlienGeneticEngine,
-    TuringMorphogenesisEngine
+    TuringMorphogenesisEngine,
+    DNAOrigamiNanorobotEngine,
+    EpigeneticShannonInformationEngine
 )
 
 def main():
@@ -35,16 +37,19 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Genesis Dei (v15.0.0): The God-Tier Biological, Astrobiological & Sacred Geometry OS"
+        description="DREDGE Aethelgard (v16.0.0): The Ultimate Universal Bio-Nanotech, Quantum & Epigenetic Information OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 15.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 16.0.0")
     
-    # Genesis Dei Supreme Features
-    parser.add_argument("--golden-ratio", type=str, default=None, help="Compute Golden Ratio (Phi) Bio-Harmonic Folding Stability on Sequence")
-    parser.add_argument("--xenobiology", action="store_true", help="Generate Astrobiological Hachimoji 8-Base Genetic System (512 Codons)")
-    parser.add_argument("--turing", action="store_true", help="Simulate Turing Reaction-Diffusion Morphogenetic Embryogenesis Pattern")
+    # Aethelgard Supreme Features
+    parser.add_argument("--nanorobot", type=str, default=None, help="Design DNA Origami Logic-Gated Nanorobot for targeted drug payload (e.g. --nanorobot Doxorubicin)")
+    parser.add_argument("--shannon-aging", action="store_true", help="Simulate Epigenetic Shannon Information Theory of Aging & Error-Correction")
+    parser.add_argument("--noise", type=float, default=0.30, help="Epigenetic channel noise rate (0.0 - 0.5)")
 
     # Core Features
+    parser.add_argument("--golden-ratio", type=str, default=None, help="Golden Ratio (Phi) Folding Stability")
+    parser.add_argument("--xenobiology", action="store_true", help="Generate Astrobiological Hachimoji 8-Base Code")
+    parser.add_argument("--turing", action="store_true", help="Simulate Turing Morphogenesis Pattern")
     parser.add_argument("--dna-encode", type=str, default=None, help="Encode plaintext to synthetic DNA")
     parser.add_argument("--dna-decode", type=str, default=None, help="Decode synthetic DNA to plaintext")
     parser.add_argument("--key", type=int, default=42, help="Secret Key")
@@ -72,43 +77,33 @@ def main():
 
     args = parser.parse_args()
 
-    if args.golden_ratio:
-        res = GoldenRatioBioGeometryEngine.calculate_golden_helix_stability(args.golden_ratio)
+    if args.nanorobot:
+        res = DNAOrigamiNanorobotEngine.design_nanorobot(payload=args.nanorobot)
         print("\n" + "="*76)
-        print("  ⚜️ SACRED BIOLOGY: GOLDEN RATIO (Φ) BIO-HARMONIC FOLDING ENGINE")
+        print("  🤖 DNA ORIGAMI LOGIC-GATED MOLECULAR NANOROBOT DESIGNER")
         print("="*76)
-        print(f" • Input Chain Length      : {res['biopolymer_length']} Residues")
-        print(f" • Universal Constant (Φ)  : {res['golden_ratio_phi']}")
-        print(f" • Helical Resonance Index : {res['spiral_harmonic_index']}")
-        print(f" • Phi-Lattice Free Energy : {res['phi_lattice_free_energy']}")
-        print(f" • Thermodynamic Symmetry  : {res['geometric_symmetry']}")
+        print(f" • Nanostructure Chassis   : {res['nanorobot_architecture']}")
+        print(f" • Scaffold Architecture   : {res['scaffold_dna']}")
+        print(f" • Staple Strand Synthesis : {res['staple_strands_required']}")
+        print(f" • Nanocage Dimensions     : {res['dimensions_xyz_nm']}")
+        print(f" • Target Cell Receptor    : {res['targeting_aptamer']}")
+        print(f" • Encapsulated Cargo      : {res['encapsulated_payload']}")
+        print(f" • Molecular Gate System   : {res['logic_gate']}")
+        print(f" • Latch Thermodynamics    : {res['latch_free_energy_delta_g']}")
         print("="*76 + "\n")
         return
 
-    if args.xenobiology:
-        res = XenobiologyAlienGeneticEngine.generate_xenobiological_code()
+    if args.shannon_aging:
+        res = EpigeneticShannonInformationEngine.calculate_epigenetic_channel_capacity(noise_rate=args.noise)
         print("\n" + "="*76)
-        print("  🪐 ASTROBIOLOGY: EXPANDED HACHIMOJI ALIEN GENETIC SYSTEM")
+        print("  📶 SHANNON EPIGENETIC INFORMATION THEORY & NOISE FILTER")
         print("="*76)
-        print(f" • System Architecture     : {res['genetic_system']}")
-        print(f" • Genetic Alphabet        : {res['synthetic_bases']}")
-        print(f" • Synthesized Xeno-DNA    : {res['alien_dna_strand']}")
-        print(f" • Codon Repertoire Space  : {res['total_codon_capacity']}")
-        print(f" • Non-Canonical Amino Acids: {res['encoded_unnatural_amino_acids']} Novel Synthetics")
-        print(f" • Planetary Resilience    : {res['astrobiological_resilience']}")
-        print("="*76 + "\n")
-        return
-
-    if args.turing:
-        res = TuringMorphogenesisEngine.simulate_turing_morphogen_gradient()
-        print("\n" + "="*76)
-        print("  🎨 MORPHOGENESIS: ALAN TURING EMBRYONIC PATTERN GENERATOR")
-        print("="*76)
-        print(f" • Mathematical Model      : {res['morphogenetic_field']}")
-        print(f" • Reaction Parameters     : {res['activator_inhibitor_kinetics']}")
-        print(f" • Tissue Differentiation  : {res['pattern_state']}")
-        print(f" • Spatial Gradient Entropy: {res['spatial_morphogen_gradient_entropy']}")
-        print(f" • Developmental State     : {res['biological_symmetry_break']}")
+        print(f" • Analyzed CpG Loci       : {res['analyzed_cpg_channel_loci']:,} Channels")
+        print(f" • Youth Baseline Entropy  : {res['pristine_epigenetic_entropy']}")
+        print(f" • Aged Entropic Noise     : {res['aged_noisy_entropy']}")
+        print(f" • Information Loss (Noise): {res['shannon_information_loss']}")
+        print(f" • Channel Capacity (C)    : {res['channel_capacity_c']}")
+        print(f" • Shannon Epigenetic Rest.: {res['restored_epigenetic_bits']}")
         print("="*76 + "\n")
         return
 
@@ -132,7 +127,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Genesis Dei: The Universal Sacred Biology & Astrobiology OS},
+  title = {DREDGE Aethelgard: Universal Bio-Nanotech, Quantum & Epigenetic Information OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
