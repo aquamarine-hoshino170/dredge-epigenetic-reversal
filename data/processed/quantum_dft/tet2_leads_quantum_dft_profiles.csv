@@ -1,0 +1,6 @@
+Scaffold_ID,HOMO_Energy_eV,LUMO_Energy_eV,Bandgap_dEg_eV,Chemical_Hardness_η,Chemical_Softness_σ,Electrophilicity_ω,Dipole_Moment_Debye,Quantum_Reactivity
+DREDGE-05,-6.555,-1.547,5.008,2.504,0.399,3.277,4.38,High Frontier Kinetic Reactivity
+DREDGE-01,-6.637,-1.43,5.207,2.603,0.384,3.125,3.99,High Frontier Kinetic Reactivity
+DREDGE-02,-6.511,-1.536,4.975,2.487,0.402,3.255,4.22,Optimally Reactive & Bio-stable
+DREDGE-03,-6.506,-1.52,4.986,2.493,0.401,3.23,4.15,Optimally Reactive & Bio-stable
+DREDGE-04,-6.591,-1.442,5.149,2.575,0.388,3.132,3.93,High Frontier Kinetic Reactivity
