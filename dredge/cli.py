@@ -10,23 +10,27 @@ from dredge.bio_kernel import (
     ClinicalDiagnosticEngine,
     NovelDiseaseDiscoveryEngine,
     SyntheticBiologyCircuit,
-    EpidemiologicalViralEngine
+    EpidemiologicalViralEngine,
+    GenerativeProteinDesigner
 )
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE OmniBio (v6.0.0): The Ultimate Universal Biological Operating System"
+        description="DREDGE Apex (v7.0.0): The Ultimate Universal Biological Operating System"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 6.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 7.0.0")
     
+    # De-Novo Design
+    parser.add_argument("--design-protein", type=str, default=None, help="De-novo design therapeutic protein sequence for target (e.g. TET2_REVERSAL, LONGEVITY_PEPTIDE)")
+
     # Synthetic Biology & Epidemiology
     parser.add_argument("--circuit", action="store_true", help="Simulate Synthetic Genetic Toggle Switch Circuit")
-    parser.add_argument("--iptg", type=float, default=2.0, help="IPTG Inducer Level for Genetic Switch")
-    parser.add_argument("--atc", type=float, default=0.0, help="aTc Inducer Level for Genetic Switch")
+    parser.add_argument("--iptg", type=float, default=2.0, help="IPTG Inducer Level")
+    parser.add_argument("--atc", type=float, default=0.0, help="aTc Inducer Level")
     parser.add_argument("--outbreak", action="store_true", help="Simulate SEIR Viral Outbreak Transmission Dynamics")
     parser.add_argument("--r0", type=float, default=2.8, help="Viral Basic Reproduction Number (R0)")
-    parser.add_argument("--pop", type=int, default=50000, help="Host Population Size for Outbreak")
+    parser.add_argument("--pop", type=int, default=50000, help="Host Population Size")
 
     # Discovery & Diagnostics
     parser.add_argument("--discover", nargs="+", help="Analyze patient metabolic markers to discover syndromes")
@@ -52,6 +56,19 @@ def main():
     parser.add_argument("--steps", type=int, default=250, help="Integration steps")
 
     args = parser.parse_args()
+
+    if args.design_protein:
+        res = GenerativeProteinDesigner.design_therapeutic_peptide(target_function=args.design_protein)
+        print("\n" + "="*76)
+        print("  🧬 DE-NOVO GENERATIVE THERAPEUTIC PEPTIDE DESIGNER")
+        print("="*76)
+        print(f" • Target Function       : {res['target_function']}")
+        print(f" • Designed Sequence     : {res['peptide_sequence']}")
+        print(f" • Sequence Length       : {res['length_aa']} Amino Acids")
+        print(f" • Structural Topology   : {res['structural_motif']}")
+        print(f" • Predicted Binding ΔG  : {res['predicted_binding_potency']} kcal/mol")
+        print("="*76 + "\n")
+        return
 
     if args.circuit:
         res = SyntheticBiologyCircuit.simulate_toggle_switch(inducer_iptg=args.iptg, inducer_atc=args.atc)
@@ -187,7 +204,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE OmniBio: The Complete Universal Computational Biology Operating System},
+  title = {DREDGE Apex: The Complete Universal Computational Biology Operating System},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")

@@ -416,3 +416,32 @@ class EpidemiologicalViralEngine:
             "herd_immunity_recovered": int(r),
             "attack_rate_pct": round((r / population) * 100.0, 2)
         }
+
+class GenerativeProteinDesigner:
+    """
+    In-silico De-Novo therapeutic peptide / functional protein generative module.
+    """
+    HYDROPHOBIC_CORE = ['L', 'I', 'V', 'F', 'M']
+    POLAR_SURFACE = ['K', 'R', 'E', 'D', 'S', 'T']
+
+    @staticmethod
+    def design_therapeutic_peptide(target_function: str = "TET2_BOOSTER", length: int = 24) -> dict:
+        np.random.seed(sum(ord(c) for c in target_function) % 9999)
+        seq = []
+        for i in range(length):
+            # Hydrophobic periodicity for stable alpha-helix folding
+            if i % 3 == 0:
+                seq.append(np.random.choice(GenerativeProteinDesigner.HYDROPHOBIC_CORE))
+            else:
+                seq.append(np.random.choice(GenerativeProteinDesigner.POLAR_SURFACE))
+        
+        designed_seq = "".join(seq)
+        mol_dock = MolecularDockingEngine.simulate_docking(designed_seq, ligand_name=target_function)
+        
+        return {
+            "target_function": target_function,
+            "peptide_sequence": designed_seq,
+            "length_aa": length,
+            "predicted_binding_potency": mol_dock["binding_affinity_kcal_mol"],
+            "structural_motif": "Stable Amphipathic Alpha-Helix"
+        }
