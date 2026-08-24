@@ -21,7 +21,8 @@ from dredge.bio_kernel import (
     PhylogeneticEvolutionEngine,
     MitochondrialBioenergeticsEngine,
     BioSpectralVisualizer,
-    BioFileIOAndMotifEngine
+    BioFileIOAndMotifEngine,
+    DNADigitalStorageCodec
 )
 
 def main():
@@ -31,15 +32,20 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Transcendence (v13.0.0): Superior Universal Biological OS"
+        description="DREDGE Omniscient (v14.0.0): The Ultimate Universal Biological, Quantum, Synthesis & DNA Storage OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 13.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 14.0.0")
     
-    # Biopython Advanced Upgrades
-    parser.add_argument("--digest", nargs=2, metavar=('DNA_SEQ', 'ENZYME'), help="In-silico Restriction Enzyme Digestion (e.g. EcoRI, BamHI, HindIII)")
+    # DNA Data Storage & Cryptography
+    parser.add_argument("--dna-encode", type=str, default=None, help="Encode secret digital text message into synthetic DNA strand")
+    parser.add_argument("--dna-decode", type=str, default=None, help="Decode synthetic DNA strand back into digital plaintext")
+    parser.add_argument("--key", type=int, default=42, help="Secret XOR Key for Bio-Cryptographic Steganography")
+
+    # Core Features
     parser.add_argument("--infinity", action="store_true", help="Run Complete Multi-Disciplinary Biological Kernel")
+    parser.add_argument("--digest", nargs=2, metavar=('DNA_SEQ', 'ENZYME'), help="Restriction Enzyme Digestion")
     parser.add_argument("--quantum-bio", action="store_true", help="Simulate Quantum Exciton Energy Transfer")
-    parser.add_argument("--phylo", nargs=2, metavar=('GENE_A', 'GENE_B'), help="Compute Evolutionary Divergence (MYA)")
+    parser.add_argument("--phylo", nargs=2, metavar=('GENE_A', 'GENE_B'), help="Compute Evolutionary Divergence")
     parser.add_argument("--mitochondria", type=float, default=None, help="Simulate Mitochondrial Heteroplasmy")
     parser.add_argument("--design-antibody", type=str, default=None, help="Design neutralizing antibody CDR3 loop")
     parser.add_argument("--neuron", action="store_true", help="Simulate Hodgkin-Huxley action potential")
@@ -60,22 +66,34 @@ def main():
 
     args = parser.parse_args()
 
-    if args.digest:
-        dna, enz = args.digest[0], args.digest[1]
-        res = BioFileIOAndMotifEngine.restriction_digest(dna, enzyme=enz)
+    if args.dna_encode:
+        res = DNADigitalStorageCodec.encode_text_to_dna(args.dna_encode, secret_key=args.key)
         print("\n" + "="*76)
-        print("  ✂️ RESTRICTION ENZYME IN-SILICO DIGESTION MATRIX")
+        print("  💾 DNA DIGITAL DATA STORAGE & BIO-CRYPTOGRAPHIC CODEC")
         print("="*76)
-        print(f" • Enzyme Name        : {res['enzyme']} (Target: 5'-{res['recognition_site']}-3')")
-        print(f" • Cleavage Cut Count : {res['cut_count']} Sites Found")
-        print(f" • Cleavage Positions : {res['cut_positions']}")
-        print(f" • Resulting Fragments: {res['fragment_lengths_bp']} bp bands")
+        print(f" • Input Plaintext        : \"{res['input_payload']}\"")
+        print(f" • Synthesized DNA Strand : {res['synthesized_dna_strand']}")
+        print(f" • Strand Length          : {res['strand_length_nt']} Nucleotides (nt)")
+        print(f" • GC Balance Stability   : {res['gc_thermodynamic_balance']}")
+        print(f" • Molecular Weight       : {res['estimated_molecular_weight']}")
+        print(f" • Storage Security       : {res['encryption_status']} (Key: {args.key})")
+        print("="*76 + "\n")
+        return
+
+    if args.dna_decode:
+        decoded = DNADigitalStorageCodec.decode_dna_to_text(args.dna_decode, secret_key=args.key)
+        print("\n" + "="*76)
+        print("  🔓 DNA BIO-CRYPTOGRAPHIC REVERSE SEQUENCING & DECODER")
+        print("="*76)
+        print(f" • Input DNA Strand : {args.dna_decode}")
+        print(f" • Decoded Payload  : \"{decoded}\"")
+        print(f" • Decryption Key   : {args.key}")
         print("="*76 + "\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND TRANSCENDENCE SYSTEM HEALTH & SPECTRUM")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND OMNISCIENT SYSTEM HEALTH & SPECTRUM")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
@@ -90,13 +108,10 @@ def main():
         print("="*76 + "\n")
         return
 
-    if args.quantum_bio:
-        res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
-        print(f"\n • Quantum Efficiency: {res['quantum_exciton_efficiency']}\n")
-    elif args.cite:
+    if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Transcendence: The Universal Computational Biology & Synthesis OS},
+  title = {DREDGE Omniscient: Universal Biological, Quantum, Synthesis & DNA Storage OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
