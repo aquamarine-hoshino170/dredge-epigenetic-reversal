@@ -28,9 +28,6 @@ class GenomicBedProcessor:
 
 
 class HorvathEpigeneticClock:
-    """
-    Normalized Pan-Tissue Biological Clock calibrated for large-scale CpG cohorts.
-    """
     def __init__(self):
         self.intercept = 20.0
         self.slope = 75.0
@@ -76,7 +73,7 @@ class DREDGEResearchPipeline:
 
         report = {
             "metadata": {
-                "engine": "Aquamarine DREDGE v1.2.2 Enterprise",
+                "engine": "Aquamarine DREDGE v1.3.0 Enterprise",
                 "cpg_loci_analyzed": int(self.n_sites),
                 "integration_steps": steps,
                 "tet2_catalytic_efficiency": tet2_flux
@@ -91,3 +88,19 @@ class DREDGEResearchPipeline:
             }
         }
         return report, p
+
+    def run_cohort_trial(self, cohort_size: int = 10, steps: int = 200, tet2_flux: float = 0.40) -> dict:
+        """Simulates clinical trials over a batch of biological subjects."""
+        reversals = []
+        for _ in range(cohort_size):
+            rep, _ = self.run_rejuvenation_pipeline(steps=steps, tet2_flux=tet2_flux)
+            reversals.append(rep["biomarkers"]["years_rejuvenated"])
+        
+        arr = np.array(reversals)
+        return {
+            "cohort_size": cohort_size,
+            "mean_years_rejuvenated": round(float(np.mean(arr)), 2),
+            "std_deviation": round(float(np.std(arr)), 2),
+            "min_reversal": round(float(np.min(arr)), 2),
+            "max_reversal": round(float(np.max(arr)), 2)
+        }
