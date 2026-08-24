@@ -1,0 +1,201 @@
+Cell_ID,Pseudotime,Cell_State,Biological_Age,Methylation_Beta,Cell_Entropy_Bits,Plasticity_Index
+SC_0049,0.001,Senescent / Deep Aged,85.1,0.804,0.713,0.183
+SC_0137,0.006,Senescent / Deep Aged,80.3,0.841,0.631,0.167
+SC_0014,0.008,Senescent / Deep Aged,79.4,0.803,0.7149,0.129
+SC_0144,0.011,Senescent / Deep Aged,73.3,0.854,0.5994,0.195
+SC_0126,0.029,Senescent / Deep Aged,70.3,0.843,0.6269,0.198
+SC_0016,0.03,Senescent / Deep Aged,79.7,0.815,0.6918,0.188
+SC_0058,0.03,Senescent / Deep Aged,79.8,0.817,0.6866,0.14
+SC_0150,0.04,Senescent / Deep Aged,73.5,0.814,0.6934,0.182
+SC_0138,0.048,Senescent / Deep Aged,70.7,0.798,0.7264,0.153
+SC_0085,0.064,Senescent / Deep Aged,69.3,0.83,0.6578,0.244
+SC_0079,0.071,Senescent / Deep Aged,77.3,0.807,0.7085,0.244
+SC_0133,0.071,Senescent / Deep Aged,75.8,0.777,0.7649,0.184
+SC_0196,0.082,Senescent / Deep Aged,72.8,0.776,0.768,0.193
+SC_0088,0.088,Senescent / Deep Aged,74.5,0.746,0.8174,0.235
+SC_0094,0.091,Senescent / Deep Aged,73.2,0.774,0.7713,0.214
+SC_0062,0.092,Senescent / Deep Aged,78.4,0.778,0.7645,0.199
+SC_0157,0.094,Senescent / Deep Aged,74.9,0.78,0.7604,0.18
+SC_0001,0.098,Senescent / Deep Aged,73.9,0.783,0.7553,0.221
+SC_0147,0.098,Senescent / Deep Aged,72.2,0.784,0.7535,0.174
+SC_0048,0.101,Senescent / Deep Aged,79.3,0.771,0.7756,0.196
+SC_0153,0.101,Senescent / Deep Aged,75.8,0.821,0.6772,0.179
+SC_0176,0.11,Senescent / Deep Aged,76.4,0.789,0.7437,0.191
+SC_0034,0.115,Senescent / Deep Aged,77.6,0.785,0.7503,0.255
+SC_0121,0.121,Senescent / Deep Aged,75.1,0.759,0.7961,0.267
+SC_0061,0.122,Senescent / Deep Aged,74.9,0.774,0.7707,0.278
+SC_0185,0.128,Senescent / Deep Aged,76.3,0.735,0.8341,0.295
+SC_0008,0.131,Senescent / Deep Aged,70.3,0.786,0.7494,0.218
+SC_0117,0.132,Senescent / Deep Aged,74.4,0.785,0.751,0.294
+SC_0042,0.133,Senescent / Deep Aged,74.7,0.761,0.793,0.225
+SC_0127,0.134,Senescent / Deep Aged,81.7,0.742,0.8239,0.234
+SC_0067,0.144,Senescent / Deep Aged,68.9,0.773,0.7728,0.302
+SC_0004,0.146,Senescent / Deep Aged,67.9,0.758,0.7991,0.21
+SC_0027,0.148,Senescent / Deep Aged,68.7,0.745,0.8184,0.253
+SC_0071,0.154,Senescent / Deep Aged,74.4,0.759,0.7962,0.295
+SC_0156,0.154,Senescent / Deep Aged,78.8,0.762,0.7914,0.298
+SC_0187,0.167,Senescent / Deep Aged,79.4,0.772,0.7753,0.304
+SC_0055,0.17,Senescent / Deep Aged,76.2,0.779,0.7613,0.259
+SC_0134,0.172,Senescent / Deep Aged,78.8,0.735,0.8337,0.268
+SC_0169,0.174,Senescent / Deep Aged,75.0,0.757,0.7994,0.33
+SC_0161,0.178,Senescent / Deep Aged,69.4,0.77,0.7782,0.291
+SC_0189,0.179,Senescent / Deep Aged,70.5,0.743,0.8228,0.257
+SC_0151,0.192,Senescent / Deep Aged,66.9,0.739,0.8277,0.304
+SC_0112,0.194,Senescent / Deep Aged,67.2,0.744,0.8202,0.342
+SC_0100,0.199,Senescent / Deep Aged,70.2,0.772,0.7752,0.255
+SC_0166,0.209,Senescent / Deep Aged,72.5,0.75,0.8111,0.351
+SC_0102,0.211,Senescent / Deep Aged,70.3,0.745,0.8198,0.326
+SC_0191,0.213,Senescent / Deep Aged,68.0,0.782,0.757,0.299
+SC_0065,0.226,Senescent / Deep Aged,71.4,0.757,0.8001,0.343
+SC_0190,0.229,Senescent / Deep Aged,72.8,0.785,0.7505,0.33
+SC_0028,0.265,Senescent / Deep Aged,68.3,0.739,0.8275,0.336
+SC_0108,0.269,Senescent / Deep Aged,69.8,0.728,0.8446,0.388
+SC_0146,0.27,Senescent / Deep Aged,73.0,0.685,0.8993,0.348
+SC_0095,0.273,Senescent / Deep Aged,71.9,0.711,0.8678,0.379
+SC_0005,0.285,Senescent / Deep Aged,69.8,0.74,0.8266,0.393
+SC_0111,0.288,Senescent / Deep Aged,74.1,0.696,0.8863,0.33
+SC_0076,0.29,Senescent / Deep Aged,72.1,0.755,0.8034,0.339
+SC_0128,0.29,Senescent / Deep Aged,71.9,0.749,0.8127,0.323
+SC_0155,0.291,Senescent / Deep Aged,69.7,0.742,0.8243,0.384
+SC_0139,0.294,Senescent / Deep Aged,67.5,0.684,0.9005,0.333
+SC_0149,0.3,Senescent / Deep Aged,73.1,0.708,0.8717,0.382
+SC_0194,0.302,Senescent / Deep Aged,71.4,0.702,0.8784,0.37
+SC_0116,0.306,Senescent / Deep Aged,72.1,0.712,0.8656,0.352
+SC_0050,0.312,Senescent / Deep Aged,67.5,0.722,0.8527,0.361
+SC_0101,0.312,Senescent / Deep Aged,68.5,0.714,0.8641,0.429
+SC_0092,0.314,Senescent / Deep Aged,71.6,0.685,0.899,0.344
+SC_0035,0.316,Senescent / Deep Aged,70.0,0.685,0.8983,0.349
+SC_0162,0.322,Senescent / Deep Aged,67.3,0.695,0.887,0.343
+SC_0038,0.331,Intermediate Demethylating,64.1,0.705,0.8753,0.431
+SC_0135,0.339,Intermediate Demethylating,71.7,0.693,0.8896,0.442
+SC_0160,0.339,Intermediate Demethylating,74.4,0.692,0.8908,0.419
+SC_0023,0.342,Intermediate Demethylating,69.7,0.714,0.864,0.453
+SC_0114,0.342,Intermediate Demethylating,71.3,0.668,0.9167,0.363
+SC_0122,0.344,Intermediate Demethylating,73.8,0.712,0.8658,0.453
+SC_0181,0.357,Intermediate Demethylating,70.0,0.691,0.8924,0.384
+SC_0033,0.363,Intermediate Demethylating,67.4,0.657,0.9276,0.426
+SC_0064,0.363,Intermediate Demethylating,69.4,0.667,0.9177,0.463
+SC_0093,0.378,Intermediate Demethylating,70.7,0.653,0.9317,0.453
+SC_0063,0.379,Intermediate Demethylating,72.0,0.686,0.8977,0.415
+SC_0068,0.384,Intermediate Demethylating,67.4,0.674,0.9105,0.477
+SC_0125,0.384,Intermediate Demethylating,67.2,0.653,0.9313,0.4
+SC_0113,0.392,Intermediate Demethylating,68.9,0.666,0.9189,0.483
+SC_0183,0.394,Intermediate Demethylating,66.8,0.672,0.9126,0.444
+SC_0175,0.402,Intermediate Demethylating,70.0,0.702,0.8789,0.41
+SC_0118,0.409,Intermediate Demethylating,66.9,0.688,0.8959,0.49
+SC_0179,0.409,Intermediate Demethylating,67.3,0.71,0.8691,0.441
+SC_0006,0.412,Intermediate Demethylating,61.5,0.691,0.8925,0.493
+SC_0168,0.415,Intermediate Demethylating,61.8,0.676,0.9089,0.427
+SC_0075,0.416,Intermediate Demethylating,72.3,0.653,0.9317,0.51
+SC_0170,0.418,Intermediate Demethylating,67.4,0.676,0.9084,0.489
+SC_0154,0.421,Intermediate Demethylating,66.0,0.654,0.9304,0.473
+SC_0044,0.422,Intermediate Demethylating,63.5,0.692,0.8909,0.456
+SC_0132,0.434,Intermediate Demethylating,71.6,0.663,0.9216,0.516
+SC_0171,0.435,Intermediate Demethylating,71.0,0.707,0.8726,0.455
+SC_0021,0.445,Intermediate Demethylating,66.6,0.653,0.9312,0.491
+SC_0159,0.454,Intermediate Demethylating,60.4,0.652,0.932,0.509
+SC_0099,0.457,Intermediate Demethylating,67.5,0.657,0.928,0.462
+SC_0052,0.47,Intermediate Demethylating,69.1,0.643,0.9398,0.544
+SC_0054,0.495,Intermediate Demethylating,68.5,0.625,0.9547,0.564
+SC_0081,0.5,Intermediate Demethylating,63.6,0.637,0.9448,0.489
+SC_0083,0.5,Intermediate Demethylating,66.2,0.678,0.9066,0.564
+SC_0026,0.503,Intermediate Demethylating,63.7,0.653,0.9313,0.524
+SC_0098,0.505,Intermediate Demethylating,64.8,0.637,0.945,0.505
+SC_0197,0.514,Intermediate Demethylating,68.4,0.67,0.9146,0.579
+SC_0140,0.515,Intermediate Demethylating,65.5,0.619,0.9591,0.545
+SC_0078,0.529,Intermediate Demethylating,56.1,0.665,0.9195,0.549
+SC_0131,0.536,Intermediate Demethylating,62.0,0.642,0.9411,0.536
+SC_0012,0.538,Intermediate Demethylating,64.8,0.623,0.9561,0.54
+SC_0059,0.538,Intermediate Demethylating,62.0,0.668,0.9167,0.52
+SC_0019,0.543,Intermediate Demethylating,57.3,0.64,0.9431,0.562
+SC_0080,0.543,Intermediate Demethylating,64.3,0.655,0.9294,0.545
+SC_0072,0.544,Intermediate Demethylating,60.5,0.596,0.9732,0.571
+SC_0091,0.556,Intermediate Demethylating,60.0,0.615,0.9612,0.598
+SC_0143,0.563,Intermediate Demethylating,63.2,0.654,0.9305,0.576
+SC_0193,0.571,Intermediate Demethylating,60.0,0.611,0.9641,0.6
+SC_0029,0.576,Intermediate Demethylating,57.4,0.599,0.9713,0.546
+SC_0096,0.582,Intermediate Demethylating,63.2,0.637,0.9449,0.589
+SC_0074,0.585,Intermediate Demethylating,63.3,0.621,0.9576,0.601
+SC_0174,0.587,Intermediate Demethylating,63.8,0.625,0.9547,0.619
+SC_0106,0.592,Intermediate Demethylating,60.6,0.596,0.9733,0.571
+SC_0142,0.593,Intermediate Demethylating,62.3,0.626,0.954,0.634
+SC_0046,0.6,Intermediate Demethylating,63.8,0.628,0.9521,0.6
+SC_0047,0.6,Intermediate Demethylating,60.8,0.6,0.9712,0.594
+SC_0032,0.604,Intermediate Demethylating,62.4,0.605,0.9678,0.567
+SC_0104,0.612,Intermediate Demethylating,58.2,0.624,0.9553,0.601
+SC_0020,0.62,Intermediate Demethylating,61.1,0.626,0.9538,0.651
+SC_0152,0.633,Intermediate Demethylating,59.7,0.573,0.9845,0.625
+SC_0084,0.635,Intermediate Demethylating,58.7,0.575,0.9838,0.661
+SC_0198,0.643,Intermediate Demethylating,63.2,0.605,0.968,0.598
+SC_0043,0.645,Intermediate Demethylating,59.1,0.58,0.9815,0.617
+SC_0056,0.65,Intermediate Demethylating,60.3,0.575,0.9837,0.599
+SC_0172,0.653,Intermediate Demethylating,61.2,0.6,0.9711,0.621
+SC_0167,0.668,Rejuvenated Stem-Like,58.8,0.566,0.9875,0.62
+SC_0173,0.675,Rejuvenated Stem-Like,58.4,0.571,0.9854,0.649
+SC_0030,0.676,Rejuvenated Stem-Like,63.3,0.571,0.9853,0.615
+SC_0002,0.683,Rejuvenated Stem-Like,56.3,0.61,0.9649,0.691
+SC_0145,0.69,Rejuvenated Stem-Like,62.2,0.569,0.9864,0.668
+SC_0070,0.693,Rejuvenated Stem-Like,60.9,0.586,0.9787,0.716
+SC_0097,0.703,Rejuvenated Stem-Like,61.8,0.578,0.9826,0.674
+SC_0107,0.711,Rejuvenated Stem-Like,58.4,0.58,0.9813,0.641
+SC_0178,0.717,Rejuvenated Stem-Like,56.0,0.568,0.9868,0.73
+SC_0073,0.725,Rejuvenated Stem-Like,56.4,0.58,0.9815,0.662
+SC_0103,0.729,Rejuvenated Stem-Like,58.3,0.544,0.9945,0.658
+SC_0066,0.731,Rejuvenated Stem-Like,60.4,0.543,0.9946,0.664
+SC_0130,0.733,Rejuvenated Stem-Like,54.7,0.56,0.9894,0.748
+SC_0199,0.745,Rejuvenated Stem-Like,56.9,0.58,0.9814,0.757
+SC_0053,0.748,Rejuvenated Stem-Like,55.4,0.568,0.9864,0.751
+SC_0136,0.751,Rejuvenated Stem-Like,56.7,0.549,0.9931,0.741
+SC_0069,0.752,Rejuvenated Stem-Like,57.6,0.531,0.9973,0.71
+SC_0025,0.754,Rejuvenated Stem-Like,62.2,0.582,0.9804,0.698
+SC_0180,0.757,Rejuvenated Stem-Like,55.2,0.575,0.9839,0.721
+SC_0105,0.761,Rejuvenated Stem-Like,61.9,0.572,0.9851,0.697
+SC_0123,0.764,Rejuvenated Stem-Like,54.2,0.564,0.9883,0.733
+SC_0057,0.78,Rejuvenated Stem-Like,55.8,0.526,0.998,0.785
+SC_0045,0.784,Rejuvenated Stem-Like,58.1,0.536,0.9963,0.691
+SC_0148,0.791,Rejuvenated Stem-Like,52.6,0.527,0.9978,0.78
+SC_0036,0.793,Rejuvenated Stem-Like,60.3,0.53,0.9974,0.737
+SC_0124,0.797,Rejuvenated Stem-Like,54.1,0.57,0.986,0.767
+SC_0182,0.802,Rejuvenated Stem-Like,54.8,0.507,0.9998,0.764
+SC_0009,0.813,Rejuvenated Stem-Like,58.5,0.561,0.9893,0.766
+SC_0013,0.813,Rejuvenated Stem-Like,55.8,0.524,0.9984,0.782
+SC_0022,0.814,Rejuvenated Stem-Like,61.8,0.519,0.9989,0.716
+SC_0164,0.82,Rejuvenated Stem-Like,54.9,0.531,0.9972,0.778
+SC_0003,0.829,Rejuvenated Stem-Like,56.0,0.513,0.9995,0.783
+SC_0110,0.832,Rejuvenated Stem-Like,53.6,0.551,0.9924,0.793
+SC_0184,0.842,Rejuvenated Stem-Like,54.0,0.49,0.9997,0.796
+SC_0015,0.843,Rejuvenated Stem-Like,56.8,0.52,0.9988,0.736
+SC_0192,0.852,Rejuvenated Stem-Like,54.6,0.49,0.9997,0.819
+SC_0024,0.86,Rejuvenated Stem-Like,55.6,0.516,0.9993,0.824
+SC_0158,0.861,Rejuvenated Stem-Like,57.9,0.51,0.9997,0.754
+SC_0089,0.875,Rejuvenated Stem-Like,53.7,0.507,0.9999,0.851
+SC_0018,0.876,Rejuvenated Stem-Like,50.1,0.517,0.9992,0.842
+SC_0119,0.877,Rejuvenated Stem-Like,55.3,0.51,0.9997,0.766
+SC_0041,0.881,Rejuvenated Stem-Like,53.4,0.534,0.9966,0.828
+SC_0007,0.884,Rejuvenated Stem-Like,50.8,0.531,0.9972,0.846
+SC_0037,0.885,Rejuvenated Stem-Like,51.8,0.477,0.9985,0.832
+SC_0120,0.891,Rejuvenated Stem-Like,52.1,0.526,0.9981,0.847
+SC_0177,0.892,Rejuvenated Stem-Like,53.2,0.504,1.0,0.79
+SC_0040,0.893,Rejuvenated Stem-Like,48.4,0.53,0.9975,0.834
+SC_0011,0.898,Rejuvenated Stem-Like,57.3,0.471,0.9975,0.862
+SC_0060,0.902,Rejuvenated Stem-Like,56.7,0.515,0.9994,0.807
+SC_0010,0.91,Rejuvenated Stem-Like,53.4,0.502,1.0,0.857
+SC_0077,0.914,Rejuvenated Stem-Like,50.6,0.499,1.0,0.861
+SC_0163,0.914,Rejuvenated Stem-Like,51.7,0.5,1.0,0.839
+SC_0186,0.919,Rejuvenated Stem-Like,55.0,0.485,0.9994,0.824
+SC_0109,0.921,Rejuvenated Stem-Like,54.1,0.506,0.9999,0.879
+SC_0115,0.931,Rejuvenated Stem-Like,53.4,0.507,0.9999,0.893
+SC_0090,0.938,Rejuvenated Stem-Like,53.8,0.462,0.9959,0.806
+SC_0031,0.947,Rejuvenated Stem-Like,53.4,0.493,0.9999,0.864
+SC_0082,0.947,Rejuvenated Stem-Like,55.3,0.504,0.9999,0.885
+SC_0086,0.947,Rejuvenated Stem-Like,50.5,0.525,0.9982,0.902
+SC_0129,0.949,Rejuvenated Stem-Like,50.8,0.479,0.9988,0.83
+SC_0200,0.957,Rejuvenated Stem-Like,51.9,0.499,1.0,0.82
+SC_0165,0.971,Rejuvenated Stem-Like,50.9,0.521,0.9987,0.891
+SC_0188,0.975,Rejuvenated Stem-Like,52.4,0.454,0.994,0.896
+SC_0017,0.977,Rejuvenated Stem-Like,50.5,0.461,0.9957,0.839
+SC_0087,0.977,Rejuvenated Stem-Like,53.4,0.466,0.9967,0.835
+SC_0051,0.989,Rejuvenated Stem-Like,45.8,0.501,1.0,0.904
+SC_0195,0.989,Rejuvenated Stem-Like,49.8,0.469,0.9973,0.858
+SC_0039,0.994,Rejuvenated Stem-Like,50.6,0.504,1.0,0.936
+SC_0141,0.996,Rejuvenated Stem-Like,49.3,0.491,0.9998,0.856
