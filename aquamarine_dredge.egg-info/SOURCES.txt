@@ -9,6 +9,7 @@ aquamarine_dredge.egg-info/entry_points.txt
 aquamarine_dredge.egg-info/requires.txt
 aquamarine_dredge.egg-info/top_level.txt
 dredge/__init__.py
+dredge/bio_kernel.py
 dredge/cli.py
 dredge/core.py
 src/__init__.py

@@ -2,54 +2,54 @@ import argparse
 import json
 import sys
 from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor
-
-def export_markdown_report(report: dict, filename: str = "report.md"):
-    md_content = rf"""# Epigenetic Entropy Reversal Scientific Report
-**Engine:** `{report['metadata']['engine']}`  
-**Analyzed CpG Coordinates:** {report['metadata']['cpg_loci_analyzed']:,} loci  
-**Integration Steps:** {report['metadata']['integration_steps']} | **TET2 Catalytic Rate:** {report['metadata']['tet2_catalytic_efficiency']}
-
----
-
-## Biomarker Results Summary
-| Biomarker Indicator | Pre-Treatment | Post-Treatment | Net Effect |
-| :--- | :--- | :--- | :--- |
-| **Horvath Biological Age** | {report['biomarkers']['pre_treatment_biological_age']} yrs | {report['biomarkers']['post_treatment_biological_age']} yrs | **-{report['biomarkers']['years_rejuvenated']} Years** |
-| **Shannon Information Entropy** | {report['biomarkers']['shannon_entropy_initial']} bits | {report['biomarkers']['shannon_entropy_final']} bits | **+{report['biomarkers']['entropy_decay_percentage']}%** |
-
-### Mathematical Validation
-- **Stochastic Operator:** Langevin SDE ($\Delta t = 0.01$)
-- **Potential Field:** Non-equilibrium Waddington Landscape $V(p)$
-- **Status:** Demethylation flux convergence achieved.
-"""
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(md_content)
+from dredge.bio_kernel import UniversalBioKernel
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Enterprise: Computational Epigenetics Pipeline for Academic & Clinical Research"
+        description="DREDGE Bio-Kernel (v2.0.0): The Universal Computational Biology & Epigenetics Engine"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 1.4.0")
-    parser.add_argument("--run", action="store_true", help="Execute single-sample research simulation")
-    parser.add_argument("--trial", type=int, default=0, help="Run Cohort Trial with N subjects")
-    parser.add_argument("--benchmark", action="store_true", help="Run computational throughput benchmarks")
-    parser.add_argument("--cite", action="store_true", help="Print BibTeX citation format for research papers")
-    parser.add_argument("--input", type=str, default=None, help="Input genomic BED file path")
-    parser.add_argument("--generate-bed", action="store_true", help="Generate synthetic human CpG island BED dataset")
-    parser.add_argument("--sites", type=int, default=10000, help="CpG loci count (default: 10000)")
-    parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux (default: 0.45)")
-    parser.add_argument("--steps", type=int, default=250, help="Integration steps (default: 250)")
-    parser.add_argument("--export-md", type=str, default="report.md", help="Export Markdown scientific report")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 2.0.0")
+    
+    # Epigenomics Flags
+    parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
+    parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial (N subjects)")
+    parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
+    parser.add_argument("--cite", action="store_true", help="Print BibTeX academic citation")
+    parser.add_argument("--sites", type=int, default=10000, help="CpG loci count")
+    parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux")
+    parser.add_argument("--steps", type=int, default=250, help="Integration steps")
+
+    # Genomics & Proteomics Kernel Flags
+    parser.add_argument("--analyze-seq", type=str, default=None, help="Input raw DNA sequence for Full Dogma Analysis")
 
     args = parser.parse_args()
+
+    if args.analyze_seq:
+        dna = args.analyze_seq.strip()
+        rna = UniversalBioKernel.transcribe(dna)
+        rev_comp = UniversalBioKernel.reverse_complement(dna)
+        protein = UniversalBioKernel.translate(dna)
+        gc = UniversalBioKernel.calculate_gc_content(dna)
+        gravy = UniversalBioKernel.mean_hydrophobicity(protein)
+
+        print("\n" + "="*70)
+        print("  🧬 UNIVERSAL BIO-KERNEL: CENTRAL DOGMA PIPELINE")
+        print("="*70)
+        print(f" • Input DNA (5'->3')   : {dna}")
+        print(f" • Reverse Complement   : {rev_comp}")
+        print(f" • Transcribed mRNA     : {rna}")
+        print(f" • Translated Protein   : {protein}")
+        print(f" • GC-Content Stability : {gc}%")
+        print(f" • Mean Hydrophobicity  : {gravy} (GRAVY Index)")
+        print("="*70 + "\n")
+        return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE: In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation Pipeline},
+  title = {DREDGE: Universal Computational Biology & Epigenetic Entropy Engine},
   year = {2026},
-  publisher = {PyPI},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
         return
@@ -63,12 +63,7 @@ def main():
         results = pipeline.benchmark_engine()
         for res in results:
             print(f" • Cohort Size: {res['loci']:,} Loci | Time: {res['time_sec']}s | Rate: {res['throughput_loci_per_sec']:,} Loci/sec")
-        print("[✓] Vector engine verified for large-scale bio-simulations.\n")
-        return
-
-    if args.generate_bed:
-        bed_path = GenomicBedProcessor.generate_synthetic_cpg_bed(n_sites=args.sites)
-        print(f"[✓] Generated synthetic human genomic methylation profile: {bed_path}")
+        print("[✓] Bio-Kernel vector throughput operational.\n")
         return
 
     if args.trial > 0:
@@ -85,17 +80,12 @@ def main():
         print("\n" + "="*70)
         print("  🔬 AQUAMARINE DREDGE ENTERPRISE BIO-COMPUTING PIPELINE")
         print("="*70)
-        report, _ = pipeline.run_rejuvenation_pipeline(steps=args.steps, tet2_flux=args.rate, input_bed=args.input)
-        
+        report, _ = pipeline.run_rejuvenation_pipeline(steps=args.steps, tet2_flux=args.rate)
         print(f"[*] Analyzed {report['metadata']['cpg_loci_analyzed']:,} CpG genomic loci.")
         print(f" • Pre-Treatment Biological Age  : {report['biomarkers']['pre_treatment_biological_age']} years")
         print(f" • Post-Treatment Biological Age : {report['biomarkers']['post_treatment_biological_age']} years")
         print(f" • Net Rejuvenation Reclaimed    : -{report['biomarkers']['years_rejuvenated']} years")
-        
-        with open("report.json", "w", encoding="utf-8") as f:
-            json.dump(report, f, indent=2)
-        export_markdown_report(report, args.export_md)
-        print(f"\n[✓] Publication reports generated: report.json & {args.export_md}\n")
+        print(f"[✓] Simulation report generated.\n")
     else:
         parser.print_help()
 
