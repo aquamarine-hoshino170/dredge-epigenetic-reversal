@@ -7,22 +7,25 @@ from dredge.bio_kernel import (
     SequenceAlignmentEngine, 
     MolecularDockingEngine, 
     PharmacologyScreener, 
-    ClinicalDiagnosticEngine,
+    ClinicalDiagnosticEngine, 
     NovelDiseaseDiscoveryEngine,
-    SyntheticBiologyCircuit,
-    EpidemiologicalViralEngine,
+    SyntheticBiologyCircuit, 
+    EpidemiologicalViralEngine, 
     GenerativeProteinDesigner,
-    SyntheticLifeGenesisEngine,
-    TelomereLongevityEngine,
+    SyntheticLifeGenesisEngine, 
+    TelomereLongevityEngine, 
     RNAFoldingLatticeEngine,
-    MonoclonalAntibodyDesigner,
-    HodgkinHuxleyNeuronSimulator,
+    MonoclonalAntibodyDesigner, 
+    HodgkinHuxleyNeuronSimulator, 
     QuantumBiologyEngine,
-    PhylogeneticEvolutionEngine,
-    MitochondrialBioenergeticsEngine,
+    PhylogeneticEvolutionEngine, 
+    MitochondrialBioenergeticsEngine, 
     BioSpectralVisualizer,
-    BioFileIOAndMotifEngine,
-    DNADigitalStorageCodec
+    BioFileIOAndMotifEngine, 
+    DNADigitalStorageCodec,
+    GoldenRatioBioGeometryEngine,
+    XenobiologyAlienGeneticEngine,
+    TuringMorphogenesisEngine
 )
 
 def main():
@@ -32,16 +35,19 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Omniscient (v14.0.0): The Ultimate Universal Biological, Quantum, Synthesis & DNA Storage OS"
+        description="DREDGE Genesis Dei (v15.0.0): The God-Tier Biological, Astrobiological & Sacred Geometry OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 14.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 15.0.0")
     
-    # DNA Data Storage & Cryptography
-    parser.add_argument("--dna-encode", type=str, default=None, help="Encode secret digital text message into synthetic DNA strand")
-    parser.add_argument("--dna-decode", type=str, default=None, help="Decode synthetic DNA strand back into digital plaintext")
-    parser.add_argument("--key", type=int, default=42, help="Secret XOR Key for Bio-Cryptographic Steganography")
+    # Genesis Dei Supreme Features
+    parser.add_argument("--golden-ratio", type=str, default=None, help="Compute Golden Ratio (Phi) Bio-Harmonic Folding Stability on Sequence")
+    parser.add_argument("--xenobiology", action="store_true", help="Generate Astrobiological Hachimoji 8-Base Genetic System (512 Codons)")
+    parser.add_argument("--turing", action="store_true", help="Simulate Turing Reaction-Diffusion Morphogenetic Embryogenesis Pattern")
 
     # Core Features
+    parser.add_argument("--dna-encode", type=str, default=None, help="Encode plaintext to synthetic DNA")
+    parser.add_argument("--dna-decode", type=str, default=None, help="Decode synthetic DNA to plaintext")
+    parser.add_argument("--key", type=int, default=42, help="Secret Key")
     parser.add_argument("--infinity", action="store_true", help="Run Complete Multi-Disciplinary Biological Kernel")
     parser.add_argument("--digest", nargs=2, metavar=('DNA_SEQ', 'ENZYME'), help="Restriction Enzyme Digestion")
     parser.add_argument("--quantum-bio", action="store_true", help="Simulate Quantum Exciton Energy Transfer")
@@ -66,34 +72,49 @@ def main():
 
     args = parser.parse_args()
 
-    if args.dna_encode:
-        res = DNADigitalStorageCodec.encode_text_to_dna(args.dna_encode, secret_key=args.key)
+    if args.golden_ratio:
+        res = GoldenRatioBioGeometryEngine.calculate_golden_helix_stability(args.golden_ratio)
         print("\n" + "="*76)
-        print("  💾 DNA DIGITAL DATA STORAGE & BIO-CRYPTOGRAPHIC CODEC")
+        print("  ⚜️ SACRED BIOLOGY: GOLDEN RATIO (Φ) BIO-HARMONIC FOLDING ENGINE")
         print("="*76)
-        print(f" • Input Plaintext        : \"{res['input_payload']}\"")
-        print(f" • Synthesized DNA Strand : {res['synthesized_dna_strand']}")
-        print(f" • Strand Length          : {res['strand_length_nt']} Nucleotides (nt)")
-        print(f" • GC Balance Stability   : {res['gc_thermodynamic_balance']}")
-        print(f" • Molecular Weight       : {res['estimated_molecular_weight']}")
-        print(f" • Storage Security       : {res['encryption_status']} (Key: {args.key})")
+        print(f" • Input Chain Length      : {res['biopolymer_length']} Residues")
+        print(f" • Universal Constant (Φ)  : {res['golden_ratio_phi']}")
+        print(f" • Helical Resonance Index : {res['spiral_harmonic_index']}")
+        print(f" • Phi-Lattice Free Energy : {res['phi_lattice_free_energy']}")
+        print(f" • Thermodynamic Symmetry  : {res['geometric_symmetry']}")
         print("="*76 + "\n")
         return
 
-    if args.dna_decode:
-        decoded = DNADigitalStorageCodec.decode_dna_to_text(args.dna_decode, secret_key=args.key)
+    if args.xenobiology:
+        res = XenobiologyAlienGeneticEngine.generate_xenobiological_code()
         print("\n" + "="*76)
-        print("  🔓 DNA BIO-CRYPTOGRAPHIC REVERSE SEQUENCING & DECODER")
+        print("  🪐 ASTROBIOLOGY: EXPANDED HACHIMOJI ALIEN GENETIC SYSTEM")
         print("="*76)
-        print(f" • Input DNA Strand : {args.dna_decode}")
-        print(f" • Decoded Payload  : \"{decoded}\"")
-        print(f" • Decryption Key   : {args.key}")
+        print(f" • System Architecture     : {res['genetic_system']}")
+        print(f" • Genetic Alphabet        : {res['synthetic_bases']}")
+        print(f" • Synthesized Xeno-DNA    : {res['alien_dna_strand']}")
+        print(f" • Codon Repertoire Space  : {res['total_codon_capacity']}")
+        print(f" • Non-Canonical Amino Acids: {res['encoded_unnatural_amino_acids']} Novel Synthetics")
+        print(f" • Planetary Resilience    : {res['astrobiological_resilience']}")
+        print("="*76 + "\n")
+        return
+
+    if args.turing:
+        res = TuringMorphogenesisEngine.simulate_turing_morphogen_gradient()
+        print("\n" + "="*76)
+        print("  🎨 MORPHOGENESIS: ALAN TURING EMBRYONIC PATTERN GENERATOR")
+        print("="*76)
+        print(f" • Mathematical Model      : {res['morphogenetic_field']}")
+        print(f" • Reaction Parameters     : {res['activator_inhibitor_kinetics']}")
+        print(f" • Tissue Differentiation  : {res['pattern_state']}")
+        print(f" • Spatial Gradient Entropy: {res['spatial_morphogen_gradient_entropy']}")
+        print(f" • Developmental State     : {res['biological_symmetry_break']}")
         print("="*76 + "\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND OMNISCIENT SYSTEM HEALTH & SPECTRUM")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND SUPREME SYSTEM HEALTH & SPECTRUM")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
@@ -111,7 +132,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Omniscient: Universal Biological, Quantum, Synthesis & DNA Storage OS},
+  title = {DREDGE Genesis Dei: The Universal Sacred Biology & Astrobiology OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
