@@ -1131,3 +1131,56 @@ class CircadianClockOscillationEngine:
             "optimal_chronotherapy_window": f"{optimal_drug_window:.1f}:00 Hours (Max Efficacy / Min Toxicity)",
             "circadian_synchronization": "ENTRAINED TO BIO-COSMIC DIURNAL RHYTHM"
         }
+
+class LucasRuthlessQCEngine:
+    """
+    Lucas: The Angry Biological Code Auditor & Mutational Reaper.
+    Unforgivingly detects genetic rot, oncogenic nonsense codons, frame-shift corruption,
+    and brutally purges damaged sequences via targeted synthetic apoptosis.
+    """
+    STOP_CODONS = {"TAA", "TAG", "TGA"}
+
+    @staticmethod
+    def audit_and_purge(dna_seq: str) -> dict:
+        seq = dna_seq.upper().strip()
+        n = len(seq)
+        
+        # 1. Check frame shift
+        frame_shift = (n % 3 != 0)
+        
+        # 2. Check premature stop codons (Nonsense mutations)
+        codons = [seq[i:i+3] for i in range(0, n - (n % 3), 3)]
+        stop_indices = [idx for idx, c in enumerate(codons) if c in LucasRuthlessQCEngine.STOP_CODONS]
+        
+        # 3. Assess GC balance
+        gc = (seq.count('G') + seq.count('C')) / (n if n > 0 else 1) * 100.0
+        gc_abnormal = (gc < 35.0 or gc > 65.0)
+
+        # Lucas Rage Index Calculation (0 - 100)
+        rage_score = 0
+        reasons = []
+        if frame_shift:
+            rage_score += 45
+            reasons.append("Disastrous Frame-Shift detected (Not a multiple of 3!)")
+        if len(stop_indices) > 1 or (stop_indices and stop_indices[0] < len(codons) - 1):
+            rage_score += 40
+            reasons.append(f"Premature Nonsense STOP Codons found at codons: {stop_indices}!")
+        if gc_abnormal:
+            rage_score += 15
+            reasons.append(f"Unacceptable GC content ({round(gc, 1)}%) - Thermodynamically unstable!")
+
+        # Purge & Rescue (Brutally excise corrupted parts)
+        purged_seq = "".join([c for idx, c in enumerate(codons) if c not in LucasRuthlessQCEngine.STOP_CODONS])
+        if len(purged_seq) % 3 != 0:
+            purged_seq = purged_seq[:-(len(purged_seq) % 3)]
+
+        status = "🔥 LUCAS RAGE STATUS: PURGE EXECUTION COMPLETE (Damaged Bases Annihilated)" if rage_score > 0 else "⚡ LUCAS VERDICT: ACCEPTABLE BIO-CODE (Spared from Annihilation)"
+
+        return {
+            "audited_sequence_length": n,
+            "lucas_rage_index": f"{rage_score} / 100",
+            "detected_corruptions": reasons if reasons else ["Clean sequence. Lucas is temporarily calm."],
+            "purge_action": "APOPTOTIC NUCLEASE CLEAVAGE EXECUTED" if rage_score > 0 else "CLEARED QUALITY CONTROL",
+            "purged_repaired_dna": purged_seq if purged_seq else "COMPLETELY DESTROYED (Unsalvageable Garbage Code)",
+            "verdict": status
+        }

@@ -31,7 +31,8 @@ from dredge.bio_kernel import (
     ValportugiecResonatorEngine,
     PrigogineBioThermodynamicsEngine,
     CRISPRCas13DiagnosticEngine,
-    CircadianClockOscillationEngine
+    CircadianClockOscillationEngine,
+    LucasRuthlessQCEngine
 )
 
 def main():
@@ -41,25 +42,26 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Singularity (v18.0.0): The Grand Universal Bio-Operating System"
+        description="DREDGE Lucas (v19.0.0): The Ultimate Universal Bio-Operating System & Ruthless Quality Control"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 18.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 19.0.0")
     
-    # Grand Singularity Upgrades
-    parser.add_argument("--thermo", action="store_true", help="Simulate Prigogine Non-Equilibrium Bio-Thermodynamics & Negentropy")
-    parser.add_argument("--cas13", type=str, default=None, help="Simulate CRISPR-Cas13 Collateral Cleavage Diagnostic Sensor")
-    parser.add_argument("--circadian", type=float, default=14.0, help="Simulate 24-Hour Circadian Gene Rhythm & Chronotherapy (Peak Hour, e.g. 14.0)")
+    # Lucas Feature
+    parser.add_argument("--lucas", type=str, default=None, help="Trigger Lucas: The Angry Ruthless Biological Auditor & Corrupted Code Purger")
 
     # Core Systems
-    parser.add_argument("--valportugiec", type=str, default=None, help="Simulate Valportugiec Bio-Harmonic Resonance")
-    parser.add_argument("--barrier", type=float, default=1.45, help="Energy barrier height in eV")
-    parser.add_argument("--nanorobot", type=str, default=None, help="Design DNA Origami Logic Nanorobot")
-    parser.add_argument("--shannon-aging", action="store_true", help="Simulate Shannon Epigenetic Aging")
+    parser.add_argument("--thermo", action="store_true", help="Simulate Prigogine Thermodynamics")
+    parser.add_argument("--cas13", type=str, default=None, help="Simulate CRISPR-Cas13 Sensor")
+    parser.add_argument("--circadian", type=float, default=14.0, help="Simulate 24-Hour Circadian Gene Rhythm")
+    parser.add_argument("--valportugiec", type=str, default=None, help="Simulate Valportugiec Resonance")
+    parser.add_argument("--barrier", type=float, default=1.45, help="Energy barrier in eV")
+    parser.add_argument("--nanorobot", type=str, default=None, help="Design DNA Origami Nanorobot")
+    parser.add_argument("--shannon-aging", action="store_true", help="Simulate Shannon Aging")
     parser.add_argument("--golden-ratio", type=str, default=None, help="Golden Ratio (Phi) Folding")
     parser.add_argument("--xenobiology", action="store_true", help="Generate Astrobiological 8-Base Code")
-    parser.add_argument("--turing", action="store_true", help="Simulate Turing Morphogenesis Pattern")
-    parser.add_argument("--dna-encode", type=str, default=None, help="Encode plaintext to synthetic DNA")
-    parser.add_argument("--dna-decode", type=str, default=None, help="Decode synthetic DNA to plaintext")
+    parser.add_argument("--turing", action="store_true", help="Simulate Turing Morphogenesis")
+    parser.add_argument("--dna-encode", type=str, default=None, help="Encode plaintext to DNA")
+    parser.add_argument("--dna-decode", type=str, default=None, help="Decode DNA to plaintext")
     parser.add_argument("--key", type=int, default=42, help="Secret Key")
     parser.add_argument("--infinity", action="store_true", help="Run Complete Biological Kernel")
     parser.add_argument("--digest", nargs=2, metavar=('DNA_SEQ', 'ENZYME'), help="Restriction Digestion")
@@ -80,55 +82,25 @@ def main():
     parser.add_argument("--dock", type=str, default=None, help="Simulate 3D Docking")
     parser.add_argument("--crispr", type=str, default=None, help="CRISPR-Cas9 gRNA")
     parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align DNA")
+    parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Analysis")
     parser.add_argument("--cite", action="store_true", help="Print BibTeX citation")
 
     args = parser.parse_args()
 
-    if args.thermo:
-        res = PrigogineBioThermodynamicsEngine.simulate_cellular_negentropy()
+    if args.lucas:
+        res = LucasRuthlessQCEngine.audit_and_purge(args.lucas)
         print("\n" + "="*76)
-        print("  🔥 NON-EQUILIBRIUM BIO-THERMODYNAMICS & NEGENTROPY DISSIPATION")
+        print("  😡 LUCAS: THE RUTHLESS BIOLOGICAL CODE AUDITOR & REAPER")
         print("="*76)
-        print(f" • Thermodynamics State   : {res['system_thermodynamics']}")
-        print(f" • Homeostatic Temperature: {res['cellular_temperature_kelvin']}")
-        print(f" • Entropy Export Flux    : {res['entropy_export_flux']}")
-        print(f" • Internal Entropy Prod. : {res['internal_entropy_generation']}")
-        print(f" • Net System Flux (dS/dt): {res['net_cellular_entropy_rate']}")
-        print(f" • Negentropy Coherence   : {res['dissipative_order_efficiency']}")
-        print(f" • Prigogine Living State : {res['prigogine_state']}")
+        print(f" • Audited Strand Length : {res['audited_sequence_length']} bp")
+        print(f" • Lucas Rage Index      : {res['lucas_rage_index']}")
+        print(f" • Purge Execution Action: {res['purge_action']}")
+        print("\n[!] Lucas Outrage Log:")
+        for r in res['detected_corruptions']:
+            print(f"   ❌ {r}")
+        print(f"\n • Brutally Purged DNA   : {res['purged_repaired_dna']}")
+        print(f" • Final Verdict         : {res['verdict']}")
         print("="*76 + "\n")
-        return
-
-    if args.cas13:
-        res = CRISPRCas13DiagnosticEngine.simulate_collateral_cleavage(viral_target=args.cas13)
-        print("\n" + "="*76)
-        print("  🎯 NEXT-GEN CRISPR-CAS13 ATTOMOLAR DIAGNOSTIC SENSOR")
-        print("="*76)
-        print(f" • Target Pathogen        : {res['diagnostic_target']}")
-        print(f" • Enzyme Cleaver Complex : {res['crispr_enzyme']}")
-        print(f" • Collateral Velocity    : {res['collateral_cleavage_velocity']}")
-        print(f" • Detection Latency      : {res['fluorescent_signal_latency']}")
-        print(f" • Limit of Detection     : {res['limit_of_detection_lod']}")
-        print(f" • Analytical Specificity : {res['diagnostic_accuracy']}")
-        print("="*76 + "\n")
-        return
-
-    if args.circadian is not None and not any([args.thermo, args.cas13, args.valportugiec, args.infinity]):
-        res = CircadianClockOscillationEngine.simulate_24h_cycle(peak_hour=args.circadian)
-        print("\n" + "="*76)
-        print("  ⏰ BIO-COSMIC CHRONOBIOLOGY & CIRCADIAN OSCILLATOR")
-        print("="*76)
-        print(f" • Periodicity Cycle      : {res['chronobiological_cycle']}")
-        print(f" • Transcription Loop     : {res['core_transcriptional_loop']}")
-        print(f" • Zenith Peak Hour       : {res['peak_expression_zenith']}")
-        print(f" • Optimal Chronotherapy  : {res['optimal_chronotherapy_window']}")
-        print(f" • Diurnal Coherence      : {res['circadian_synchronization']}")
-        print("="*76 + "\n")
-        return
-
-    if args.valportugiec:
-        res = ValportugiecResonatorEngine.simulate_valportugiec_resonance(molecular_target=args.valportugiec, barrier_height_ev=args.barrier)
-        print(f"\n • Valportugiec Resonance: {res['valportugiec_harmonic_frequency']} | Transmittance: {res['quantum_tunneling_probability']}\n")
         return
 
     if args.infinity:
@@ -139,8 +111,6 @@ def main():
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
-        t_res = TelomereLongevityEngine.simulate_cellular_lifespan()
-        print(f" • [Aging & Telomere] : Hayflick Barrier = {t_res['hayflick_barrier_status']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
         print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="QUANTUM-NEURAL WAVEFORM"))
         print("="*76 + "\n")
@@ -149,7 +119,7 @@ def main():
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Singularity: The Grand Universal Biological & Quantum Synthesis OS},
+  title = {DREDGE Lucas: The Universal Biological OS with Ruthless Genetic QC},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
