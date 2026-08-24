@@ -1,0 +1,16 @@
+{
+  "metadata": {
+    "engine": "Aquamarine DREDGE v1.2.1 Enterprise",
+    "cpg_loci_analyzed": 20000,
+    "integration_steps": 300,
+    "tet2_catalytic_efficiency": 0.45
+  },
+  "biomarkers": {
+    "pre_treatment_biological_age": 120.0,
+    "post_treatment_biological_age": 120.0,
+    "years_rejuvenated": 0.0,
+    "shannon_entropy_initial": 0.36335,
+    "shannon_entropy_final": 0.42135,
+    "entropy_decay_percentage": 15.96
+  }
+}
