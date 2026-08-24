@@ -3,12 +3,12 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "dredge-epigenetic"
+name = "aquamarine-dredge"
 version = "1.0.0"
 authors = [
   { name="Aquamarine Hoshino", email="aquamarine.hoshino170@github.io" },
 ]
-description = "In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation Pipeline"
+description = "In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation Pipeline by Aquamarine"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
@@ -31,4 +31,5 @@ dependencies = [
 "Bug Tracker" = "https://github.com/aquamarine-hoshino170/dredge-epigenetic-reversal/issues"
 
 [project.scripts]
+aquamarine-dredge = "dredge_cli:main"
 dredge = "dredge_cli:main"
