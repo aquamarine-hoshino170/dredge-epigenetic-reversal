@@ -1,0 +1,87 @@
+{
+    "DREDGE-05": {
+        "IUPAC_Core": "2-(4-(trifluoromethyl)benzamido)benzoic acid",
+        "Starting_Materials": [
+            {
+                "name": "Anthranilic acid (2-aminobenzoic acid)",
+                "CAS": "118-92-3",
+                "Supplier_Tier": "Catalog Available (Sigma/TCI)"
+            },
+            {
+                "name": "4-(Trifluoromethyl)benzoyl chloride",
+                "CAS": "2251-65-2",
+                "Supplier_Tier": "Catalog Available"
+            }
+        ],
+        "Steps": [
+            {
+                "Step_Number": 1,
+                "Reaction_Type": "Schotten-Baumann Amide Coupling",
+                "Reagents": "DCM, Triethylamine (TEA) or DIPEA",
+                "Conditions": "0\u00b0C to Room Temperature, 4 hours",
+                "Estimated_Yield": "86%"
+            },
+            {
+                "Step_Number": 2,
+                "Reaction_Type": "Aqueous Workup & Recrystallization",
+                "Reagents": "Ethanol / Water (3:1)",
+                "Conditions": "Crystallization at 4\u00b0C",
+                "Estimated_Yield": "92%"
+            }
+        ],
+        "Overall_Yield": "79.1%",
+        "Synthetic_Complexity": "Low (2 Steps, Facile Synthesis)"
+    },
+    "DREDGE-01": {
+        "IUPAC_Core": "N-hydroxy-4-methylbenzamide",
+        "Starting_Materials": [
+            {
+                "name": "Methyl 4-methylbenzoate",
+                "CAS": "99-94-5",
+                "Supplier_Tier": "Catalog Available"
+            },
+            {
+                "name": "Hydroxylamine hydrochloride",
+                "CAS": "5470-11-1",
+                "Supplier_Tier": "Catalog Available"
+            }
+        ],
+        "Steps": [
+            {
+                "Step_Number": 1,
+                "Reaction_Type": "Hydroxamation / Nucleophilic Acyl Substitution",
+                "Reagents": "Sodium methoxide (NaOMe) in Methanol",
+                "Conditions": "Reflux, 6 hours",
+                "Estimated_Yield": "78%"
+            }
+        ],
+        "Overall_Yield": "78.0%",
+        "Synthetic_Complexity": "Very Low (1 Step direct condensation)"
+    },
+    "DREDGE-02": {
+        "IUPAC_Core": "2-hydroxy-N-(thiazol-2-yl)benzamide",
+        "Starting_Materials": [
+            {
+                "name": "Salicylic acid",
+                "CAS": "69-72-7",
+                "Supplier_Tier": "Catalog Available"
+            },
+            {
+                "name": "2-Aminothiazole",
+                "CAS": "96-50-4",
+                "Supplier_Tier": "Catalog Available"
+            }
+        ],
+        "Steps": [
+            {
+                "Step_Number": 1,
+                "Reaction_Type": "EDCI/HOBt Mediated Amide Coupling",
+                "Reagents": "EDC\u00b7HCl, HOBt, DIPEA in DMF",
+                "Conditions": "Room Temperature, 12 hours",
+                "Estimated_Yield": "72%"
+            }
+        ],
+        "Overall_Yield": "72.0%",
+        "Synthetic_Complexity": "Low (1 Step direct coupling)"
+    }
+}
