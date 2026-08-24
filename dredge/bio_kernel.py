@@ -741,3 +741,30 @@ class MitochondrialBioenergeticsEngine:
             "reactive_oxygen_species_ros": f"{ros_generation_index}x Baseline",
             "clinical_oxphos_status": pathology_status
         }
+
+class BioSpectralVisualizer:
+    """
+    Renders high-resolution ASCII spectral charts for Quantum States, Neural Spikes & Epigenetic Entropy.
+    """
+    @staticmethod
+    def render_ascii_spectrum(data_points: list, title: str = "BIOLOGICAL SPECTRAL DENSITY", width: int = 40, height: int = 8) -> str:
+        if not data_points:
+            return ""
+        norm = np.array(data_points, dtype=float)
+        min_v, max_v = np.min(norm), np.max(norm)
+        if max_v == min_v:
+            norm = np.ones_like(norm) * 0.5
+        else:
+            norm = (norm - min_v) / (max_v - min_v)
+            
+        indices = np.linspace(0, len(norm) - 1, width, dtype=int)
+        sampled = norm[indices]
+        
+        lines = []
+        lines.append(f"\n  ┌─ [ {title} ]" + "─" * (width - len(title) - 2) + "┐")
+        for h in range(height, 0, -1):
+            threshold = h / height
+            row = ["█" if val >= threshold else " " for val in sampled]
+            lines.append(f"  │ {''.join(row)} │")
+        lines.append("  └" + "─" * (width + 2) + "┘\n")
+        return "\n".join(lines)
