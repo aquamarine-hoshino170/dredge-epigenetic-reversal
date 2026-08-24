@@ -80,3 +80,56 @@ class UniversalBioKernel:
                     "on_target_score": efficiency_score
                 })
         return targets
+
+class SequenceAlignmentEngine:
+    """
+    Dynamic Programming Engine for Global Sequence Alignment (Needleman-Wunsch).
+    """
+    @staticmethod
+    def align_pairwise(seq1: str, seq2: str, match: int = 1, mismatch: int = -1, gap: int = -2) -> tuple:
+        n, m = len(seq1), len(seq2)
+        score_matrix = np.zeros((n + 1, m + 1), dtype=int)
+
+        for i in range(n + 1):
+            score_matrix[i][0] = i * gap
+        for j in range(m + 1):
+            score_matrix[0][j] = j * gap
+
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                diag = score_matrix[i-1][j-1] + (match if seq1[i-1] == seq2[j-1] else mismatch)
+                delete = score_matrix[i-1][j] + gap
+                insert = score_matrix[i][j-1] + gap
+                score_matrix[i][j] = max(diag, delete, insert)
+
+        align1, align2 = [], []
+        i, j = n, m
+        while i > 0 and j > 0:
+            current = score_matrix[i][j]
+            diag = score_matrix[i-1][j-1]
+            if current == diag + (match if seq1[i-1] == seq2[j-1] else mismatch):
+                align1.append(seq1[i-1])
+                align2.append(seq2[j-1])
+                i -= 1
+                j -= 1
+            elif current == score_matrix[i-1][j] + gap:
+                align1.append(seq1[i-1])
+                align2.append('-')
+                i -= 1
+            else:
+                align1.append('-')
+                align2.append(seq2[j-1])
+                j -= 1
+
+        while i > 0:
+            align1.append(seq1[i-1])
+            align2.append('-')
+            i -= 1
+        while j > 0:
+            align1.append('-')
+            align2.append(seq2[j-1])
+            j -= 1
+
+        aligned_seq1 = "".join(reversed(align1))
+        aligned_seq2 = "".join(reversed(align2))
+        return aligned_seq1, aligned_seq2, int(score_matrix[n][m])

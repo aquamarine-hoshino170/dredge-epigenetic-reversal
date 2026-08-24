@@ -2,29 +2,45 @@ import argparse
 import json
 import sys
 from dredge.core import DREDGEResearchPipeline, GenomicBedProcessor
-from dredge.bio_kernel import UniversalBioKernel
+from dredge.bio_kernel import UniversalBioKernel, SequenceAlignmentEngine
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Bio-Kernel (v2.1.0): Universal Computational Biology, CRISPR & Epigenetics Engine"
+        description="DREDGE Bio-Kernel (v2.2.0): The Complete Computational Biology OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 2.1.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 2.2.0")
     
-    # Epigenomics
+    # Modules
     parser.add_argument("--run", action="store_true", help="Execute Epigenetic Reversal Simulation")
     parser.add_argument("--trial", type=int, default=0, help="Run Cohort Clinical Trial (N subjects)")
     parser.add_argument("--benchmark", action="store_true", help="Run Hardware Throughput Benchmarks")
     parser.add_argument("--cite", action="store_true", help="Print BibTeX academic citation")
+    parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence for Central Dogma Analysis")
+    parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates from DNA")
+    parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Align two DNA sequences (Needleman-Wunsch)")
+
+    # Epigenetic Parameters
     parser.add_argument("--sites", type=int, default=10000, help="CpG loci count")
     parser.add_argument("--rate", type=float, default=0.45, help="TET2 catalytic flux")
     parser.add_argument("--steps", type=int, default=250, help="Integration steps")
 
-    # Central Dogma & CRISPR
-    parser.add_argument("--analyze-seq", type=str, default=None, help="DNA Sequence for Central Dogma Analysis")
-    parser.add_argument("--crispr", type=str, default=None, help="Design CRISPR-Cas9 gRNA candidates from DNA")
-
     args = parser.parse_args()
+
+    if args.align:
+        s1, s2 = args.align[0].upper(), args.align[1].upper()
+        a1, a2, score = SequenceAlignmentEngine.align_pairwise(s1, s2)
+        match_line = "".join(['|' if a1[i] == a2[i] and a1[i] != '-' else ' ' for i in range(len(a1))])
+        
+        print("\n" + "="*70)
+        print("  🧬 NEEDLEMAN-WUNSCH GLOBAL SEQUENCE ALIGNMENT")
+        print("="*70)
+        print(f" Target 1 : {a1}")
+        print(f" Match    : {match_line}")
+        print(f" Target 2 : {a2}")
+        print(f" • Alignment Score : {score}")
+        print("="*70 + "\n")
+        return
 
     if args.crispr:
         targets = UniversalBioKernel.find_crispr_targets(args.crispr.strip())
