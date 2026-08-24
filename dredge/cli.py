@@ -1,5 +1,6 @@
 import argparse
 import sys
+import numpy as np
 from dredge.shell import start_interactive_shell
 from dredge.bio_kernel import (
     UniversalBioKernel, 
@@ -29,9 +30,9 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Infinity (v12.0.0): The Ultimate Universal Biological, Quantum & Synthesis OS"
+        description="DREDGE Infinity (v12.0.1): The Ultimate Universal Biological, Quantum & Synthesis OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 12.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 12.0.1")
     
     # Grand Infinity Summary
     parser.add_argument("--infinity", action="store_true", help="Run the Complete Multi-Disciplinary Biological Kernel Diagnostics")
