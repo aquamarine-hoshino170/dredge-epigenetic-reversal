@@ -1,0 +1,2 @@
+Lead_Scaffold,Animal_Model_Dose,Human_Equivalent_Dose_HED,Clinical_Total_Daily_Dose,Phase1_MRSD_Starting_Dose,Plasma_Cmax,Elimination_HalfLife_T12,Volume_of_Distribution_Vd,Systemic_Clearance_CL,Dosing_Regimen
+DREDGE-05,10.0 mg/kg (Murine),0.811 mg/kg,56.8 mg/day (70kg adult),5.7 mg/day,0.62 ug/mL,2.78 hours,1.12 L/kg,4.66 mL/min/kg,Twice Daily Oral (BID)
