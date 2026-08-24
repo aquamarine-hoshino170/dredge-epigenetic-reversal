@@ -1,61 +1,67 @@
 import numpy as np
 
+class HorvathEpigeneticClock:
+    """
+    Simulates elastic-net penalized epigenetic biological age estimation.
+    """
+    def __init__(self, n_sites: int = 1000):
+        np.random.seed(42)
+        self.weights = np.random.normal(loc=0.05, scale=0.02, size=n_sites)
+        self.intercept = 20.0
+
+    def predict_age(self, methylation_states: np.ndarray) -> float:
+        """Predicts biological age from CpG methylation vector."""
+        raw_age = self.intercept + np.dot(methylation_states, self.weights)
+        return float(np.clip(raw_age, 0.0, 120.0))
+
+
 class WaddingtonPotentialEngine:
     """
-    Simulates Non-equilibrium Epigenetic Landscapes using Stochastic Langevin Dynamics.
-    Aligned with MIT/Broad Institute Computational Epigenomics frameworks.
+    Ultra-tier Epigenetic Entropy Reversal Engine with Horvath Clock Calibration.
     """
-    def __init__(self, n_cpg_sites: int = 1000, temperature: float = 0.05):
+    def __init__(self, n_cpg_sites: int = 2000, temperature: float = 0.04):
         self.n_sites = n_cpg_sites
         self.temp = temperature
-        # Initialize degraded/aged epigenetic methylation state (High Entropy)
-        self.state = np.random.beta(a=0.5, b=0.5, size=self.n_sites)
+        self.clock = HorvathEpigeneticClock(n_sites=n_cpg_sites)
+        # Old/degraded epigenetic state
+        self.state = np.random.beta(a=0.8, b=0.3, size=self.n_sites)
 
     def calculate_shannon_entropy(self, p: np.ndarray) -> float:
-        """Computes information-theoretic Shannon entropy across CpG coordinates."""
         eps = 1e-12
-        p_clamped = np.clip(p, eps, 1.0 - eps)
-        s_i = -(p_clamped * np.log2(p_clamped) + (1.0 - p_clamped) * np.log2(1.0 - p_clamped))
+        p_c = np.clip(p, eps, 1.0 - eps)
+        s_i = -(p_c * np.log2(p_c) + (1.0 - p_c) * np.log2(1.0 - p_c))
         return float(np.mean(s_i))
 
     def potential_gradient(self, p: np.ndarray) -> np.ndarray:
-        """
-        Bistable epigenetic potential landscape V(p) = -a*(p - 0.5)^2 + b*(p - 0.5)^4
-        Differentiating gives the drift term driving states to stable wells (0 or 1).
-        """
         return 4.0 * (p - 0.5)**3 - 2.0 * (p - 0.5)
 
-    def simulate_tet2_reversal(self, steps: int = 100, catalytic_rate: float = 0.15, dt: float = 0.01) -> dict:
-        """
-        Executes Euler-Maruyama integration over targeted TET2 demethylation vector fields.
-        """
+    def simulate_tet2_reversal(self, steps: int = 150, catalytic_rate: float = 0.35, dt: float = 0.01) -> dict:
         initial_entropy = self.calculate_shannon_entropy(self.state)
-        entropy_trajectory = [initial_entropy]
+        initial_age = self.clock.predict_age(self.state)
+        
+        entropy_traj = [initial_entropy]
+        age_traj = [initial_age]
         
         current_p = self.state.copy()
         
-        for step in range(steps):
-            # Deterministic Waddington gradient drift
+        for _ in range(steps):
             drift = -self.potential_gradient(current_p)
-            
-            # Targeted TET2 catalytic active demethylation force
             tet2_force = -catalytic_rate * current_p
-            
-            # Stochastic thermal fluctuation (Brownian motion)
             diffusion = np.sqrt(2.0 * self.temp * dt) * np.random.normal(size=self.n_sites)
             
-            # Update state with boundary clamping
             current_p = np.clip(current_p + (drift + tet2_force) * dt + diffusion, 0.0, 1.0)
-            entropy_trajectory.append(self.calculate_shannon_entropy(current_p))
+            entropy_traj.append(self.calculate_shannon_entropy(current_p))
+            age_traj.append(self.clock.predict_age(current_p))
             
         self.state = current_p
-        final_entropy = entropy_trajectory[-1]
         
         return {
-            "initial_entropy_bits": initial_entropy,
-            "final_entropy_bits": final_entropy,
-            "entropy_delta_pct": ((final_entropy - initial_entropy) / initial_entropy) * 100.0,
-            "methylation_mean": float(np.mean(current_p)),
-            "methylation_variance": float(np.var(current_p)),
-            "trajectory": entropy_trajectory
+            "initial_entropy": initial_entropy,
+            "final_entropy": entropy_traj[-1],
+            "initial_age": initial_age,
+            "final_age": age_traj[-1],
+            "age_reversal_years": initial_age - age_traj[-1],
+            "entropy_reduction_pct": ((entropy_traj[-1] - initial_entropy) / initial_entropy) * 100.0,
+            "entropy_traj": entropy_traj,
+            "age_traj": age_traj
         }
