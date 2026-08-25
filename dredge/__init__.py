@@ -1,15 +1,13 @@
-__version__ = '57.0.0'
+__version__ = '58.0.0'
 from dredge.bio_kernel import (
-    MultithreadedBWTEngine,
-    Constrained3DRNAEngine,
-    GillespieStochasticKineticsEngine,
-    JukesCantorMLEngine,
-    DeBruijnGraphCorrectionEngine
+    ExactMultiSequenceAlignmentEngine,
+    AbInitioProteinPhysicsEngine,
+    MultiScaleTissueMorphogenesisEngine,
+    VectorizedNLSOptimizerEngine
 )
 __all__ = [
-    'MultithreadedBWTEngine',
-    'Constrained3DRNAEngine',
-    'GillespieStochasticKineticsEngine',
-    'JukesCantorMLEngine',
-    'DeBruijnGraphCorrectionEngine'
+    'ExactMultiSequenceAlignmentEngine',
+    'AbInitioProteinPhysicsEngine',
+    'MultiScaleTissueMorphogenesisEngine',
+    'VectorizedNLSOptimizerEngine'
 ]
