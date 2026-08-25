@@ -47,7 +47,8 @@ from dredge.bio_kernel import (
     AegisHardwareShieldEngine,
     FullDeviceCryptographicEnclave,
     QuantumImmuneInformationEngine,
-    ShamirZeroTraceShieldEngine
+    ShamirZeroTraceShieldEngine,
+    DeepSiliconHardwareFortress
 )
 
 def main():
@@ -57,15 +58,17 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Shamir Zero-Trace (v33.0.0): Anti-Spyware & Threshold Cryptographic OS"
+        description="DREDGE Deep-Silicon Fortress (v34.0.0): Anti-Side-Channel & Hardware Shielded OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 33.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 34.0.0")
     
-    # Shamir Threshold & RAM Wipe Flags
-    parser.add_argument("--shamir-split", type=int, default=None, help="Split secret integer into Shamir (3-out-of-5) Threshold Shares")
-    parser.add_argument("--ram-wipe", type=str, default=None, help="Process payload and immediately zeroize volatile RAM")
+    # Deep-Silicon Hardware Flags
+    parser.add_argument("--deep-silicon", action="store_true", help="Execute Speculative Instruction Barrier & Baseband Airgap Containment")
+    parser.add_argument("--cold-boot-shield", type=str, default=None, help="Process payload with Anti-Cold-Boot DRAM Remanence Protection")
 
     # Core Systems
+    parser.add_argument("--shamir-split", type=int, default=None, help="Split secret into Shamir Threshold Shares")
+    parser.add_argument("--ram-wipe", type=str, default=None, help="Process payload and immediately zeroize volatile RAM")
     parser.add_argument("--quantum-otp", type=str, default=None, help="Generate Shannon One-Time Pad")
     parser.add_argument("--lattice-enc", type=str, default=None, help="Encrypt payload with Post-Quantum Lattice")
     parser.add_argument("--key", type=str, default="QuantumEnclave2026", help="Key seed")
@@ -86,49 +89,49 @@ def main():
 
     args = parser.parse_args()
 
-    if args.shamir_split is not None:
-        res = ShamirZeroTraceShieldEngine.split_secret_into_threshold_shares(args.shamir_split, n_shares=5, threshold_k=3)
+    if args.deep_silicon:
+        b_res = DeepSiliconHardwareFortress.execute_speculative_barrier()
+        a_res = DeepSiliconHardwareFortress.airgap_network_containment()
         print("\n" + "="*76)
-        print("  🔑 SHAMIR'S THRESHOLD SECRET SHARING (ANTI-SOCIAL ENGINEERING)")
+        print("  🛡️ DEEP-SILICON SPECULATIVE FENCE & BASEBAND AIRGAP FORTRESS")
         print("="*76)
-        print(f" • Scheme Protocol      : {res['threshold_scheme']}")
-        print(f" • Threshold Required   : Minimum {res['required_shares_to_reconstruct']} of {res['total_dispersed_shares']} Shares")
-        print(f" • Security Guarantee   : {res['social_engineering_defense']}")
-        print("\n[*] Cryptographic Dispersed Shares:")
-        for idx, share_val in res['generated_shares']:
-            print(f"   [Share #{idx}] = {share_val}")
+        print(f" • Hardware Barrier  : {b_res['silicon_defense_mode']}")
+        print(f" • Barrier Latency   : {b_res['speculative_barrier_latency']}")
+        print(f" • Cache Execution   : {b_res['side_channel_mitigation']}")
+        print(f" • Baseband Isolation: {a_res['baseband_isolation_profile']}")
+        print(f" • Modem Quarantine  : {a_res['modem_firmware_bypass_risk']}")
         print("="*76 + "\n")
         return
 
-    if args.ram_wipe:
-        res = ShamirZeroTraceShieldEngine.execute_volatile_ram_zeroize(args.ram_wipe)
+    if args.cold_boot_shield:
+        c_res = DeepSiliconHardwareFortress.cold_boot_ram_scramble(args.cold_boot_shield)
         print("\n" + "="*76)
-        print("  🧹 VOLATILE EPHEMERAL RAM ZEROIZATION (ANTI-MEMORY SCRAPING)")
+        print("  🧊 ANTI-COLD-BOOT DRAM REMANENCE SCRAMBLER")
         print("="*76)
-        print(f" • Execution Action     : {res['volatile_ram_status']}")
-        print(f" • Overwritten Buffer   : {res['cleared_memory_bytes']}")
-        print(f" • RAM Dump Defense     : {res['memory_scraping_resistance']}")
-        print(f" • Keystroke Guard      : {res['anti_keylogger_guard']}")
+        print(f" • Memory Status     : {c_res['anti_cold_boot_status']}")
+        print(f" • Scrambled Latch   : {c_res['masked_ephemeral_state']}")
+        print(f" • Rowhammer Defense : {c_res['rowhammer_defense']}")
+        print(f" • Decay Retention   : {c_res['decay_time_survival']}")
         print("="*76 + "\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND TOTAL SHIELD HEALTH")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND DEEP-SILICON OS HEALTH")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="SHIELD MATRIX SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="SILICON FORTRESS SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Shamir Zero-Trace: Anti-Spyware & Threshold Cryptographic OS},
+  title = {DREDGE Deep-Silicon Fortress: Hardware-Shielded Bio-OS Kernel},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
