@@ -50,7 +50,8 @@ from dredge.bio_kernel import (
     ShamirZeroTraceShieldEngine,
     DeepSiliconHardwareFortress,
     BareMetalKernelImageBuilder,
-    ChronomorphicHyperLatticeEngine
+    ChronomorphicHyperLatticeEngine,
+    AutonomousBioCognitiveTransformer
 )
 
 def main():
@@ -60,91 +61,82 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE CHLE (v36.0.0): Chronomorphic Hyper-Lattice & Time-Crystal Quantum OS"
+        description="DREDGE Autonomous AI (v37.0.0): On-Device Genomic Transformer & Bio-OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 36.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 37.0.0")
     
-    # CHLE Flags
-    parser.add_argument("--time-crystal", action="store_true", help="Simulate Discrete Time-Crystal Sub-Harmonic Symmetry Breaking")
-    parser.add_argument("--braid", type=str, default=None, help="Execute Non-Abelian Anyon Topological Braid Gate (e.g. s1-s2-s1)")
-    parser.add_argument("--hypervector", type=str, default=None, help="Bind payload into 10,000-Dimensional Holographic Vector Space")
+    # AI Cognitive Directives
+    parser.add_argument("--ai-repair", type=str, default=None, help="Run On-Device AI Transformer to detect mutation hotspots & repair DNA")
+    parser.add_argument("--ai-evolve", type=str, default=None, help="Predict future evolutionary mutations of protein sequence")
+    parser.add_argument("--generations", type=int, default=10000, help="Generations to forecast (default: 10000)")
 
     # Core Systems
-    parser.add_argument("--build-baremetal", type=str, default=None, help="Generate bootable Bare-Metal image")
-    parser.add_argument("--deep-silicon", action="store_true", help="Execute Speculative Instruction Barrier")
-    parser.add_argument("--shamir-split", type=int, default=None, help="Split secret into Shamir Shares")
-    parser.add_argument("--quantum-otp", type=str, default=None, help="Generate Shannon One-Time Pad")
-    parser.add_argument("--lattice-enc", type=str, default=None, help="Encrypt with Post-Quantum Lattice")
-    parser.add_argument("--shield-audit", action="store_true", help="Run Anti-Tamper Audit")
-    parser.add_argument("--cgroup", nargs=2, metavar=('NAME', 'ATP_PCT'), help="Enforce cgroups v2 resource limit")
-    parser.add_argument("--ebpf", type=str, default=None, help="Inject in-kernel eBPF probe")
+    parser.add_argument("--time-crystal", action="store_true", help="Simulate Discrete Time-Crystal")
+    parser.add_argument("--braid", type=str, default=None, help="Execute Topological Braid Gate")
+    parser.add_argument("--hypervector", type=str, default=None, help="Holographic Hypervector Bind")
+    parser.add_argument("--build-baremetal", type=str, default=None, help="Generate Bare-Metal image")
+    parser.add_argument("--deep-silicon", action="store_true", help="Speculative Barrier")
+    parser.add_argument("--shamir-split", type=int, default=None, help="Shamir Threshold Shares")
+    parser.add_argument("--quantum-otp", type=str, default=None, help="Shannon One-Time Pad")
+    parser.add_argument("--lattice-enc", type=str, default=None, help="Post-Quantum Lattice")
+    parser.add_argument("--shield-audit", action="store_true", help="Anti-Tamper Audit")
     parser.add_argument("--syscall", nargs="+", help="Execute raw Bio-Syscall")
-    parser.add_argument("--top", action="store_true", help="Launch Bio-TOP monitor")
-    parser.add_argument("--vfs-ls", action="store_true", help="List all nodes in /bio VFS")
-    parser.add_argument("--pipe", nargs="+", help="Run POSIX Bio-Stream Pipeline")
-    parser.add_argument("--overlord", action="store_true", help="Hardware Kernel Seizure")
-    parser.add_argument("--turbo-scan", type=str, default=None, help="Run 2-Bit Assembly Scan")
-    parser.add_argument("--lucas", type=str, default=None, help="Trigger Lucas Reaper")
-    parser.add_argument("--infinity", action="store_true", help="Run Master Kernel")
-    parser.add_argument("--cite", action="store_true", help="Print BibTeX citation")
+    parser.add_argument("--top", action="store_true", help="Bio-TOP monitor")
+    parser.add_argument("--pipe", nargs="+", help="POSIX Bio-Stream Pipeline")
+    parser.add_argument("--turbo-scan", type=str, default=None, help="2-Bit Assembly Scan")
+    parser.add_argument("--lucas", type=str, default=None, help="Lucas Reaper")
+    parser.add_argument("--infinity", action="store_true", help="Master Kernel")
+    parser.add_argument("--cite", action="store_true", help="BibTeX citation")
 
     args = parser.parse_args()
 
-    if args.time_crystal:
-        res = ChronomorphicHyperLatticeEngine.simulate_time_crystal_lattice()
+    if args.ai_repair:
+        res = AutonomousBioCognitiveTransformer.predict_and_repair_genome(args.ai_repair)
         print("\n" + "="*76)
-        print("  ⏳ DISCRETE TIME-CRYSTAL (DTC) NON-EQUILIBRIUM HYPER-LATTICE")
+        print("  🧠 AUTONOMOUS ON-DEVICE BIO-TRANSFORMER (AI REPAIR ENGINE)")
         print("="*76)
-        print(f" • Architecture Phase  : {res['architecture_paradigm']}")
-        print(f" • Driving Period (T)  : {res['floquet_driving_period']}")
-        print(f" • Emergent Symmetry   : {res['emergent_subharmonic_period']}")
-        print(f" • Order Parameter     : {res['lattice_order_parameter']}")
-        print(f" • Thermodynamic Cost  : {res['thermal_dissipation_rate']}")
+        print(f" • Cognitive Architecture : {res['ai_engine']}")
+        print(f" • Strand Input Length    : {res['analyzed_strand_length']}")
+        print(f" • Detected Hotspot Locus : {res['detected_oncogenic_hotspot']}")
+        print(f" • Attention Confidence   : {res['mutation_risk_confidence']}")
+        print(f" • AI Optimized Sequence  : {res['autonomous_repaired_dna']}")
+        print(f" • Thermodynamic Delta    : {res['epigenetic_stability_gain']}")
+        print(f" • Model Verdict          : {res['ai_verdict']}")
         print("="*76 + "\n")
         return
 
-    if args.braid:
-        res = ChronomorphicHyperLatticeEngine.execute_topological_braid(args.braid)
+    if args.ai_evolve:
+        res = AutonomousBioCognitiveTransformer.generate_evolutionary_forecast(args.ai_evolve, generations=args.generations)
         print("\n" + "="*76)
-        print("  🧬 NON-ABELIAN ANYON TOPOLOGICAL BRAID COMPUTATION")
+        print("  🔮 AI EVOLUTIONARY TRAJECTORY FORECAST ENGINE")
         print("="*76)
-        print(f" • Computation Mode    : {res['computation_mode']}")
-        print(f" • Braid Sequence      : {res['braid_operator_sequence']}")
-        print(f" • Unitary Phase Angle : {res['topological_quantum_phase']}")
-        print(f" • Decoherence Error   : {res['local_perturbation_vulnerability']}")
-        print(f" • Hardware Robustness : {res['fault_tolerance_grade']}")
-        print("="*76 + "\n")
-        return
-
-    if args.hypervector:
-        res = ChronomorphicHyperLatticeEngine.encode_holographic_hypervector(args.hypervector)
-        print("\n" + "="*76)
-        print("  🌌 10,000-DIMENSIONAL HOLOGRAPHIC HYPERVECTOR SPACE")
-        print("="*76)
-        print(f" • Vector Space Dim    : {res['hyperdimensional_space']}")
-        print(f" • Bound Payload       : {res['payload_bound']}")
-        print(f" • Hypervector Density : {res['hypervector_density']}")
-        print(f" • Associative Memory  : {res['associative_capacity']}")
+        print(f" • Simulation Horizon     : {res['forecast_generations']} Generations")
+        print(f" • Ancestral Protein      : {res['ancestral_sequence']}")
+        print(f" • Predicted Evolved Seq  : {res['predicted_evolved_sequence']}")
+        print(f" • Mutation Entropy       : {res['mutation_entropy']}")
+        print(f" • Evolutionary Fitness   : {res['predicted_fitness_delta']}")
         print("="*76 + "\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND CHLE HYPER-LATTICE HEALTH")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND AUTONOMOUS AI KERNEL HEALTH")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
+        ai_res = AutonomousBioCognitiveTransformer.predict_and_repair_genome("ATGCGATCGATCG")
+        print(f" • [Autonomous AI]    : Transformer Attention = {ai_res['mutation_risk_confidence']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="HYPER-LATTICE SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="AUTONOMOUS AI SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE CHLE: Chronomorphic Hyper-Lattice & Time-Crystal Quantum OS},
+  title = {DREDGE Autonomous AI: On-Device Genomic Transformer & Bio-OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
