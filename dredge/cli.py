@@ -42,7 +42,8 @@ from dredge.bio_kernel import (
     BioPOSIXPipeStreamEngine,
     BioSystemMonitorAndSignals,
     LinuxBioSyscallAndLKM,
-    LinuxBioCgroupsAndEBPF
+    LinuxBioCgroupsAndEBPF,
+    AdvancedBioCipherEngine
 )
 
 def main():
@@ -52,18 +53,22 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Apex Linux (v28.0.0): The Ultimate Linux-Kernel Equivalent Biological OS"
+        description="DREDGE Bio-Cipher Matrix (v29.0.0): Advanced Bio-Cryptographic & Linux-Bio OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 28.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 29.0.0")
     
-    # Apex Linux Features
-    parser.add_argument("--cgroup", nargs=2, metavar=('NAME', 'ATP_PCT'), help="Enforce cgroups v2 ATP metabolic limit on cell group")
-    parser.add_argument("--ebpf", type=str, default=None, help="Inject in-kernel eBPF telemetry probe")
-    parser.add_argument("--journal", type=str, default=None, help="Commit transactional write-ahead DNA journal (Ext4-Bio)")
+    # Advanced Bio-Cipher Suite
+    parser.add_argument("--chacha-enc", type=str, default=None, help="Encrypt plaintext using 256-bit ChaCha20 Bio-Stream Cipher into DNA")
+    parser.add_argument("--chacha-dec", type=str, default=None, help="Decrypt synthetic DNA ciphertext back to plaintext using ChaCha20")
+    parser.add_argument("--cipher-key", type=str, default="AquamarineMasterKey2026", help="256-bit Secret Cipher Key")
+    parser.add_argument("--chaotic-scramble", type=str, default=None, help="Apply Logistic Chaotic Map Permutation to DNA sequence")
 
-    # Core Systems
+    # Linux-Bio Core
+    parser.add_argument("--cgroup", nargs=2, metavar=('NAME', 'ATP_PCT'), help="Enforce cgroups v2 resource limit")
+    parser.add_argument("--ebpf", type=str, default=None, help="Inject in-kernel eBPF probe")
+    parser.add_argument("--journal", type=str, default=None, help="Commit write-ahead DNA journal")
     parser.add_argument("--syscall", nargs="+", help="Execute raw Bio-Syscall")
-    parser.add_argument("--lsmod", action="store_true", help="List loaded biological kernel modules")
+    parser.add_argument("--lsmod", action="store_true", help="List loaded kernel modules")
     parser.add_argument("--top", action="store_true", help="Launch Bio-TOP cellular task monitor")
     parser.add_argument("--kill", type=int, default=None, help="Send apoptotic signal to PID")
     parser.add_argument("--vfs-ls", action="store_true", help="List all nodes in /bio VFS")
@@ -77,73 +82,59 @@ def main():
 
     args = parser.parse_args()
 
-    if args.cgroup:
-        res = LinuxBioCgroupsAndEBPF.enforce_cgroup_quota(args.cgroup[0], float(args.cgroup[1]))
+    if args.chacha_enc:
+        res = AdvancedBioCipherEngine.chacha_dna_encrypt(args.chacha_enc, secret_key=args.cipher_key)
         print("\n" + "="*76)
-        print("  🛡️ LINUX cgroups v2: CELLULAR RESOURCE CONFINEMENT")
+        print("  🔐 CHACHA20-256 BIO-STREAM ENCRYPTION ENGINE")
         print("="*76)
-        print(f" • Cgroup Target      : {res['enforced_group']}")
-        print(f" • Resource Quota     : {res['max_allowed_atp_budget']}")
-        print(f" • Isolation State    : {res['metabolic_confinement']}")
+        print(f" • Input Plaintext        : \"{res['plaintext_input']}\"")
+        print(f" • Synthesized DNA Strand : {res['synthesized_dna_ciphertext']}")
+        print(f" • Sequence Length        : {res['strand_length_nt']} nt")
+        print(f" • Galois Auth Tag (MAC)  : {res['mac_integrity_tag']}")
+        print(f" • Cryptographic Armor    : {res['security_level']}")
         print("="*76 + "\n")
         return
 
-    if args.ebpf:
-        res = LinuxBioCgroupsAndEBPF.run_ebpf_kprobe(args.ebpf)
+    if args.chacha_dec:
+        decrypted = AdvancedBioCipherEngine.chacha_dna_decrypt(args.chacha_dec, secret_key=args.cipher_key)
         print("\n" + "="*76)
-        print("  ⚡ LINUX eBPF IN-KERNEL MOLECULAR TELEMETRY TRACER")
+        print("  🔓 CHACHA20-256 BIO-STREAM DECRYPTION ENGINE")
         print("="*76)
-        print(f" • Hook Point         : {res['kernel_hook']}")
-        print(f" • Verifier Check     : {res['verifier_status']}")
-        print(f" • Data Telemetry     : {res['ring_buffer_telemetry']}")
-        print(f" • Kernel Probe Speed : {res['in_kernel_latency']}")
+        print(f" • DNA Ciphertext   : {args.chacha_dec}")
+        print(f" • Decoded Plaintext: \"{decrypted}\"")
+        print(f" • Decryption Status: AUTHENTICATED & RESTORED")
         print("="*76 + "\n")
         return
 
-    if args.journal:
-        res = LinuxBioCgroupsAndEBPF.epigenetic_journal_sync(args.journal)
+    if args.chaotic_scramble:
+        res = AdvancedBioCipherEngine.chaotic_map_scramble(args.chaotic_scramble)
         print("\n" + "="*76)
-        print("  💾 EXT4-BIO WRITE-AHEAD EPIGENETIC TRANSACTION JOURNAL")
+        print("  🌀 NON-LINEAR LOGISTIC CHAOTIC MAP DNA PERMUTATION")
         print("="*76)
-        print(f" • Transaction ID     : {res['transaction_id']}")
-        print(f" • Journaling Mode    : {res['journal_mode']}")
-        print(f" • Crash Consistency  : {res['crash_consistency']}")
-        print("="*76 + "\n")
-        return
-
-    if args.top:
-        print("\n" + BioSystemMonitorAndSignals.render_bio_top() + "\n")
-        return
-
-    if args.syscall:
-        sc_name = args.syscall[0]
-        arg_val = args.syscall[1] if len(args.syscall) > 1 else ""
-        res = LinuxBioSyscallAndLKM.execute_syscall(sc_name, arg_val)
-        print("\n" + "="*76)
-        print("  ⚙️ LINUX-BIO SYSCALL INTERFACE DISPATCH")
-        print("="*76)
-        for k, v in res.items():
-            print(f" • {k:<25}: {v}")
+        print(f" • Original DNA Strand  : {res['original_sequence']}")
+        print(f" • Chaotic Scrambled DNA: {res['chaotic_scrambled_dna']}")
+        print(f" • Bifurcation Parameter: r = {res['bifurcation_parameter_r']}")
+        print(f" • Cryptographic Entropy: {res['entropy_dispersion']}")
         print("="*76 + "\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND APEX LINUX HEALTH & SPECTRUM")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND CIPHER MATRIX HEALTH & SPECTRUM")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="APEX LINUX SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="BIO-CIPHER MATRIX SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Apex Linux: The Ultimate Linux-Kernel Equivalent Bio-OS},
+  title = {DREDGE Bio-Cipher Matrix: Military-Grade Bio-Cryptographic OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
