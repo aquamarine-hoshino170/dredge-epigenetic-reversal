@@ -1,32 +1,30 @@
 import unittest
-import os
 from dredge.bio_kernel import (
-    PurePythonPatternRecognitionEngine,
-    SelfIntrospectionEngine
+    PolymorphicQuineEngine,
+    ZeroKnowledgeLedgerEngine,
+    ChaosReactionDiffusionEngine,
+    MolecularMeshStrainEngine
 )
 
-class TestCoreLogicSuite(unittest.TestCase):
-    def test_pure_pattern_matching(self):
-        scene = [
-            [0, 0, 0, 0],
-            [0, 1, 1, 0],
-            [0, 1, 1, 0],
-            [0, 0, 0, 0]
-        ]
-        template = [
-            [1, 1],
-            [1, 1]
-        ]
-        res = PurePythonPatternRecognitionEngine.match_template(scene, template)
-        self.assertEqual(res['best_match_coordinate'], (1, 1))
-        self.assertEqual(res['max_confidence_score'], 1.0)
-        self.assertEqual(res['detection_verdict'], "MATCH_CONFIRMED")
+class TestPolymorphicZKCore(unittest.TestCase):
+    def test_polymorphic_quine(self):
+        res = PolymorphicQuineEngine.generate_polymorphic_replica()
+        self.assertTrue(res['generated_code_bytes'] > 0)
+        self.assertIn("def execute():", res['source_code_replica'])
 
-    def test_self_introspection(self):
-        current_file = os.path.abspath(__file__)
-        res = SelfIntrospectionEngine.inspect_and_reverse_source(current_file)
-        self.assertTrue(res['total_lines_read'] > 0)
-        self.assertEqual(res['state_status'], "SECURE_INTROSPECTION_COMPLETED")
+    def test_zk_ledger_proof(self):
+        res = ZeroKnowledgeLedgerEngine.simulate_zk_transition(initial_balance=1000, transfer_amount=350)
+        self.assertTrue(res['zk_proof_verified'])
+        self.assertIn("0x", res['commitment_initial'])
+
+    def test_chaos_rd_lattice(self):
+        res = ChaosReactionDiffusionEngine.simulate_chaos_lattice(grid_size=10, steps=15)
+        self.assertEqual(len(res['ascii_visual']), 10)
+
+    def test_molecular_mesh_strain(self):
+        res = MolecularMeshStrainEngine.calculate_mesh_strain(nodes=40, edge_density=2.0, applied_torque_n_m=10.0)
+        self.assertEqual(res['scaffold_topological_nodes'], 40)
+        self.assertTrue(res['total_strain_energy_J'] > 0.0)
 
 if __name__ == '__main__':
     unittest.main()
