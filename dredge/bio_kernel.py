@@ -218,3 +218,38 @@ class BigDataGenomicsEngine:
             'alignment_dimensions': f'{n}x{m}',
             'algorithm': 'Needleman-Wunsch Dynamic Programming'
         }
+
+class FastqQualityFilterEngine:
+    r"""
+    Fastq Phred Quality Score Engine:
+    Q = -10 * log10(P_error)
+    ASCII Sanger Phred+33 offset decoding: Q = ord(char) - 33
+    """
+    @staticmethod
+    def parse_phred_scores(qual_str: str, phred_offset: int = 33) -> list:
+        return [ord(c) - phred_offset for c in qual_str.strip()]
+
+    @staticmethod
+    def filter_read(seq: str, qual_str: str, min_q: float = 20.0, max_low_q_fraction: float = 0.1) -> dict:
+        seq = seq.strip()
+        qual_str = qual_str.strip()
+        if len(seq) != len(qual_str) or len(seq) == 0:
+            return {"error": "Sequence and quality string length mismatch"}
+
+        scores = [ord(c) - 33 for c in qual_str]
+        mean_q = round(float(np.mean(scores)), 2)
+        low_q_count = sum(1 for q in scores if q < min_q)
+        low_q_fraction = round(low_q_count / len(scores), 4)
+        
+        # Mean error probability: P = 10^(-Q/10)
+        mean_p_error = round(float(np.mean([10.0 ** (-q / 10.0) for q in scores])), 6)
+        is_pass = (mean_q >= min_q) and (low_q_fraction <= max_low_q_fraction)
+
+        return {
+            "read_length": len(seq),
+            "mean_phred_score": mean_q,
+            "mean_error_probability": mean_p_error,
+            "low_quality_bases_pct": round(low_q_fraction * 100, 2),
+            "quality_filter_status": "PASS" if is_pass else "FAIL",
+            "accuracy_confidence": f"{round((1.0 - mean_p_error) * 100, 4)}%"
+        }

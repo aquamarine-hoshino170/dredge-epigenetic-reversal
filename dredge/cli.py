@@ -8,11 +8,12 @@ from dredge.bio_kernel import (
     PureEnzymeKineticsEngine,
     PureBufferEquilibriumEngine,
     PureSpectrophotometryEngine,
-    BigDataGenomicsEngine
+    BigDataGenomicsEngine,
+    FastqQualityFilterEngine
 )
 
 def main():
-    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Pure Sciences & Big Data (v49.0.0)')
+    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Pure Sciences, Big Data & Quality Engine (v49.0.0)')
     parser.add_argument('--version', action='version', version='aquamarine-dredge 49.0.0')
     parser.add_argument('--dna-tm', type=str, default=None, help='DNA Melting Temp')
     parser.add_argument('--protein-pi', type=str, default=None, help='Protein pI & Hydropathy')
@@ -21,6 +22,7 @@ def main():
     parser.add_argument('--spec', nargs=2, type=float, metavar=('A260', 'A280'), help='Purity A260/A280')
     parser.add_argument('--bwt', type=str, default=None, help='Run Burrows-Wheeler Transform')
     parser.add_argument('--global-align', nargs=2, metavar=('SEQ1', 'SEQ2'), help='Needleman-Wunsch Global Alignment')
+    parser.add_argument('--fastq-qc', nargs=2, metavar=('SEQUENCE', 'QUAL_STRING'), help='Evaluate FastQ Phred Quality Score')
     parser.add_argument('--test', action='store_true', help='Run unit tests')
 
     args = parser.parse_args()
@@ -30,6 +32,11 @@ def main():
         suite = unittest.defaultTestLoader.discover('tests')
         unittest.TextTestRunner(verbosity=2).run(suite)
         print('=====================================\n')
+        return
+
+    if args.fastq_qc:
+        res = FastqQualityFilterEngine.filter_read(args.fastq_qc[0], args.fastq_qc[1])
+        print(f"\n • FastQ QC Mean Phred: Q{res['mean_phred_score']} | Status: {res['quality_filter_status']} | Accuracy: {res['accuracy_confidence']}\n")
         return
 
     if args.bwt:
