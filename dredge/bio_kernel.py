@@ -1496,3 +1496,43 @@ class BioPOSIXPipeStreamEngine:
             "final_stream_payload": current_data,
             "pipeline_trace": stream_log
         }
+
+class BioSystemMonitorAndSignals:
+    """
+    Bio-Top (htop-equivalent) & Bio-Signal Killer (kill -9 for defective cellular threads).
+    """
+    @staticmethod
+    def render_bio_top() -> str:
+        lines = []
+        lines.append("="*76)
+        lines.append("  📊 BIO-TOP: REAL-TIME CELLULAR KERNEL MONITOR (System Load: 0.12, 0.08, 0.01)")
+        lines.append("="*76)
+        lines.append("  [CPU/ATP Usage]  [||||||||||||||||||||||||||||||||||          ] 78.4% (784/1000 ATP)")
+        lines.append("  [Mem/Histone]    [||||||||||||||||||                          ] 42.1% (CpG Paging Active)")
+        lines.append("  [Tasks: 6 total] 1 running, 5 sleeping, 0 stopped, 0 zombie")
+        lines.append("-" * 76)
+        lines.append("   PID  THREAD_NAME          PRI   ATP%   STATE   UPTIME      COMMAND")
+        lines.append("  1001  tet2_demethylase      -5   12.4   RUN     00:14:22    demeth --target cpg_site")
+        lines.append("  1002  ribosome_transla      10   28.1   SLEEP   00:45:01    transla --mrna_poly_a")
+        lines.append("  1003  crispr_cas13_scout    -2    8.2   RUN     00:02:11    cas13 --scan viral_rna")
+        lines.append("  1004  tert_telomerase        0    5.0   SLEEP   01:12:00    telomere --extend")
+        lines.append("  1005  lucas_reaper_qc      -20   18.5   IDLE    00:00:44    lucas --audit_purge")
+        lines.append("  1006  fmo_quantum_wave      -1    6.2   RUN     00:05:30    quantum --fmo_coherence")
+        lines.append("="*76)
+        return "\n".join(lines)
+
+    @staticmethod
+    def send_cellular_signal(pid: int, signal_code: int = 9) -> dict:
+        signal_table = {
+            9: "SIGKILL_APOPTOSIS (Immediate Cellular Execution & Nuclease Degradation)",
+            15: "SIGTERM_GRACEFUL (Homeostatic Quiescence Triggered)",
+            19: "SIGSTOP_AUTOPHAGY (Process Frozen in Cellular Lysosome)"
+        }
+        sig_name = signal_table.get(signal_code, f"SIG_{signal_code} (Generic Biological Signal)")
+        
+        return {
+            "target_cellular_pid": pid,
+            "dispatched_signal": sig_name,
+            "kernel_execution": "SIGNAL_DELIVERED (Thread Terminated from Process Table)",
+            "process_table_status": "CLEARED (Zero Residual Oncogenic State)"
+        }
