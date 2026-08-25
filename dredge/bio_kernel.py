@@ -378,3 +378,153 @@ class EnzymeInhibitionEngine:
             "apparent_Km": round(k_m_app, 4),
             "efficiency_loss": f"{eff_drop}%"
         }
+
+class PhylogeneticTreeEngine:
+    r"""
+    UPGMA (Unweighted Pair Group Method with Arithmetic Mean) Hierarchical Clustering:
+    d_{(A U B), C} = (|A|*d_{A,C} + |B|*d_{B,C}) / (|A| + |B|)
+    """
+    @staticmethod
+    def construct_upgma_tree(taxa: list, distance_matrix: list) -> dict:
+        taxa = list(taxa)
+        n = len(taxa)
+        if n != len(distance_matrix) or n < 2:
+            return {"error": "Invalid distance matrix dimensions"}
+
+        clusters = {i: [taxa[i]] for i in range(n)}
+        cluster_labels = {i: taxa[i] for i in range(n)}
+        current_matrix = np.array(distance_matrix, dtype=float)
+        active_nodes = list(range(n))
+        merge_history = []
+
+        while len(active_nodes) > 1:
+            min_dist = float('inf')
+            min_i, min_j = -1, -1
+
+            # Find closest pair
+            for i in range(len(active_nodes)):
+                for j in range(i + 1, len(active_nodes)):
+                    u = active_nodes[i]
+                    v = active_nodes[j]
+                    if current_matrix[u, v] < min_dist:
+                        min_dist = current_matrix[u, v]
+                        min_i, min_j = u, v
+
+            node_a, node_b = min_i, min_j
+            new_node_id = max(clusters.keys()) + 1
+            new_label = f"({cluster_labels[node_a]}:{round(min_dist/2.0, 3)},{cluster_labels[node_b]}:{round(min_dist/2.0, 3)})"
+
+            # Create new cluster
+            clusters[new_node_id] = clusters[node_a] + clusters[node_b]
+            cluster_labels[new_node_id] = new_label
+            merge_history.append({
+                "merged_taxa": f"{cluster_labels[node_a]} + {cluster_labels[node_b]}",
+                "branch_distance": round(float(min_dist), 4),
+                "cluster_height": round(float(min_dist / 2.0), 4)
+            })
+
+            # Expand distance matrix
+            old_size = current_matrix.shape[0]
+            new_matrix = np.zeros((old_size + 1, old_size + 1), dtype=float)
+            new_matrix[:old_size, :old_size] = current_matrix
+
+            for k in active_nodes:
+                if k not in (node_a, node_b):
+                    size_a = len(clusters[node_a])
+                    size_b = len(clusters[node_b])
+                    dist_k = (size_a * current_matrix[k, node_a] + size_b * current_matrix[k, node_b]) / (size_a + size_b)
+                    new_matrix[k, new_node_id] = dist_k
+                    new_matrix[new_node_id, k] = dist_k
+
+            current_matrix = new_matrix
+            active_nodes.remove(node_a)
+            active_nodes.remove(node_b)
+            active_nodes.append(new_node_id)
+
+        root_node = active_nodes[0]
+        return {
+            "num_taxa": n,
+            "newick_tree_representation": cluster_labels[root_node] + ";",
+            "merge_steps": merge_history,
+            "clustering_algorithm": "UPGMA Arithmetic Mean"
+        }
+
+class GeneticLinkageMappingEngine:
+    r"""
+    Chromosome Mapping & Recombination Frequency:
+    r = Recombinants / Total Offspring
+    Map Distance (cM) = r * 100
+    Haldane Correction: d = -0.5 * ln(1 - 2r) * 100 cM
+    Kosambi Correction: d = 0.25 * ln((1 + 2r) / (1 - 2r)) * 100 cM
+    """
+    @staticmethod
+    def calculate_linkage(parental_count: int, recombinant_count: int) -> dict:
+        total = parental_count + recombinant_count
+        if total <= 0 or recombinant_count < 0 or parental_count < 0:
+            return {"error": "Offspring counts must be positive numbers"}
+
+        r = recombinant_count / total
+        direct_cM = round(r * 100.0, 3)
+
+        # Haldane mapping function
+        if r < 0.5:
+            haldane_cM = round(-0.5 * math.log(1.0 - 2.0 * r) * 100.0, 3)
+            kosambi_cM = round(0.25 * math.log((1.0 + 2.0 * r) / (1.0 - 2.0 * r)) * 100.0, 3)
+        else:
+            haldane_cM = "UNLINKED (>= 50 cM)"
+            kosambi_cM = "UNLINKED (>= 50 cM)"
+
+        linkage_status = "TIGHT_GENETIC_LINKAGE" if direct_cM < 20.0 else ("PARTIALLY_LINKED" if direct_cM < 50.0 else "INDEPENDENT_ASSORTMENT")
+
+        return {
+            "total_offspring": total,
+            "recombination_fraction_r": round(r, 4),
+            "standard_map_distance_cM": f"{direct_cM} cM",
+            "haldane_corrected_distance": f"{haldane_cM} cM" if isinstance(haldane_cM, float) else haldane_cM,
+            "kosambi_corrected_distance": f"{kosambi_cM} cM" if isinstance(kosambi_cM, float) else kosambi_cM,
+            "linkage_assessment": linkage_status
+        }
+
+class AllostericCooperativityEngine:
+    r"""
+    Hill Equation & Cooperativity Kinetics:
+    log(theta / (1 - theta)) = n_H * log([L]) - log(Kd)
+    n_H > 1: Positive Cooperativity (e.g. Hemoglobin)
+    n_H = 1: Non-cooperative (Hyperbolic Michaelis-Menten)
+    n_H < 1: Negative Cooperativity
+    """
+    @staticmethod
+    def fit_hill_equation(ligand_concentrations: list, fractional_saturations: list) -> dict:
+        if len(ligand_concentrations) != len(fractional_saturations) or len(ligand_concentrations) < 2:
+            return {"error": "At least 2 points required"}
+
+        valid_points = []
+        for l, theta in zip(ligand_concentrations, fractional_saturations):
+            if l > 0 and 0.0 < theta < 1.0:
+                x = math.log10(l)
+                y = math.log10(theta / (1.0 - theta))
+                valid_points.append((x, y))
+
+        if len(valid_points) < 2:
+            return {"error": "Invalid concentration or fractional saturation values"}
+
+        x_arr = np.array([p[0] for p in valid_points])
+        y_arr = np.array([p[1] for p in valid_points])
+
+        slope, intercept = np.polyfit(x_arr, y_arr, 1)
+        hill_coefficient_nH = round(float(slope), 3)
+        kd_apparent = round(float(10.0 ** (-intercept / slope)), 4)
+
+        if hill_coefficient_nH > 1.05:
+            cooperativity = f"POSITIVE_COOPERATIVITY (nH = {hill_coefficient_nH})"
+        elif hill_coefficient_nH < 0.95:
+            cooperativity = f"NEGATIVE_COOPERATIVITY (nH = {hill_coefficient_nH})"
+        else:
+            cooperativity = "NON_COOPERATIVE_BINDING (nH ~ 1.0)"
+
+        return {
+            "hill_coefficient_nH": hill_coefficient_nH,
+            "apparent_dissociation_constant_Kd": kd_apparent,
+            "half_saturation_K0_5": kd_apparent,
+            "cooperativity_type": cooperativity
+        }
