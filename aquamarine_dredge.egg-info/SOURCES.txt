@@ -15,5 +15,4 @@ dredge/core.py
 dredge/shell.py
 src/__init__.py
 tests/test_biophysics.py
-tests/test_core.py
 tests/test_pipeline.py
