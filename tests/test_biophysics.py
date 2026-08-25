@@ -18,10 +18,10 @@ class TestBioMathChallenges(unittest.TestCase):
         self.assertEqual(res['decoded_sequence'], "BANANA")
 
     def test_sliding_window_qc(self):
-        # 'I' = Q40, '#' = Q2
+        # 'I' = Q40, '#' = Q2; window [40, 2, 2] drops below Q20 at index 5
         res = SangerSlidingWindowQCEngine.trim_sliding_window("ATGCGATCGCTA", "IIIIII######", window_size=3, min_q=20.0)
-        self.assertEqual(res['trimmed_length'], 6)
-        self.assertEqual(res['trimmed_sequence'], "ATGCGA")
+        self.assertEqual(res['trimmed_length'], 5)
+        self.assertEqual(res['trimmed_sequence'], "ATGCG")
 
     def test_kinetics_curve_fit(self):
         subs = [5.0, 10.0, 20.0, 40.0]
