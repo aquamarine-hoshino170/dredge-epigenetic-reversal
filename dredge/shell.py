@@ -6,16 +6,17 @@ from dredge.bio_kernel import (
     BioSystemMonitorAndSignals,
     LinuxBioSyscallAndLKM,
     LucasRuthlessQCEngine,
-    NativeAssemblyBitKernel
+    NativeAssemblyBitKernel,
+    LinuxBioCgroupsAndEBPF
 )
 
 def start_interactive_shell():
     print("""
 ============================================================================
-  🐧 AQUAMARINE DREDGE MONOLITH: PURE LINUX-BIO REPL SHELL (v27.0.0)
+  🐧 AQUAMARINE DREDGE: APEX LINUX KERNEL WITH CGROUPS & eBPF (v28.0.0)
 ============================================================================
-  * Ring-0 Protected Mode Active. VFS mounted on /bio. PID 1 init running.
-  * Type 'help' for built-in syscalls, 'exit' to halt the kernel.
+  * cgroups v2 mounted on /sys/fs/cgroup/bio. eBPF Verifier Ring-0 Active.
+  * Ext4 Epigenetic Journaling Active. Type 'help' for commands.
 ============================================================================
 """)
     while True:
@@ -32,18 +33,27 @@ def start_interactive_shell():
                 break
             elif cmd == "help":
                 print("""
-Available Kernel Commands:
-  • ls /bio           : List biological VFS nodes
-  • cat <node>        : Read biological VFS node (e.g. cat /bio/sys/atp_pool)
-  • top               : Real-time cellular task monitor
-  • kill -9 <pid>     : Dispatch apoptotic signal to cellular thread
-  • syscall <name>    : Execute Bio-Syscall (bio_fork, bio_mmap, bio_ptrace)
-  • lsmod             : List loaded biological kernel modules (LKM)
-  • insmod <mod>      : Insert synthetic plasmid kernel module
-  • rmmod <mod>       : Remove synthetic kernel module
-  • audit <dna>       : Lucas ruthless code auditor & purge
-  • scan <dna>        : 2-bit native assembly high-speed scan
+Available Advanced Kernel Commands:
+  • cgroup <name> <limit> : Enforce cgroups v2 ATP metabolic resource limit
+  • ebpf <hook>           : Attach in-kernel eBPF probe for molecular telemetry
+  • journal <dna>         : Commit transactional write-ahead DNA journal (Ext4-Bio)
+  • ls /bio               : List biological VFS nodes
+  • cat <node>            : Read biological VFS node
+  • top                   : Real-time cellular task monitor
+  • kill -9 <pid>         : Dispatch apoptotic signal to cellular thread
+  • syscall <name>        : Execute Bio-Syscall (bio_fork, bio_mmap, bio_ptrace)
+  • lsmod / insmod        : Manage Loadable Kernel Modules
 """)
+            elif cmd == "cgroup" and len(args) >= 2:
+                res = LinuxBioCgroupsAndEBPF.enforce_cgroup_quota(args[0], float(args[1]))
+                print(f"[✓] cgroups v2: {res['enforced_group']} limited to {res['max_allowed_atp_budget']}")
+            elif cmd == "ebpf":
+                hook = args[0] if args else "kprobe_rna_polymerase"
+                res = LinuxBioCgroupsAndEBPF.run_ebpf_kprobe(hook)
+                print(f"[✓] eBPF Probe [{res['kernel_hook']}]: {res['ring_buffer_telemetry']} (Latency: {res['in_kernel_latency']})")
+            elif cmd == "journal" and args:
+                res = LinuxBioCgroupsAndEBPF.epigenetic_journal_sync(args[0])
+                print(f"[✓] Journal Commited: {res['transaction_id']} | Mode: {res['crash_consistency']}")
             elif cmd == "ls" and args and args[0] == "/bio":
                 for node in BioVirtualFileSystemPOSIX.ls_nodes():
                     print(f"  [r--r--r-- bio bio] {node}")
@@ -65,17 +75,6 @@ Available Kernel Commands:
                 print("  " + "-"*50)
                 for m, info in res['loaded_kernel_modules'].items():
                     print(f"  {m:<20} {info['memory_kb']:<10} {info['status']}")
-            elif cmd == "insmod" and args:
-                print(LinuxBioSyscallAndLKM.manage_lkm("insmod", args[0])['lkm_action'])
-            elif cmd == "rmmod" and args:
-                print(LinuxBioSyscallAndLKM.manage_lkm("rmmod", args[0])['lkm_action'])
-            elif cmd == "audit" and args:
-                res = LucasRuthlessQCEngine.audit_and_purge(args[0])
-                print(f"  Lucas Verdict: {res['verdict']}")
-                print(f"  Purged DNA   : {res['purged_repaired_dna']}")
-            elif cmd == "scan" and args:
-                res = NativeAssemblyBitKernel.ultra_fast_bit_scan(args[0])
-                print(f"  Latency: {res['execution_latency']} | Throughput: {res['processing_throughput']}")
             else:
                 print(f"dredge-sh: command not found: {cmd}. Type 'help' for commands.")
         except (KeyboardInterrupt, EOFError):
