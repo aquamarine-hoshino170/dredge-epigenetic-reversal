@@ -1,41 +1,39 @@
 import unittest
 from dredge.bio_kernel import (
-    GrandFinaleBioEngine,
-    FMIndexBwtEngine,
-    AdaptivePhredTrimmerEngine,
-    NonLinearKineticsEngine,
-    ExactTreeBranchEngine,
-    PureThermodynamicsEngine
+    ParallelFMIndexEngine, Constrained3DRNAEngine, GillespieStochasticKineticsEngine,
+    JukesCantorMLEngine, DeBruijnGraphCorrectionEngine, EpigeneticShannonEntropyEngine
 )
 
-class TestGrandFinaleCore(unittest.TestCase):
-    def test_sw_affine_matrices(self):
-        res = GrandFinaleBioEngine.smith_waterman_full_affine("ACGTACGT", "ACGT")
-        self.assertEqual(res['max_score'], 12.0)
-        self.assertIn("ACGT", res['local_align_seq1'])
+class TestDomainBreakerCore(unittest.TestCase):
+    def test_parallel_fm_search(self):
+        res = ParallelFMIndexEngine.parallel_search("BANANABANANA", ["ANA", "BAN", "XYZ"])
+        self.assertEqual(res['match_results']['ANA'], 4)
+        self.assertEqual(res['match_results']['XYZ'], 0)
 
-    def test_fm_index_search(self):
-        res = FMIndexBwtEngine.count_pattern("ANA", "BANANA")
-        self.assertEqual(res['occurrences'], 2)
-        self.assertEqual(res['status'], "EXACT_MATCH")
+    def test_3d_rna_folding(self):
+        seq = "GGGAAACCC"
+        n = len(seq)
+        dist_mat = [[abs(i - j) * 3.8 for j in range(n)] for i in range(n)]
+        res = Constrained3DRNAEngine.fold_with_spatial_constraints(seq, dist_mat)
+        self.assertTrue(res['max_constrained_energy_score'] > 0.0)
 
-    def test_adaptive_trimmer(self):
-        res = AdaptivePhredTrimmerEngine.adaptive_trim("ATGCGATCGCTA", "IIIIII######", min_q=20.0)
-        self.assertTrue(res['trimmed_length'] <= 6)
+    def test_gillespie_simulation(self):
+        res = GillespieStochasticKineticsEngine.simulate_enzyme_system(s_init=100, e_init=20, t_max=2.0)
+        self.assertTrue(res['total_reaction_events'] > 0)
 
-    def test_nls_kinetics_curve_fit(self):
-        subs = [5.0, 10.0, 20.0, 40.0]
-        vels = [(100.0 * x) / (10.0 + x) for x in subs]
-        res = NonLinearKineticsEngine.fit_direct_nls(subs, vels)
-        self.assertAlmostEqual(res['v_max'], 100.0, places=1)
-        self.assertAlmostEqual(res['k_m'], 10.0, places=1)
+    def test_jc69_ml_estimation(self):
+        res = JukesCantorMLEngine.calculate_branch_ml("ACGTACGTACGT", "ACGTACGTACGA")
+        self.assertTrue(res['maximum_likelihood_branch_t'] > 0.0)
 
-    def test_upgma_branch_verification(self):
-        taxa = ["A", "B", "C"]
-        mat = [[0.0, 2.0, 4.0], [2.0, 0.0, 4.0], [4.0, 4.0, 0.0]]
-        res = ExactTreeBranchEngine.construct_verified_upgma(taxa, mat)
-        self.assertTrue(res['newick_tree'].endswith(";"))
-        self.assertEqual(res['root_tree_height'], 2.0)
+    def test_debruijn_error_correction(self):
+        reads = ["ACGT", "ACGT", "ACGA"]
+        res = DeBruijnGraphCorrectionEngine.error_correct(reads, k=3, min_coverage=2)
+        self.assertTrue(res['corrections_made'] >= 1)
+
+    def test_shannon_methylation_entropy(self):
+        patterns = ["1100", "1100", "1100", "1100"]
+        res = EpigeneticShannonEntropyEngine.calculate_methylation_entropy(patterns)
+        self.assertEqual(res['shannon_entropy_bits'], 0.0)
 
 if __name__ == '__main__':
     unittest.main()
