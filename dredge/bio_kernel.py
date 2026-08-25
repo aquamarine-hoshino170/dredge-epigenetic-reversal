@@ -44,15 +44,21 @@ class AsyncP2PBioLedgerEngine:
             }]
             for idx, mut in enumerate(mutations, 1):
                 prev_h = chain[-1]["block_hash"]
-                # Dispatch mining tasks across asynchronous nodes with variable latency
+                # Explicitly wrap coroutines into asyncio Tasks for Python 3.14+ compatibility
                 tasks = [
-                    AsyncP2PBioLedgerEngine._mine_block_async(idx, prev_h, mut, node, latency_ms=random.uniform(5.0, 20.0))
+                    asyncio.create_task(
+                        AsyncP2PBioLedgerEngine._mine_block_async(idx, prev_h, mut, node, latency_ms=random.uniform(5.0, 20.0))
+                    )
                     for node in range(num_nodes)
                 ]
-                # First node to achieve consensus appends the block
+                # First task to complete wins consensus
                 done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
                 for task in pending:
                     task.cancel()
+                    try:
+                        await task
+                    except asyncio.CancelledError:
+                        pass
                 mined_block = list(done)[0].result()
                 chain.append(mined_block)
             return chain
@@ -68,10 +74,6 @@ class AsyncP2PBioLedgerEngine:
         }
 
 class QuantumLindbladDensityVisualizerEngine:
-    r"""
-    Time-Dependent Open Quantum System Lindblad Master Equation & ASCII Coherence Matrix
-    d\rho/dt = -i[H, \rho] + \sum (L \rho L^\dagger - 0.5 {L^\dagger L, \rho})
-    """
     @staticmethod
     def simulate_and_visualize(sites: int = 4, total_time_fs: float = 40.0, dt_fs: float = 1.0, dephasing_rate: float = 0.01) -> dict:
         H = np.zeros((sites, sites), dtype=complex)
@@ -95,7 +97,6 @@ class QuantumLindbladDensityVisualizerEngine:
             rho += d_rho * (dt_fs / 10.0)
             rho /= np.trace(rho)
 
-        # High-density ASCII grid mapping of final density matrix magnitude
         chars = [" ", "·", "x", "#"]
         matrix_ascii = []
         for r in range(sites):
@@ -114,16 +115,12 @@ class QuantumLindbladDensityVisualizerEngine:
         }
 
 class TuringMorphogenesisDynamicGridEngine:
-    r"""
-    2D Reaction-Diffusion PDE with Evolving Boundary Shape Masks
-    """
     @staticmethod
     def render_morphogenesis(grid_size: int = 20, iterations: int = 80) -> dict:
         np.random.seed(42)
         u = np.ones((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
         v = np.zeros((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
 
-        # Dynamic circular boundary constraint mask
         center = grid_size / 2.0
         mask = np.zeros((grid_size, grid_size), dtype=bool)
         for r in range(grid_size):
@@ -158,9 +155,6 @@ class TuringMorphogenesisDynamicGridEngine:
         }
 
 class DNAOrigamiTorsionRouterEngine:
-    r"""
-    3D DNA Origami Matrix Routing & Mechanical Torsion Energy
-    """
     @staticmethod
     def calculate_routing_strain(scaffold_bp: int, staple_strands: int, target_planes: int = 3) -> dict:
         turns = scaffold_bp / 10.5
@@ -179,9 +173,6 @@ class DNAOrigamiTorsionRouterEngine:
         }
 
 class ChronomorphicShannonManifoldEngine:
-    r"""
-    Multi-Generational Epigenetic Network Shannon Information Decay Manifold
-    """
     @staticmethod
     def simulate_entropy_manifold(generations: int = 50, base_entropy: float = 0.92, decay_constant: float = 0.028) -> dict:
         trajectory = []
