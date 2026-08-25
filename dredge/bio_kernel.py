@@ -253,3 +253,128 @@ class FastqQualityFilterEngine:
             "quality_filter_status": "PASS" if is_pass else "FAIL",
             "accuracy_confidence": f"{round((1.0 - mean_p_error) * 100, 4)}%"
         }
+
+class PopulationGeneticsEngine:
+    r"""
+    Hardy-Weinberg Equilibrium & Allele Frequencies:
+    p + q = 1  =>  p^2 + 2pq + q^2 = 1
+    Chi-Square Goodness-of-Fit Test for Equilibrium Deviation
+    """
+    @staticmethod
+    def calculate_hardy_weinberg(obs_AA: int, obs_Aa: int, obs_aa: int) -> dict:
+        total_ind = obs_AA + obs_Aa + obs_aa
+        if total_ind <= 0:
+            return {"error": "Total population must be greater than zero"}
+
+        total_alleles = 2 * total_ind
+        p = ((2 * obs_AA) + obs_Aa) / total_alleles
+        q = 1.0 - p
+
+        exp_AA = (p ** 2) * total_ind
+        exp_Aa = (2 * p * q) * total_ind
+        exp_aa = (q ** 2) * total_ind
+
+        # Chi-Square Test (df = 1, critical value at alpha=0.05 is 3.841)
+        chi2 = 0.0
+        for obs, exp in zip([obs_AA, obs_Aa, obs_aa], [exp_AA, exp_Aa, exp_aa]):
+            if exp > 0:
+                chi2 += ((obs - exp) ** 2) / exp
+
+        is_equilibrium = chi2 < 3.841
+
+        return {
+            "total_population": total_ind,
+            "allele_frequency_p": round(p, 4),
+            "allele_frequency_q": round(q, 4),
+            "genotype_freq_AA_p2": round(p**2, 4),
+            "genotype_freq_Aa_2pq": round(2*p*q, 4),
+            "genotype_freq_aa_q2": round(q**2, 4),
+            "chi_square_stat": round(chi2, 4),
+            "equilibrium_status": "IN_HARDY_WEINBERG_EQUILIBRIUM" if is_equilibrium else "DEVIATES_FROM_EQUILIBRIUM"
+        }
+
+class RNASecondaryStructureEngine:
+    r"""
+    Nussinov Dynamic Programming Algorithm:
+    Predicts maximum number of nested Watson-Crick & Wobble Base Pairs in RNA
+    N(i, j) = max( N(i+1, j), N(i, j-1), N(i+1, j-1) + \delta(i, j), max_{i<=k<j}(N(i, k) + N(k+1, j)) )
+    """
+    CANONICAL_PAIRS = {('A', 'U'), ('U', 'A'), ('G', 'C'), ('C', 'G'), ('G', 'U'), ('U', 'G')}
+
+    @staticmethod
+    def nussinov_fold(rna_sequence: str, min_loop_len: int = 3) -> dict:
+        seq = rna_sequence.upper().strip().replace('T', 'U')
+        n = len(seq)
+        if n < min_loop_len + 2:
+            return {"error": "Sequence too short for RNA secondary structure"}
+
+        DP = np.zeros((n, n), dtype=int)
+
+        # Fill dynamic programming matrix along diagonals
+        for length in range(min_loop_len + 1, n):
+            for i in range(n - length):
+                j = i + length
+                # Case 1: Unpaired positions
+                DP[i, j] = max(DP[i + 1, j], DP[i, j - 1])
+
+                # Case 2: Base pair between i and j
+                if (seq[i], seq[j]) in RNASecondaryStructureEngine.CANONICAL_PAIRS:
+                    DP[i, j] = max(DP[i, j], DP[i + 1, j - 1] + 1)
+
+                # Case 3: Bifurcation
+                for k in range(i + 1, j):
+                    DP[i, j] = max(DP[i, j], DP[i, k] + DP[k + 1, j])
+
+        max_pairs = int(DP[0, n - 1])
+        base_pair_density = round((2 * max_pairs / n) * 100, 2)
+
+        return {
+            "rna_length": f"{n} nt",
+            "max_nested_base_pairs": max_pairs,
+            "paired_nucleotide_pct": f"{base_pair_density}%",
+            "structure_matrix_shape": f"{n}x{n}",
+            "folding_model": "Nussinov Dynamic Matrix"
+        }
+
+class EnzymeInhibitionEngine:
+    r"""
+    Enzyme Inhibition Kinetics:
+    Competitive: Km_app = Km * (1 + [I] / Ki), Vmax_app = Vmax
+    Non-Competitive: Vmax_app = Vmax / (1 + [I] / Ki), Km_app = Km
+    Uncompetitive: Vmax_app = Vmax / (1 + [I] / Ki), Km_app = Km / (1 + [I] / Ki)
+    """
+    @staticmethod
+    def calculate_inhibition(v_max: float, k_m: float, inhibitor_conc: float, k_i: float, mode: str = "competitive") -> dict:
+        if v_max <= 0 or k_m <= 0 or k_i <= 0 or inhibitor_conc < 0:
+            return {"error": "Kinetic constants and concentrations must be positive"}
+
+        alpha = 1.0 + (inhibitor_conc / k_i)
+        mode = mode.lower().strip()
+
+        if mode == "competitive":
+            v_max_app = v_max
+            k_m_app = k_m * alpha
+        elif mode == "noncompetitive" or mode == "non-competitive":
+            v_max_app = v_max / alpha
+            k_m_app = k_m
+        elif mode == "uncompetitive":
+            v_max_app = v_max / alpha
+            k_m_app = k_m / alpha
+        else:
+            return {"error": f"Unknown inhibition mode: {mode}"}
+
+        # Apparent catalytic efficiency (Vmax_app / Km_app)
+        eff_native = v_max / k_m
+        eff_inhibited = v_max_app / k_m_app
+        eff_drop = round((1.0 - (eff_inhibited / eff_native)) * 100, 2)
+
+        return {
+            "inhibition_mode": mode.upper(),
+            "inhibitor_concentration": inhibitor_conc,
+            "inhibition_factor_alpha": round(alpha, 4),
+            "native_Vmax": v_max,
+            "apparent_Vmax": round(v_max_app, 4),
+            "native_Km": k_m,
+            "apparent_Km": round(k_m_app, 4),
+            "efficiency_loss": f"{eff_drop}%"
+        }
