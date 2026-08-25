@@ -17,7 +17,7 @@ def main():
     parser.add_argument('--nw-visual', nargs=2, metavar=('SEQ1', 'SEQ2'), help='Needleman-Wunsch Visual')
     parser.add_argument('--window-qc', nargs=2, metavar=('SEQ', 'QUAL'), help='Sliding Window QC')
     parser.add_argument('--upgma-matrix', type=str, help='UPGMA Tree')
-    parser.add_argument('--kinetics-fit', nargs=2, help='Kinetics Fit')
+    parser.add_argument('--kinetics-fit', nargs=2, metavar=('SUBSTRATES', 'VELOCITIES'), help='Kinetics Fit')
     parser.add_argument('--test', action='store_true', help='Run Tests')
 
     args = parser.parse_args()
@@ -25,6 +25,13 @@ def main():
     if args.test:
         suite = unittest.defaultTestLoader.discover('tests')
         unittest.TextTestRunner(verbosity=2).run(suite)
+        return
+
+    if args.kinetics_fit:
+        subs = [float(x.strip()) for x in args.kinetics_fit[0].split(',')]
+        vels = [float(x.strip()) for x in args.kinetics_fit[1].split(',')]
+        res = PureEnzymeKineticsEngine.fit_lineweaver_burk(subs, vels)
+        print(f"\n • Lineweaver-Burk Fit: Vmax = {res['v_max']} uM/min | Km = {res['k_m']} uM | R^2 = {res['r_squared']}\n")
         return
 
     if args.bwt_decode:
