@@ -2,18 +2,18 @@ import argparse
 import sys
 import unittest
 from dredge.bio_kernel import (
-    PolymorphicQuineEngine,
-    ZeroKnowledgeLedgerEngine,
-    ChaosReactionDiffusionEngine,
-    MolecularMeshStrainEngine
+    HeterogeneousPolyglotQuineEngine,
+    MultiTenantZKPedersenEngine,
+    ChaosFractalDiffusionEngine,
+    MultiAxisLatticeOptimizationEngine
 )
 
 def main():
-    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Polymorphic & Zero-Knowledge Core (v66.0.0)')
-    parser.add_argument('--poly-quine', action='store_true', help='Generate Polymorphic Self-Replicating Code Replica')
-    parser.add_argument('--zk-ledger', nargs=2, type=int, metavar=('BALANCE', 'TRANSFER'), help='Simulate Zero-Knowledge Pedersen Commitment Transition')
-    parser.add_argument('--chaos-rd', action='store_true', help='Render Chaos-Boundary Reaction-Diffusion Lattice')
-    parser.add_argument('--mesh-strain', nargs=3, type=float, metavar=('NODES', 'DENSITY', 'TORQUE'), help='Compute Molecular Mesh Topological Strain')
+    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Logic Singularity Suite (v67.0.0)')
+    parser.add_argument('--polyglot-quine', nargs='?', const='c', default=None, help='Synthesize Polyglot Quine Module (c/js)')
+    parser.add_argument('--zk-pedersen', nargs='+', type=int, help='Multi-Tenant Zero-Knowledge Pedersen Ledger: --zk-pedersen 500 250 1200')
+    parser.add_argument('--chaos-fractal', action='store_true', help='Render Chaos-Boundary Fractal Reaction-Diffusion Lattice')
+    parser.add_argument('--mesh-top', nargs=3, type=float, metavar=('NODES', 'TORQUE', 'AXES'), help='Multi-Axis Lattice Topological Optimization')
     parser.add_argument('--test', action='store_true', help='Run unit tests')
 
     args = parser.parse_args()
@@ -23,42 +23,42 @@ def main():
         unittest.TextTestRunner(verbosity=2).run(suite)
         return
 
-    if args.poly_quine:
-        res = PolymorphicQuineEngine.generate_polymorphic_replica()
+    if args.polyglot_quine:
+        res = HeterogeneousPolyglotQuineEngine.synthesize_polyglot(args.polyglot_quine)
         print("\n" + "="*50)
-        print("  POLYMORPHIC QUINE REPLICA GENERATOR")
+        print(f"  HETEROGENEOUS POLYGLOT QUINE ({res['target_paradigm']})")
         print("="*50)
-        print(f" • Signature: {res['polymorphic_signature']} | Bytes: {res['generated_code_bytes']}")
-        print(" • Code Output:\n")
-        print(res['source_code_replica'])
+        print(f" • Signature: {res['payload_signature']} | SHA-256: {res['root_sha256_verification'][:16]}...")
+        print(" • Synthesized Source Output:\n")
+        print(res['generated_polyglot_source'])
         print("\n" + "="*50 + "\n")
         return
 
-    if args.zk_ledger:
-        res = ZeroKnowledgeLedgerEngine.simulate_zk_transition(args.zk_ledger[0], args.zk_ledger[1])
+    if args.zk_pedersen:
+        res = MultiTenantZKPedersenEngine.verify_multi_tenant_state(args.zk_pedersen)
         print("\n" + "="*50)
-        print("  ZERO-KNOWLEDGE PEDERSEN COMMITMENT LEDGER")
+        print("  MULTI-TENANT ZK-PEDERSEN STATE MATRIX")
         print("="*50)
-        print(f" • Initial Commitment:   {res['commitment_initial']}")
-        print(f" • Transfer Commitment:  {res['commitment_transfer']}")
-        print(f" • Remainder Commitment: {res['commitment_remainder']}")
-        print(f" • Cryptographic Proof:  {res['zk_proof_verified']} ({res['privacy_status']})\n" + "="*50 + "\n")
+        for t in res['tenant_commitments']:
+            print(f" • {t['tenant_id']}: Commitment = {t['commitment']}")
+        print(f" • Aggregated Commitment: {res['aggregated_homomorphic_commitment']}")
+        print(f" • Proof Status: {res['zk_proof_status']} ({res['privacy_metric']})\n" + "="*50 + "\n")
         return
 
-    if args.chaos_rd:
-        res = ChaosReactionDiffusionEngine.simulate_chaos_lattice(grid_size=20, steps=60)
-        print("\n" + "="*45)
-        print("  CHAOS-BOUNDARY REACTION-DIFFUSION LATTICE")
-        print("="*45)
-        for row in res['ascii_visual']:
-            print("  " + row)
-        print("="*45)
-        print(f" • Attractor State: {res['chaos_attractor_state']} | Mean Field: {res['mean_field_density']}\n")
+    if args.chaos_fractal:
+        res = ChaosFractalDiffusionEngine.simulate_chaos_fractal(grid_size=24, steps=70)
+        print("\n" + "="*50)
+        print("  CHAOS-BOUNDARY FRACTAL REACTION-DIFFUSION")
+        print("="*50)
+        for line in res['fractal_ascii_tissue']:
+            print("  " + line)
+        print("="*50)
+        print(f" • Attractor State: {res['chaos_attractor_state']} | Fractal Area: {res['fractal_occupancy_pct']}\n")
         return
 
-    if args.mesh_strain:
-        res = MolecularMeshStrainEngine.calculate_mesh_strain(int(args.mesh_strain[0]), args.mesh_strain[1], args.mesh_strain[2])
-        print(f"\n • Molecular Mesh: {res['scaffold_topological_nodes']} Nodes, {res['interconnecting_mesh_edges']} Edges\n • Shear Strain: {res['shear_strain_magnitude']} | Energy: {res['total_strain_energy_J']} J ({res['topological_stability']})\n")
+    if args.mesh_top:
+        res = MultiAxisLatticeOptimizationEngine.optimize_structural_lattice(int(args.mesh_top[0]), args.mesh_top[1], int(args.mesh_top[2]))
+        print(f"\n • Lattice Mesh: {res['topological_nodes']} Nodes ({res['spatial_coordination_axes']} Axes, {res['mesh_intersections']} Intersections)\n • Von Mises Stress: {res['von_mises_equivalent_stress_MPa']} MPa (Normal: {res['normal_stress_MPa']}, Shear: {res['shear_stress_MPa']})\n • Strain Energy: {res['strain_energy_J']} J ({res['structural_evaluation']})\n")
         return
 
     parser.print_help()
