@@ -528,3 +528,164 @@ class AllostericCooperativityEngine:
             "half_saturation_K0_5": kd_apparent,
             "cooperativity_type": cooperativity
         }
+
+class AdvancedAlignmentEngine:
+    r"""
+    1. Smith-Waterman Local Alignment with Affine Gap Penalty (Gotoh 1982)
+       Gap cost: g(k) = d + (k - 1) * e  (d: open, e: extend)
+    2. Needleman-Wunsch with Matrix & Backtracking
+    """
+    @staticmethod
+    def smith_waterman_affine(seq1: str, seq2: str, match: int = 3, mismatch: int = -3, gap_open: int = 5, gap_extend: int = 1) -> dict:
+        n, m = len(seq1), len(seq2)
+        M = np.zeros((n + 1, m + 1), dtype=float)
+        Ix = np.full((n + 1, m + 1), -np.inf)
+        Iy = np.full((n + 1, m + 1), -np.inf)
+
+        max_score = 0.0
+        best_pos = (0, 0)
+
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                s = match if seq1[i-1] == seq2[j-1] else mismatch
+                Ix[i, j] = max(M[i-1, j] - gap_open, Ix[i-1, j] - gap_extend)
+                Iy[i, j] = max(M[i, j-1] - gap_open, Iy[i, j-1] - gap_extend)
+                M[i, j] = max(0.0, M[i-1, j-1] + s, Ix[i, j], Iy[i, j])
+
+                if M[i, j] > max_score:
+                    max_score = M[i, j]
+                    best_pos = (i, j)
+
+        return {
+            "max_alignment_score": float(max_score),
+            "peak_position": best_pos,
+            "gap_penalty_model": f"Affine (open={gap_open}, extend={gap_extend})"
+        }
+
+    @staticmethod
+    def needleman_wunsch_visual(seq1: str, seq2: str, match: int = 1, mismatch: int = -1, gap: int = -1) -> dict:
+        n, m = len(seq1), len(seq2)
+        DP = np.zeros((n + 1, m + 1), dtype=int)
+        traceback = np.zeros((n + 1, m + 1), dtype=int) # 1: Diag, 2: Up, 3: Left
+
+        for i in range(n + 1):
+            DP[i, 0] = i * gap
+            traceback[i, 0] = 2
+        for j in range(m + 1):
+            DP[0, j] = j * gap
+            traceback[0, j] = 3
+        traceback[0, 0] = 0
+
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                s = match if seq1[i-1] == seq2[j-1] else mismatch
+                score_diag = DP[i-1, j-1] + s
+                score_up = DP[i-1, j] + gap
+                score_left = DP[i, j-1] + gap
+                best = max(score_diag, score_up, score_left)
+                DP[i, j] = best
+
+                if best == score_diag:
+                    traceback[i, j] = 1
+                elif best == score_up:
+                    traceback[i, j] = 2
+                else:
+                    traceback[i, j] = 3
+
+        # Backtrack path
+        align1, align2 = [], []
+        curr_i, curr_j = n, m
+        while curr_i > 0 or curr_j > 0:
+            tb = traceback[curr_i, curr_j]
+            if tb == 1 or (curr_i > 0 and curr_j > 0 and tb == 0):
+                align1.append(seq1[curr_i - 1])
+                align2.append(seq2[curr_j - 1])
+                curr_i -= 1
+                curr_j -= 1
+            elif tb == 2:
+                align1.append(seq1[curr_i - 1])
+                align2.append('-')
+                curr_i -= 1
+            else:
+                align1.append('-')
+                align2.append(seq2[curr_j - 1])
+                curr_j -= 1
+
+        aligned_s1 = "".join(reversed(align1))
+        aligned_s2 = "".join(reversed(align2))
+
+        return {
+            "score": int(DP[n, m]),
+            "aligned_seq1": aligned_s1,
+            "aligned_seq2": aligned_s2,
+            "matrix_ascii": str(DP)
+        }
+
+class InverseBwtDecoderEngine:
+    r"""
+    Inverse Burrows-Wheeler Transform via LF-Mapping (Last-to-First)
+    """
+    @staticmethod
+    def decode_bwt(bwt_str: str) -> dict:
+        if not bwt_str or "$" not in bwt_str:
+            return {"error": "Sentinel marker '$' missing in BWT string"}
+
+        n = len(bwt_str)
+        # Create indexed L-column and sorted F-column
+        L_tuples = []
+        counts_L = {}
+        for char in bwt_str:
+            counts_L[char] = counts_L.get(char, 0) + 1
+            L_tuples.append((char, counts_L[char]))
+
+        F_tuples = sorted(L_tuples, key=lambda x: x[0])
+        tuple_to_F_idx = {t: idx for idx, t in enumerate(F_tuples)}
+
+        # Follow LF mapping starting from sentinel '$'
+        orig = []
+        curr_tuple = ('$', 1)
+        for _ in range(n - 1):
+            f_idx = tuple_to_F_idx[curr_tuple]
+            next_tuple = L_tuples[f_idx]
+            orig.append(next_tuple[0])
+            curr_tuple = next_tuple
+
+        decoded_seq = "".join(reversed(orig))
+        return {
+            "bwt_input": bwt_str,
+            "decoded_sequence": decoded_seq,
+            "status": "EXACT_RECONSTRUCTION"
+        }
+
+class SangerSlidingWindowQCEngine:
+    r"""
+    Sliding Window Quality Trimmer (Phred+33 Sanger Offset)
+    Trims 3' end when average quality in window falls below threshold.
+    """
+    @staticmethod
+    def trim_sliding_window(sequence: str, qual_str: str, window_size: int = 4, min_q: float = 20.0) -> dict:
+        seq = sequence.strip()
+        qual = qual_str.strip()
+        if len(seq) != len(qual) or len(seq) == 0:
+            return {"error": "Length mismatch between sequence and quality string"}
+
+        scores = [ord(c) - 33 for c in qual]
+        n = len(scores)
+
+        cut_idx = n
+        for i in range(0, n - window_size + 1):
+            win = scores[i:i + window_size]
+            if float(np.mean(win)) < min_q:
+                cut_idx = i
+                break
+
+        trimmed_seq = seq[:cut_idx]
+        trimmed_qual = qual[:cut_idx]
+
+        return {
+            "original_length": n,
+            "trimmed_length": cut_idx,
+            "trimmed_sequence": trimmed_seq,
+            "trimmed_quality": trimmed_qual,
+            "bases_dropped": n - cut_idx
+        }

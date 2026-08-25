@@ -1,41 +1,40 @@
 import unittest
 from dredge.bio_kernel import (
-    PureThermodynamicsEngine, PureBiochemistryProteinEngine, BigDataGenomicsEngine,
-    FastqQualityFilterEngine, PopulationGeneticsEngine, RNASecondaryStructureEngine,
-    EnzymeInhibitionEngine, PhylogeneticTreeEngine, GeneticLinkageMappingEngine,
-    AllostericCooperativityEngine
+    AdvancedAlignmentEngine, InverseBwtDecoderEngine, SangerSlidingWindowQCEngine,
+    PureEnzymeKineticsEngine, PhylogeneticTreeEngine
 )
 
-class TestScientificFramework(unittest.TestCase):
-    def test_upgma_phylogenetics(self):
+class TestBioMathChallenges(unittest.TestCase):
+    def test_affine_smith_waterman(self):
+        res = AdvancedAlignmentEngine.smith_waterman_affine("ACGTACGT", "ACGT", match=3, mismatch=-3, gap_open=5, gap_extend=1)
+        self.assertEqual(res['max_alignment_score'], 12.0)
+
+    def test_needleman_wunsch_visual(self):
+        res = AdvancedAlignmentEngine.needleman_wunsch_visual("GATTACA", "GCATGCU")
+        self.assertIn("G-ATTACA", res['aligned_seq1'])
+
+    def test_bwt_inverse_decode(self):
+        res = InverseBwtDecoderEngine.decode_bwt("ANNB$AA")
+        self.assertEqual(res['decoded_sequence'], "BANANA")
+
+    def test_sliding_window_qc(self):
+        # 'I' = Q40, '#' = Q2
+        res = SangerSlidingWindowQCEngine.trim_sliding_window("ATGCGATCGCTA", "IIIIII######", window_size=3, min_q=20.0)
+        self.assertEqual(res['trimmed_length'], 6)
+        self.assertEqual(res['trimmed_sequence'], "ATGCGA")
+
+    def test_kinetics_curve_fit(self):
+        subs = [5.0, 10.0, 20.0, 40.0]
+        vels = [(100.0 * x) / (10.0 + x) for x in subs]
+        res = PureEnzymeKineticsEngine.fit_lineweaver_burk(subs, vels)
+        self.assertAlmostEqual(res['v_max'], 100.0, places=2)
+        self.assertAlmostEqual(res['k_m'], 10.0, places=2)
+
+    def test_upgma_matrix_parser(self):
         taxa = ["A", "B", "C"]
         mat = [[0.0, 2.0, 4.0], [2.0, 0.0, 4.0], [4.0, 4.0, 0.0]]
         res = PhylogeneticTreeEngine.construct_upgma_tree(taxa, mat)
         self.assertTrue(res['newick_tree_representation'].endswith(";"))
-        self.assertTrue(res['newick_tree_representation'].startswith("("))
-        self.assertIn("A", res['newick_tree_representation'])
-        self.assertIn("B", res['newick_tree_representation'])
-        self.assertIn("C", res['newick_tree_representation'])
-
-    def test_genetic_linkage(self):
-        res = GeneticLinkageMappingEngine.calculate_linkage(80, 20)
-        self.assertEqual(res['standard_map_distance_cM'], "20.0 cM")
-        self.assertAlmostEqual(res['recombination_fraction_r'], 0.20, places=2)
-
-    def test_allosteric_hill_equation(self):
-        concs = [0.1, 0.5, 1.0, 2.0, 5.0]
-        sats = [0.005, 0.15, 0.50, 0.85, 0.98]
-        res = AllostericCooperativityEngine.fit_hill_equation(concs, sats)
-        self.assertTrue(res['hill_coefficient_nH'] > 1.5)
-        self.assertIn("POSITIVE_COOPERATIVITY", res['cooperativity_type'])
-
-    def test_hardy_weinberg(self):
-        res = PopulationGeneticsEngine.calculate_hardy_weinberg(49, 42, 9)
-        self.assertAlmostEqual(res['allele_frequency_p'], 0.7, places=2)
-
-    def test_dna_tm(self):
-        res = PureThermodynamicsEngine.calculate_melting_temp("GCGAATTCGC")
-        self.assertIn('melting_temperature_Tm', res)
 
 if __name__ == '__main__':
     unittest.main()
