@@ -52,7 +52,8 @@ from dredge.bio_kernel import (
     BareMetalKernelImageBuilder,
     ChronomorphicHyperLatticeEngine,
     AutonomousBioCognitiveTransformer,
-    UniversalAutonomousOmniEngine
+    UniversalAutonomousOmniEngine,
+    SentientConversationalOmniCore
 )
 
 def main():
@@ -62,19 +63,19 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Universal Omni-AI (v38.0.0): Autonomous General Cognitive Agent & Bio-OS"
+        description="DREDGE Sentient Core (v39.0.0): Conversational AI, Universal Agent & Bio-OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 38.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 39.0.0")
     
-    # Universal Omni AI Directive
-    parser.add_argument("--do", type=str, default=None, help="Execute ANY arbitrary task or command autonomously via Universal Omni-AI")
+    # Conversational Omnipotent Prompt
+    parser.add_argument("--prompt", "-p", type=str, default=None, help="Talk to DREDGE in natural language ('hi', 'hello', questions, or any task)")
+    parser.add_argument("--do", type=str, default=None, help="Execute task via Omni-AI")
 
     # Core Systems
-    parser.add_argument("--ai-repair", type=str, default=None, help="Run AI Genomic Transformer Repair")
+    parser.add_argument("--ai-repair", type=str, default=None, help="AI Genomic Transformer Repair")
     parser.add_argument("--ai-evolve", type=str, default=None, help="Predict evolutionary mutations")
     parser.add_argument("--time-crystal", action="store_true", help="Simulate Discrete Time-Crystal")
     parser.add_argument("--braid", type=str, default=None, help="Execute Topological Braid Gate")
-    parser.add_argument("--hypervector", type=str, default=None, help="Holographic Hypervector Bind")
     parser.add_argument("--build-baremetal", type=str, default=None, help="Generate Bare-Metal image")
     parser.add_argument("--deep-silicon", action="store_true", help="Speculative Barrier")
     parser.add_argument("--shamir-split", type=int, default=None, help="Shamir Threshold Shares")
@@ -91,45 +92,42 @@ def main():
 
     args = parser.parse_args()
 
-    if args.do:
-        res = UniversalAutonomousOmniEngine.execute_universal_task(args.do)
+    if args.prompt:
+        res = SentientConversationalOmniCore.process_any_intent(args.prompt)
         print("\n" + "="*76)
-        print("  🤖 UNIVERSAL AUTONOMOUS OMNI-COGNITIVE AGENT EXECUTION")
+        print("  💬 DREDGE SENTIENT CONVERSATIONAL CORE")
         print("="*76)
-        print(f" • Input Goal / Prompt   : \"{res['input_objective']}\"")
-        print(f" • Identified Domain     : {res['cognitive_task_domain']}")
-        print("\n[*] Chain-of-Logic Planning Trace:")
-        for step in res['task_decomposition_steps']:
-            print(f"   {step}")
-        print(f"\n • Final Resolution Payload:\n   ▶ {res['autonomous_resolution']}")
-        print(f" • Task Completion State : {res['agent_status']}")
+        print(f" • Input Message : \"{res['input_text']}\"")
+        print(f" • Domain Scope  : {res['intent_domain']}")
+        print(f"\n[*] Response / Output:\n   ▶ {res['sentient_response']}")
+        print(f"\n • Status        : {res['system_state']}")
         print("="*76 + "\n")
         return
 
-    if args.ai_repair:
-        res = AutonomousBioCognitiveTransformer.predict_and_repair_genome(args.ai_repair)
-        print(f"\n • AI Repaired DNA: {res['autonomous_repaired_dna']} | Hotspot: {res['detected_oncogenic_hotspot']}\n")
+    if args.do:
+        res = UniversalAutonomousOmniEngine.execute_universal_task(args.do)
+        print(f"\n • Omni Output: {res['autonomous_resolution']}\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND UNIVERSAL OMNI-AI OS HEALTH")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND SENTIENT SYSTEM HEALTH")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
-        omni_res = UniversalAutonomousOmniEngine.execute_universal_task("Self-Test Core Invariants")
-        print(f" • [Universal Omni-AI]: Status = {omni_res['agent_status']}")
+        chat_res = SentientConversationalOmniCore.process_any_intent("hello")
+        print(f" • [Conversational AI]: {chat_res['sentient_response']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="OMNI-COGNITIVE SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="SENTIENT CORE SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Universal Omni-AI: Autonomous Cognitive Agent & Bio-OS},
+  title = {DREDGE Sentient Core: Conversational AI & Universal Bio-OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")

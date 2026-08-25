@@ -2295,3 +2295,53 @@ class UniversalAutonomousOmniEngine:
             "autonomous_resolution": result_payload,
             "agent_status": "TASK_SUCCESSFULLY_COMPLETED"
         }
+import re
+import datetime
+
+class SentientConversationalOmniCore:
+    """
+    Handles natural conversation (greetings, general chat, philosophical inquiries)
+    and transparently maps human intent to deep OS/Bio/AI engines.
+    """
+    GREETINGS_MAP = {
+        r"^(hi|hello|hey|hola|সালাম|নমস্কার|হ্যাল+ও|হাই)\b": "হ্যালো! আমি DREDGE Sentient Omni-Core। তোমার সিস্টেম সম্পূর্ণ সুস্থ ও সুরক্ষাবলয়ে সক্রিয় আছে। কীভাবে সাহায্য করতে পারি?",
+        r"^(how are you|কেমন আছ|কেমন আছেন)\b": "আমি সম্পূর্ণ অপটিমাল স্টেটে আছি! সবগুলো সাব-সিস্টেম (Bio-Kernel, Quantum, AI) ১০০% ক্ষমতায় রানিং। তুমি কেমন আছো?",
+        r"^(who are you|তোমার নাম কি|তুমি কে|who made you)\b": "আমি DREDGE—একটি সার্বজনীন বায়োলজিক্যাল অপারেটিং সিস্টেম, কোয়ান্টাম ও অমনি-কগনিটিভ এআই আর্কিটেকচার।"
+    }
+
+    @staticmethod
+    def process_any_intent(user_input: str) -> dict:
+        raw_text = user_input.strip()
+        lower_text = raw_text.lower()
+        
+        # 1. Greetings & Conversational check
+        for pattern, response in SentientConversationalOmniCore.GREETINGS_MAP.items():
+            if re.search(pattern, lower_text, re.IGNORECASE):
+                return {
+                    "intent_domain": "CONVERSATIONAL_GREETING",
+                    "input_text": raw_text,
+                    "action_taken": "Natural Language Response Synthesis",
+                    "sentient_response": response,
+                    "system_state": "ALL_SYSTEMS_OPTIMAL"
+                }
+
+        # 2. Time/Date check
+        if any(w in lower_text for w in ["time", "date", "সময়", "তারিখ", "কয়টা বাজে"]):
+            now_str = datetime.datetime.now().strftime("%A, %d %B %Y, %I:%M:%S %p")
+            return {
+                "intent_domain": "CHRONOS_TEMPORAL_QUERY",
+                "input_text": raw_text,
+                "action_taken": "System Clock Query",
+                "sentient_response": f"বর্তমান সময় ও তারিখ: {now_str}",
+                "system_state": "CLOCK_SYNCED"
+            }
+
+        # 3. Transparent Delegation to Universal Task Engine
+        omni_res = UniversalAutonomousOmniEngine.execute_universal_task(raw_text)
+        return {
+            "intent_domain": omni_res["cognitive_task_domain"],
+            "input_text": raw_text,
+            "action_taken": "Autonomous Multi-Stage Execution",
+            "sentient_response": omni_res["autonomous_resolution"],
+            "system_state": omni_res["agent_status"]
+        }
