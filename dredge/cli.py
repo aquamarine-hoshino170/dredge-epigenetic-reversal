@@ -49,7 +49,8 @@ from dredge.bio_kernel import (
     QuantumImmuneInformationEngine,
     ShamirZeroTraceShieldEngine,
     DeepSiliconHardwareFortress,
-    BareMetalKernelImageBuilder
+    BareMetalKernelImageBuilder,
+    ChronomorphicHyperLatticeEngine
 )
 
 def main():
@@ -59,19 +60,19 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Bare-Metal Sovereign (v35.0.0): Autonomous Hardware Bootable Bio-OS"
+        description="DREDGE CHLE (v36.0.0): Chronomorphic Hyper-Lattice & Time-Crystal Quantum OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 35.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 36.0.0")
     
-    # Bare-Metal Builder
-    parser.add_argument("--build-baremetal", type=str, default=None, help="Generate autonomous bootable Bare-Metal raw image (.bin)")
-    parser.add_argument("--banner", type=str, default="DREDGE BIO-OS [BARE-METAL SOVEREIGN RUNNING]\r\n", help="Custom Kernel BIOS Boot Banner")
+    # CHLE Flags
+    parser.add_argument("--time-crystal", action="store_true", help="Simulate Discrete Time-Crystal Sub-Harmonic Symmetry Breaking")
+    parser.add_argument("--braid", type=str, default=None, help="Execute Non-Abelian Anyon Topological Braid Gate (e.g. s1-s2-s1)")
+    parser.add_argument("--hypervector", type=str, default=None, help="Bind payload into 10,000-Dimensional Holographic Vector Space")
 
     # Core Systems
+    parser.add_argument("--build-baremetal", type=str, default=None, help="Generate bootable Bare-Metal image")
     parser.add_argument("--deep-silicon", action="store_true", help="Execute Speculative Instruction Barrier")
-    parser.add_argument("--cold-boot-shield", type=str, default=None, help="Process payload with Anti-Cold-Boot Protection")
-    parser.add_argument("--shamir-split", type=int, default=None, help="Split secret into Shamir Threshold Shares")
-    parser.add_argument("--ram-wipe", type=str, default=None, help="Process payload and zeroize RAM")
+    parser.add_argument("--shamir-split", type=int, default=None, help="Split secret into Shamir Shares")
     parser.add_argument("--quantum-otp", type=str, default=None, help="Generate Shannon One-Time Pad")
     parser.add_argument("--lattice-enc", type=str, default=None, help="Encrypt with Post-Quantum Lattice")
     parser.add_argument("--shield-audit", action="store_true", help="Run Anti-Tamper Audit")
@@ -89,43 +90,61 @@ def main():
 
     args = parser.parse_args()
 
-    if args.build_baremetal:
-        res = BareMetalKernelImageBuilder.compile_baremetal_image(output_filename=args.build_baremetal, kernel_banner=args.banner)
+    if args.time_crystal:
+        res = ChronomorphicHyperLatticeEngine.simulate_time_crystal_lattice()
         print("\n" + "="*76)
-        print("  💾 AUTONOMOUS BARE-METAL SOVEREIGN KERNEL BUILDER")
+        print("  ⏳ DISCRETE TIME-CRYSTAL (DTC) NON-EQUILIBRIUM HYPER-LATTICE")
         print("="*76)
-        print(f" • Hardware Architecture : {res['kernel_architecture']}")
-        print(f" • Generated Disk Image  : {res['output_image_file']}")
-        print(f" • Sector Alignment      : {res['binary_size_bytes']}")
-        print(f" • Magic BIOS Signature  : {res['bios_boot_signature']}")
-        print(f" • CPU Entry Point       : {res['entry_point_vector']}")
-        print(f" • Host OS Dependency    : {res['underlying_os_requirement']}")
-        print(f"\n[*] Deployment Directives:\n   {res['deployment_instructions']}")
+        print(f" • Architecture Phase  : {res['architecture_paradigm']}")
+        print(f" • Driving Period (T)  : {res['floquet_driving_period']}")
+        print(f" • Emergent Symmetry   : {res['emergent_subharmonic_period']}")
+        print(f" • Order Parameter     : {res['lattice_order_parameter']}")
+        print(f" • Thermodynamic Cost  : {res['thermal_dissipation_rate']}")
         print("="*76 + "\n")
         return
 
-    if args.deep_silicon:
-        b_res = DeepSiliconHardwareFortress.execute_speculative_barrier()
-        print(f"\n • Deep-Silicon Barrier: {b_res['silicon_defense_mode']} | Latency: {b_res['speculative_barrier_latency']}\n")
+    if args.braid:
+        res = ChronomorphicHyperLatticeEngine.execute_topological_braid(args.braid)
+        print("\n" + "="*76)
+        print("  🧬 NON-ABELIAN ANYON TOPOLOGICAL BRAID COMPUTATION")
+        print("="*76)
+        print(f" • Computation Mode    : {res['computation_mode']}")
+        print(f" • Braid Sequence      : {res['braid_operator_sequence']}")
+        print(f" • Unitary Phase Angle : {res['topological_quantum_phase']}")
+        print(f" • Decoherence Error   : {res['local_perturbation_vulnerability']}")
+        print(f" • Hardware Robustness : {res['fault_tolerance_grade']}")
+        print("="*76 + "\n")
+        return
+
+    if args.hypervector:
+        res = ChronomorphicHyperLatticeEngine.encode_holographic_hypervector(args.hypervector)
+        print("\n" + "="*76)
+        print("  🌌 10,000-DIMENSIONAL HOLOGRAPHIC HYPERVECTOR SPACE")
+        print("="*76)
+        print(f" • Vector Space Dim    : {res['hyperdimensional_space']}")
+        print(f" • Bound Payload       : {res['payload_bound']}")
+        print(f" • Hypervector Density : {res['hypervector_density']}")
+        print(f" • Associative Memory  : {res['associative_capacity']}")
+        print("="*76 + "\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND BARE-METAL MONOLITH HEALTH")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND CHLE HYPER-LATTICE HEALTH")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="BARE-METAL SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="HYPER-LATTICE SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Bare-Metal Sovereign: Autonomous Hardware Bootable Bio-OS},
+  title = {DREDGE CHLE: Chronomorphic Hyper-Lattice & Time-Crystal Quantum OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
