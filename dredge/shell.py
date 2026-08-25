@@ -1,70 +1,83 @@
 import sys
+import readline
 from dredge.bio_kernel import (
-    UniversalBioKernel, 
-    SequenceAlignmentEngine, 
-    MolecularDockingEngine, 
-    PharmacologyScreener, 
-    ClinicalDiagnosticEngine,
-    NovelDiseaseDiscoveryEngine,
-    SyntheticBiologyCircuit,
-    EpidemiologicalViralEngine,
-    GenerativeProteinDesigner
+    UniversalBioKernel,
+    BioVirtualFileSystemPOSIX,
+    BioSystemMonitorAndSignals,
+    LinuxBioSyscallAndLKM,
+    LucasRuthlessQCEngine,
+    NativeAssemblyBitKernel
 )
-from dredge.core import DREDGEResearchPipeline
 
 def start_interactive_shell():
-    print("\n" + "="*76)
-    print("  🧬 AQUAMARINE DREDGE: INTERACTIVE BIO-SHELL (REPL v8.0.0)")
-    print("  Type 'help' for command matrix or 'exit' / 'quit' to close.")
-    print("="*76 + "\n")
-
+    print("""
+============================================================================
+  🐧 AQUAMARINE DREDGE MONOLITH: PURE LINUX-BIO REPL SHELL (v27.0.0)
+============================================================================
+  * Ring-0 Protected Mode Active. VFS mounted on /bio. PID 1 init running.
+  * Type 'help' for built-in syscalls, 'exit' to halt the kernel.
+============================================================================
+""")
     while True:
         try:
-            cmd = input("dredge-bio> ").strip()
-            if not cmd:
+            cmd_line = input("dredge-kernel:root# ").strip()
+            if not cmd_line:
                 continue
-            if cmd in ["exit", "quit", "q"]:
-                print("[*] Exiting DREDGE Bio-Kernel. Goodbye!\n")
+            parts = cmd_line.split()
+            cmd = parts[0].lower()
+            args = parts[1:]
+
+            if cmd in ["exit", "halt", "poweroff"]:
+                print("[+] Halting Bio-Kernel... System going down.")
                 break
             elif cmd == "help":
                 print("""
-Available Shell Directives:
-  • seq <DNA>              : Central Dogma Translation & Hydrophobicity
-  • crispr <DNA>           : Design CRISPR gRNA Targets
-  • align <SEQ1> <SEQ2>    : Needleman-Wunsch Alignment
-  • drug <Compound>        : Lipinski RO5 & ADMET Screener
-  • dock <Protein> <Drug>  : 3D Protein-Ligand Molecular Docking
-  • diagnose <Gene>        : Clinical Pathology & Risk Profile
-  • discover <Symptoms...> : Novel Syndrome & Biomarker Discovery
-  • design <Function>      : De-Novo Therapeutic Peptide Synthesis
-  • circuit <iptg> <atc>   : Synthetic Toggle Switch Simulation
-  • run [sites] [flux]     : In-Silico Epigenetic Reversal SDE
-                """)
-            elif cmd.startswith("seq "):
-                dna = cmd.split(" ", 1)[1].strip()
-                print(f" -> mRNA: {UniversalBioKernel.transcribe(dna)}")
-                print(f" -> Protein: {UniversalBioKernel.translate(dna)}")
-                print(f" -> GC: {UniversalBioKernel.calculate_gc_content(dna)}%")
-            elif cmd.startswith("drug "):
-                name = cmd.split(" ", 1)[1].strip()
-                res = PharmacologyScreener.analyze_molecule(name)
-                print(f" -> {res['compound_name']} | MW: {res['molecular_weight']} | Lipinski: {res['lipinski_ro5_status']}")
-            elif cmd.startswith("diagnose "):
-                gene = cmd.split(" ", 1)[1].strip()
-                res = ClinicalDiagnosticEngine.diagnose_variant(gene)
-                print(f" -> [{gene.upper()}] Pathology: {res['associated_pathology']}")
-                print(f" -> Prevention: {res['preventive_strategy']}")
-            elif cmd.startswith("design "):
-                target = cmd.split(" ", 1)[1].strip()
-                res = GenerativeProteinDesigner.design_therapeutic_peptide(target)
-                print(f" -> Peptide: {res['peptide_sequence']} (ΔG: {res['predicted_binding_potency']} kcal/mol)")
-            elif cmd.startswith("run"):
-                pipe = DREDGEResearchPipeline(n_sites=5000)
-                rep, _ = pipe.run_rejuvenation_pipeline(steps=150)
-                print(f" -> Reversal Reclaimed: -{rep['biomarkers']['years_rejuvenated']} Years | Entropy Delta: {rep['biomarkers']['entropy_decay_percentage']}%")
+Available Kernel Commands:
+  • ls /bio           : List biological VFS nodes
+  • cat <node>        : Read biological VFS node (e.g. cat /bio/sys/atp_pool)
+  • top               : Real-time cellular task monitor
+  • kill -9 <pid>     : Dispatch apoptotic signal to cellular thread
+  • syscall <name>    : Execute Bio-Syscall (bio_fork, bio_mmap, bio_ptrace)
+  • lsmod             : List loaded biological kernel modules (LKM)
+  • insmod <mod>      : Insert synthetic plasmid kernel module
+  • rmmod <mod>       : Remove synthetic kernel module
+  • audit <dna>       : Lucas ruthless code auditor & purge
+  • scan <dna>        : 2-bit native assembly high-speed scan
+""")
+            elif cmd == "ls" and args and args[0] == "/bio":
+                for node in BioVirtualFileSystemPOSIX.ls_nodes():
+                    print(f"  [r--r--r-- bio bio] {node}")
+            elif cmd == "cat" and args:
+                print(BioVirtualFileSystemPOSIX.cat_node(args[0]))
+            elif cmd == "top":
+                print(BioSystemMonitorAndSignals.render_bio_top())
+            elif cmd == "kill" and len(args) >= 2 and args[0] == "-9":
+                res = BioSystemMonitorAndSignals.send_cellular_signal(int(args[1]), 9)
+                print(f"[✓] {res['dispatched_signal']} sent to PID {res['target_cellular_pid']}")
+            elif cmd == "syscall" and args:
+                arg_val = args[1] if len(args) > 1 else ""
+                res = LinuxBioSyscallAndLKM.execute_syscall(args[0], arg_val)
+                for k, v in res.items():
+                    print(f"  {k}: {v}")
+            elif cmd == "lsmod":
+                res = LinuxBioSyscallAndLKM.manage_lkm("lsmod")
+                print("  Module Name          Size (KB)  Status")
+                print("  " + "-"*50)
+                for m, info in res['loaded_kernel_modules'].items():
+                    print(f"  {m:<20} {info['memory_kb']:<10} {info['status']}")
+            elif cmd == "insmod" and args:
+                print(LinuxBioSyscallAndLKM.manage_lkm("insmod", args[0])['lkm_action'])
+            elif cmd == "rmmod" and args:
+                print(LinuxBioSyscallAndLKM.manage_lkm("rmmod", args[0])['lkm_action'])
+            elif cmd == "audit" and args:
+                res = LucasRuthlessQCEngine.audit_and_purge(args[0])
+                print(f"  Lucas Verdict: {res['verdict']}")
+                print(f"  Purged DNA   : {res['purged_repaired_dna']}")
+            elif cmd == "scan" and args:
+                res = NativeAssemblyBitKernel.ultra_fast_bit_scan(args[0])
+                print(f"  Latency: {res['execution_latency']} | Throughput: {res['processing_throughput']}")
             else:
-                print(f"[!] Unknown directive: '{cmd}'. Type 'help' for command list.")
-        except KeyboardInterrupt:
-            print("\n[*] Interrupted. Type 'exit' to quit.")
-        except Exception as e:
-            print(f"[Error] {e}")
+                print(f"dredge-sh: command not found: {cmd}. Type 'help' for commands.")
+        except (KeyboardInterrupt, EOFError):
+            print("\n[+] Kernel Interrupt received. Exiting.")
+            break
