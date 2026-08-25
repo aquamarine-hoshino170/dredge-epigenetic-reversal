@@ -34,7 +34,8 @@ from dredge.bio_kernel import (
     CircadianClockOscillationEngine,
     LucasRuthlessQCEngine,
     ChronosHolographicMemoryEngine,
-    BioVirtualMachineKernel
+    BioVirtualMachineKernel,
+    ApexRingZeroBioKernel
 )
 
 def main():
@@ -44,15 +45,17 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Sovereign Kernel (v21.0.0): The Universal Biological OS & Bio-VM Engine"
+        description="DREDGE Sovereign Ring-0 (v22.0.0): The Ultimate Universal Biological OS & Hardware Kernel"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 21.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 22.0.0")
     
-    # Kernel VM Directives
-    parser.add_argument("--exec-vm", nargs="+", help="Execute raw Bio-ISA assembly micro-instructions (e.g. DEMETH TRANSCR TRANSLA HALT)")
-    parser.add_argument("--atp", type=int, default=500, help="Initial ATP metabolic energy budget (default: 500)")
+    # Ring-0 Kernel Directives
+    parser.add_argument("--kernel-irq", type=int, default=None, help="Trigger Hardware Bio-Interrupt Request (e.g. --kernel-irq 14)")
+    parser.add_argument("--payload", type=str, default="TET2_CpG_OVERLOAD", help="Interrupt payload data")
 
     # Core Systems
+    parser.add_argument("--exec-vm", nargs="+", help="Execute raw Bio-ISA assembly micro-instructions")
+    parser.add_argument("--atp", type=int, default=500, help="Initial ATP budget")
     parser.add_argument("--hologram", type=str, default=None, help="Holographic memory engram recall")
     parser.add_argument("--yamanaka", type=float, default=None, help="Yamanaka OSKM Epigenetic Reversal")
     parser.add_argument("--lucas", type=str, default=None, help="Trigger Lucas Angry Reaper")
@@ -75,42 +78,44 @@ def main():
 
     args = parser.parse_args()
 
+    if args.kernel_irq is not None:
+        res = ApexRingZeroBioKernel.trigger_kernel_interrupt(irq_code=args.kernel_irq, payload_data=args.payload)
+        print("\n" + "="*76)
+        print("  ⚡ DREDGE RING-0 HARDWARE-BIO KERNEL INTERRUPT CONTROLLER")
+        print("="*76)
+        print(f" • Privilege Mode     : {res['kernel_execution_ring']}")
+        print(f" • Triggered Vector   : {res['irq_vector_tripped']}")
+        print(f" • Fault Data Payload : {res['system_fault_payload']}")
+        print(f" • Kernel Execution   : {res['kernel_status']}")
+        print("\n[*] Bio-MMU & Control Register Dump:")
+        for reg, val in res['mmu_register_dump'].items():
+            print(f"   [{reg}] = {val}")
+        print(f"\n • Recovery Pipeline  : {res['recovery_strategy']}")
+        print("="*76 + "\n")
+        return
+
     if args.exec_vm:
         res = BioVirtualMachineKernel.execute_bio_bytecode(args.exec_vm, atp_pool_units=args.atp)
-        print("\n" + "="*76)
-        print("  ⚙️ DREDGE SOVEREIGN BIO-VM: KERNEL INSTRUCTION EXECUTION")
-        print("="*76)
-        print(f" • Kernel Status      : {res['kernel_execution_status']}")
-        print(f" • Instructions Run   : {res['instructions_executed']}")
-        print(f" • Starting ATP Pool  : {res['starting_atp_pool']}")
-        print(f" • Dissipated Energy  : {res['total_atp_dissipated']}")
-        print(f" • Remaining Reserves : {res['remaining_cellular_energy']}")
-        print("\n[*] Bio-Register Dump:")
-        for reg, val in res['register_state'].items():
-            print(f"   [{reg}] = {val}")
-        print("\n[*] Execution Trace Log:")
-        for log in res['kernel_trace']:
-            print(f"   {log}")
-        print("="*76 + "\n")
+        print(f"\n • Bio-VM Execution: {res['kernel_execution_status']} | Remaining ATP: {res['remaining_cellular_energy']}\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND SOVEREIGN KERNEL HEALTH & SPECTRUM")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND SOVEREIGN RING-0 SYSTEM HEALTH")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="SOVEREIGN KERNEL WAVEFORM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="RING-0 KERNEL SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Sovereign Kernel: The Universal Biological OS & Bio-VM},
+  title = {DREDGE Sovereign Ring-0: The Universal Biological OS & Hardware Kernel},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
