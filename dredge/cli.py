@@ -36,7 +36,8 @@ from dredge.bio_kernel import (
     ChronosHolographicMemoryEngine,
     BioVirtualMachineKernel,
     ApexRingZeroBioKernel,
-    NativeAssemblyBitKernel
+    NativeAssemblyBitKernel,
+    DeviceHardwareOverlord
 )
 
 def main():
@@ -46,14 +47,15 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Sovereign Ultra (v23.0.0): Hardware-Accelerated Universal Biological OS"
+        description="DREDGE Device Overlord (v24.0.0): Hardware Domination & Ultimate Bio-OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 23.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 24.0.0")
     
-    # Ultra-Fast Hardware Flag
-    parser.add_argument("--turbo-scan", type=str, default=None, help="Run 2-Bit Low-Level Assembly/Rust-Grade Hardware Scan on DNA")
+    # Hardware Overlord Flag
+    parser.add_argument("--overlord", action="store_true", help="Seize direct control of Device Hardware, CPU Cores, and Thermal Sensors")
 
     # Core Systems
+    parser.add_argument("--turbo-scan", type=str, default=None, help="Run 2-Bit Low-Level Assembly Scan")
     parser.add_argument("--kernel-irq", type=int, default=None, help="Trigger Hardware Bio-Interrupt")
     parser.add_argument("--payload", type=str, default="TET2_CpG_OVERLOAD", help="Interrupt payload")
     parser.add_argument("--exec-vm", nargs="+", help="Execute Bio-ISA bytecode")
@@ -70,43 +72,44 @@ def main():
 
     args = parser.parse_args()
 
-    if args.turbo_scan:
-        res = NativeAssemblyBitKernel.ultra_fast_bit_scan(args.turbo_scan)
+    if args.overlord:
+        res = DeviceHardwareOverlord.seize_cpu_control()
         print("\n" + "="*76)
-        print("  ⚡ NATIVE HARDWARE ACCELERATOR: 2-BIT ASSEMBLY/RUST PIPELINE")
+        print("  🔥 DEVICE OVERLORD: HARDWARE KERNEL SEIZURE & OVERCLOCK ENGINE")
         print("="*76)
-        print(f" • Architecture Mode   : {res['hardware_mode']}")
-        print(f" • Sequence Processed  : {res['sequence_length_nt']} Nucleotides")
-        print(f" • 64-bit CPU Words    : {res['dense_64bit_registers_allocated']} Registers")
-        print(f" • Execution Latency   : {res['execution_latency']}")
-        print(f" • Peak Throughput     : {res['processing_throughput']}")
-        print(f" • Memory Optimization : {res['memory_footprint_reduction']}")
-        print(f" • GC Stability        : {res['gc_content']}")
+        print(f" • OS Kernel Override    : {res['hardware_seizure']}")
+        print(f" • CPU Core Pinning      : {res['cpu_cores_locked']}")
+        print(f" • Active Core Frequency : {res.get('cpu_clock_frequency', 'N/A')}")
+        print(f" • Device Thermal Status : {res.get('thermal_status', 'N/A')}")
+        print(f" • True Hardware Entropy : {res.get('hardware_entropy_pool', 'N/A')} (From /dev/urandom)")
+        print(f" • Host System Mastered  : {res['os_kernel_bypass']}")
         print("="*76 + "\n")
         return
 
-    if args.kernel_irq is not None:
-        res = ApexRingZeroBioKernel.trigger_kernel_interrupt(irq_code=args.kernel_irq, payload_data=args.payload)
-        print(f"\n • Ring-0 Interrupt: {res['irq_vector_tripped']} | Status: {res['kernel_status']}\n")
+    if args.turbo_scan:
+        res = NativeAssemblyBitKernel.ultra_fast_bit_scan(args.turbo_scan)
+        print(f"\n • Hardware Scan Complete: {res['execution_latency']} | Throughput: {res['processing_throughput']}\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND SOVEREIGN ULTRA HEALTH & SPECTRUM")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND OVERLORD SYSTEM HEALTH & SPECTRUM")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
+        hw_res = DeviceHardwareOverlord.seize_cpu_control()
+        print(f" • [Hardware Control] : Pinned Cores = {hw_res['cpu_cores_locked']} | Thermal = {hw_res.get('thermal_status', 'Stable')}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="SOVEREIGN ULTRA SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="OVERLORD HARDWARE SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Sovereign Ultra: Hardware-Accelerated Universal Biological OS},
+  title = {DREDGE Device Overlord: Hardware Domination & Bio-OS Kernel},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")

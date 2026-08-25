@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aquamarine-dredge"
-version = "23.0.0"
+version = "24.0.0"
 authors = [
   { name="Aquamarine Hoshino", email="aquamarine.hoshino170@github.io" },
 ]
@@ -12,6 +12,7 @@ description = "In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation 
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "psutil>=5.9.0",
     "numpy"
 ]
 
