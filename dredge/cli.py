@@ -37,7 +37,9 @@ from dredge.bio_kernel import (
     BioVirtualMachineKernel,
     ApexRingZeroBioKernel,
     NativeAssemblyBitKernel,
-    DeviceHardwareOverlord
+    DeviceHardwareOverlord,
+    BioVirtualFileSystemPOSIX,
+    BioPOSIXPipeStreamEngine
 )
 
 def main():
@@ -47,14 +49,17 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Device Overlord (v24.0.0): Hardware Domination & Ultimate Bio-OS"
+        description="DREDGE Bio-POSIX OS (v25.0.0): The Complete Linux-Equivalent Biological Operating System"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 24.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 25.0.0")
     
-    # Hardware Overlord Flag
-    parser.add_argument("--overlord", action="store_true", help="Seize direct control of Device Hardware, CPU Cores, and Thermal Sensors")
+    # Bio-POSIX OS Directives
+    parser.add_argument("--vfs-ls", action="store_true", help="List all nodes in /bio Virtual File System")
+    parser.add_argument("--vfs-cat", type=str, default=None, help="Read node from /bio Virtual File System (e.g. --vfs-cat /bio/sys/atp_pool)")
+    parser.add_argument("--pipe", nargs="+", help="Run POSIX Bio-Stream Pipeline (e.g. --pipe ATGCGATCGTA transcribe translate)")
 
     # Core Systems
+    parser.add_argument("--overlord", action="store_true", help="Hardware Kernel Seizure & Thermal Check")
     parser.add_argument("--turbo-scan", type=str, default=None, help="Run 2-Bit Low-Level Assembly Scan")
     parser.add_argument("--kernel-irq", type=int, default=None, help="Trigger Hardware Bio-Interrupt")
     parser.add_argument("--payload", type=str, default="TET2_CpG_OVERLOAD", help="Interrupt payload")
@@ -72,6 +77,34 @@ def main():
 
     args = parser.parse_args()
 
+    if args.vfs_ls:
+        print("\n" + "="*76)
+        print("  📁 BIO-VFS: VIRTUAL POSIX CELLULAR NODES (/bio)")
+        print("="*76)
+        for node in BioVirtualFileSystemPOSIX.ls_nodes():
+            print(f"   [r--r--r-- bio bio] {node}")
+        print("="*76 + "\n")
+        return
+
+    if args.vfs_cat:
+        res = BioVirtualFileSystemPOSIX.cat_node(args.vfs_cat)
+        print(f"\n[{args.vfs_cat}]:\n{res}\n")
+        return
+
+    if args.pipe:
+        dna = args.pipe[0]
+        ops = args.pipe[1:]
+        res = BioPOSIXPipeStreamEngine.execute_stream_pipeline(dna, ops)
+        print("\n" + "="*76)
+        print("  🚰 POSIX BIO-STREAMING PIPELINE EXECUTION")
+        print("="*76)
+        for step in res['pipeline_trace']:
+            print(step)
+        print(f"\n • Final Pipeline Output : {res['final_stream_payload']}")
+        print(f" • Execution Status      : {res['posix_pipeline_status']}")
+        print("="*76 + "\n")
+        return
+
     if args.overlord:
         res = DeviceHardwareOverlord.seize_cpu_control()
         print("\n" + "="*76)
@@ -79,37 +112,30 @@ def main():
         print("="*76)
         print(f" • OS Kernel Override    : {res['hardware_seizure']}")
         print(f" • CPU Core Pinning      : {res['cpu_cores_locked']}")
-        print(f" • Active Core Frequency : {res.get('cpu_clock_frequency', 'N/A')}")
-        print(f" • Device Thermal Status : {res.get('thermal_status', 'N/A')}")
-        print(f" • True Hardware Entropy : {res.get('hardware_entropy_pool', 'N/A')} (From /dev/urandom)")
+        print(f" • Processor Architecture: {res.get('processor_architecture', 'ARM')}")
+        print(f" • Device Thermal Status : {res.get('device_thermal_status', 'Nominal')}")
+        print(f" • True Hardware Entropy : {res.get('hardware_entropy_pool', 'N/A')}")
         print(f" • Host System Mastered  : {res['os_kernel_bypass']}")
         print("="*76 + "\n")
         return
 
-    if args.turbo_scan:
-        res = NativeAssemblyBitKernel.ultra_fast_bit_scan(args.turbo_scan)
-        print(f"\n • Hardware Scan Complete: {res['execution_latency']} | Throughput: {res['processing_throughput']}\n")
-        return
-
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND OVERLORD SYSTEM HEALTH & SPECTRUM")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND BIO-POSIX SYSTEM HEALTH & SPECTRUM")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
-        hw_res = DeviceHardwareOverlord.seize_cpu_control()
-        print(f" • [Hardware Control] : Pinned Cores = {hw_res['cpu_cores_locked']} | Thermal = {hw_res.get('thermal_status', 'Stable')}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="OVERLORD HARDWARE SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="BIO-POSIX SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Device Overlord: Hardware Domination & Bio-OS Kernel},
+  title = {DREDGE Bio-POSIX OS: The Linux-Equivalent Biological Operating System},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
