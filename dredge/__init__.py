@@ -1,17 +1,15 @@
-__version__ = '54.0.0'
+__version__ = '55.0.0'
 from dredge.bio_kernel import (
-    ParallelFMIndexEngine,
-    Constrained3DRNAEngine,
-    GillespieStochasticKineticsEngine,
-    JukesCantorMLEngine,
-    DeBruijnGraphCorrectionEngine,
-    EpigeneticShannonEntropyEngine
+    HodgkinHuxleyCompartmentalEngine,
+    QuantumFMOExcitonEngine,
+    TuringMorphogenesisEngine,
+    DNAOrigamiScaffoldEngine,
+    ChronomorphicShannonEntropyEngine
 )
 __all__ = [
-    'ParallelFMIndexEngine',
-    'Constrained3DRNAEngine',
-    'GillespieStochasticKineticsEngine',
-    'JukesCantorMLEngine',
-    'DeBruijnGraphCorrectionEngine',
-    'EpigeneticShannonEntropyEngine'
+    'HodgkinHuxleyCompartmentalEngine',
+    'QuantumFMOExcitonEngine',
+    'TuringMorphogenesisEngine',
+    'DNAOrigamiScaffoldEngine',
+    'ChronomorphicShannonEntropyEngine'
 ]

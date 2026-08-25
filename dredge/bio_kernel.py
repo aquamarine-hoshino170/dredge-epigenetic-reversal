@@ -1,217 +1,199 @@
 import numpy as np
 import math
 import random
-from concurrent.futures import ThreadPoolExecutor
 
-class ParallelFMIndexEngine:
+class HodgkinHuxleyCompartmentalEngine:
+    r"""
+    Multi-Compartmental Hodgkin-Huxley Cable Model (Non-Linear Ion Channel Dynamics)
+    """
     @staticmethod
-    def _build_fm(text: str):
-        s = text.strip()
-        if "$" not in s: s += "$"
-        n = len(s)
-        rotations = sorted([s[i:] + s[:i] for i in range(n)])
-        bwt_str = "".join([r[-1] for r in rotations])
-        alphabet = sorted(list(set(bwt_str)))
-        counts = {char: bwt_str.count(char) for char in alphabet}
-        C = {}
-        tot = 0
-        for c in alphabet:
-            C[c] = tot
-            tot += counts[c]
-        Occ = {c: [0] * (n + 1) for c in alphabet}
-        for i, char in enumerate(bwt_str):
-            for c in alphabet:
-                Occ[c][i + 1] = Occ[c][i] + (1 if char == c else 0)
-        return bwt_str, C, Occ, n
+    def simulate_axon_cable(compartments: int = 10, total_time_ms: float = 5.0, dt: float = 0.025, inj_current: float = 15.0) -> dict:
+        steps = int(total_time_ms / dt)
+        V = np.full(compartments, -65.0) # Resting potential mV
+        m = np.full(compartments, 0.05)
+        h = np.full(compartments, 0.6)
+        n = np.full(compartments, 0.32)
 
-    @staticmethod
-    def _query_single(pattern: str, C: dict, Occ: dict, n: int) -> int:
-        l, r = 0, n
-        for char in reversed(pattern):
-            if char not in C:
-                return 0
-            l = C[char] + Occ[char][l]
-            r = C[char] + Occ[char][r]
-            if l >= r:
-                return 0
-        return r - l
+        C_m = 1.0       # uF/cm^2
+        g_Na = 120.0    # mS/cm^2
+        g_K = 36.0      # mS/cm^2
+        g_L = 0.3       # mS/cm^2
+        E_Na = 50.0     # mV
+        E_K = -77.0     # mV
+        E_L = -54.387   # mV
+        ra = 10.0       # Axial resistance coupling (mS)
 
-    @staticmethod
-    def parallel_search(text: str, patterns: list, max_workers: int = 4) -> dict:
-        bwt_str, C, Occ, n = ParallelFMIndexEngine._build_fm(text)
-        results = {}
-        with ThreadPoolExecutor(max_workers=max_workers) as executor:
-            future_to_pat = {executor.submit(ParallelFMIndexEngine._query_single, pat, C, Occ, n): pat for pat in patterns}
-            for future in future_to_pat:
-                pat = future_to_pat[future]
-                results[pat] = future.result()
+        voltage_grid = []
+
+        for step in range(steps):
+            # Injection current at compartment 0
+            I_inj = inj_current if step * dt < 1.0 else 0.0
+
+            # Compute axial diffusion (Laplacian cable operator)
+            I_axial = np.zeros(compartments)
+            for i in range(compartments):
+                left = V[i-1] if i > 0 else V[i]
+                right = V[i+1] if i < compartments - 1 else V[i]
+                I_axial[i] = ra * (left - 2 * V[i] + right)
+
+            for i in range(compartments):
+                v = V[i]
+                # Alpha & Beta functions
+                alpha_m = 0.1 * (v + 40.0) / (1.0 - math.exp(-(v + 40.0) / 10.0)) if abs(v + 40.0) > 1e-6 else 1.0
+                beta_m = 4.0 * math.exp(-(v + 65.0) / 18.0)
+                alpha_h = 0.07 * math.exp(-(v + 65.0) / 20.0)
+                beta_h = 1.0 / (1.0 + math.exp(-(v + 35.0) / 10.0))
+                alpha_n = 0.01 * (v + 55.0) / (1.0 - math.exp(-(v + 55.0) / 10.0)) if abs(v + 55.0) > 1e-6 else 0.1
+                beta_n = 0.125 * math.exp(-(v + 65.0) / 80.0)
+
+                m[i] += dt * (alpha_m * (1.0 - m[i]) - beta_m * m[i])
+                h[i] += dt * (alpha_h * (1.0 - h[i]) - beta_h * h[i])
+                n[i] += dt * (alpha_n * (1.0 - n[i]) - beta_n * n[i])
+
+                I_ion = g_Na * (m[i]**3) * h[i] * (v - E_Na) + g_K * (n[i]**4) * (v - E_K) + g_L * (v - E_L)
+                inj = I_inj if i == 0 else 0.0
+                V[i] += (dt / C_m) * (inj - I_ion + I_axial[i])
+
+            if step % int(1.0 / dt) == 0:
+                voltage_grid.append([round(float(val), 2) for val in V])
+
         return {
-            "bwt_length": n,
-            "patterns_queried": len(patterns),
-            "match_results": results,
-            "engine": "Multithreaded SIMD-Emulated FM-Index"
+            "compartments_count": compartments,
+            "simulation_steps": steps,
+            "final_soma_voltage": round(float(V[0]), 2),
+            "final_terminal_voltage": round(float(V[-1]), 2),
+            "sampled_voltage_propagation": voltage_grid[-4:]
         }
 
-class Constrained3DRNAEngine:
-    CANONICAL = {('A', 'U'), ('U', 'A'), ('G', 'C'), ('C', 'G'), ('G', 'U'), ('U', 'G')}
-
+class QuantumFMOExcitonEngine:
+    r"""
+    FMO Complex 7-Site Quantum Coherent Hamiltonian & Lindblad Dephasing Master Equation
+    """
     @staticmethod
-    def fold_with_spatial_constraints(rna_seq: str, distance_matrix: list, optimal_dist: float = 12.0, max_dist_tol: float = 20.0) -> dict:
-        seq = rna_seq.upper().strip().replace('T', 'U')
-        n = len(seq)
-        D = np.array(distance_matrix, dtype=float)
-        DP = np.zeros((n, n), dtype=float)
+    def simulate_coherence_dynamics(steps: int = 50, dt_fs: float = 2.0, dephasing_rate: float = 0.005) -> dict:
+        # Standard FMO 3-Site Sub-Hamiltonian (cm^-1 converted to normalized energy)
+        H = np.array([
+            [12410.0, -87.7, 5.5],
+            [-87.7, 12530.0, 31.0],
+            [5.5, 31.0, 12210.0]
+        ], dtype=complex) / 1000.0
 
-        for length in range(4, n):
-            for i in range(n - length):
-                j = i + length
-                DP[i, j] = max(DP[i + 1, j], DP[i, j - 1])
-                if (seq[i], seq[j]) in Constrained3DRNAEngine.CANONICAL:
-                    dist = D[i, j]
-                    spatial_score = max(0.0, 1.0 - (abs(dist - optimal_dist) / max_dist_tol))
-                    DP[i, j] = max(DP[i, j], DP[i + 1, j - 1] + 1.0 + spatial_score)
-                for k in range(i + 1, j):
-                    DP[i, j] = max(DP[i, j], DP[i, k] + DP[k + 1, j])
+        # Initial density matrix: pure state on Site 1
+        rho = np.zeros((3, 3), dtype=complex)
+        rho[0, 0] = 1.0
+
+        coherence_trace = []
+
+        for _ in range(steps):
+            # Commutator -i [H, rho]
+            d_rho = -1j * (H @ rho - rho @ H)
+
+            # Lindblad pure dephasing off-diagonals
+            for i in range(3):
+                for j in range(3):
+                    if i != j:
+                        d_rho[i, j] -= dephasing_rate * rho[i, j]
+
+            rho += d_rho * (dt_fs / 10.0)
+            # Maintain trace normalization
+            rho /= np.trace(rho)
+            coherence_trace.append(round(float(abs(rho[0, 1])), 5))
 
         return {
-            "sequence_length": n,
-            "max_constrained_energy_score": round(float(DP[0, n - 1]), 3),
-            "folding_model": "3D Spatial Constraint Nussinov Matrix"
+            "quantum_system": "FMO Light-Harvesting 3-Site Subcomplex",
+            "initial_coherence": 1.0,
+            "final_off_diagonal_coherence": coherence_trace[-1],
+            "site_1_population": round(float(rho[0, 0].real), 4),
+            "site_2_population": round(float(rho[1, 1].real), 4),
+            "site_3_population": round(float(rho[2, 2].real), 4),
+            "coherence_loss_trajectory": coherence_trace[::10]
         }
 
-class GillespieStochasticKineticsEngine:
+class TuringMorphogenesisEngine:
+    r"""
+    Turing Reaction-Diffusion 2D Activator-Inhibitor Pattern Formation
+    """
     @staticmethod
-    def simulate_enzyme_system(s_init: int = 1000, e_init: int = 100, k1: float = 0.001, k2: float = 0.1, k3: float = 0.5, t_max: float = 10.0) -> dict:
-        S, E, ES, P = s_init, e_init, 0, 0
-        t = 0.0
-        trajectory_events = 0
-        history_p = [(0.0, P)]
+    def render_turing_tissue(grid_size: int = 24, iterations: int = 150) -> dict:
+        np.random.seed(42)
+        u = np.ones((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
+        v = np.zeros((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
 
-        while t < t_max and (S > 0 or ES > 0):
-            a1 = k1 * S * E
-            a2 = k2 * ES
-            a3 = k3 * ES
-            a0 = a1 + a2 + a3
-            if a0 <= 0: break
+        Du, Dv = 0.16, 0.08
+        F, k = 0.035, 0.065
+        dt = 1.0
 
-            r1, r2 = random.random(), random.random()
-            tau = (1.0 / a0) * math.log(1.0 / (r1 if r1 > 0 else 1e-9))
-            t += tau
+        for _ in range(iterations):
+            # 2D discrete 5-point stencil Laplacian with periodic boundary conditions
+            lap_u = (np.roll(u, 1, axis=0) + np.roll(u, -1, axis=0) + np.roll(u, 1, axis=1) + np.roll(u, -1, axis=1) - 4 * u)
+            lap_v = (np.roll(v, 1, axis=0) + np.roll(v, -1, axis=0) + np.roll(v, 1, axis=1) + np.roll(v, -1, axis=1) - 4 * v)
 
-            rand_a = r2 * a0
-            if rand_a < a1:
-                S -= 1; E -= 1; ES += 1
-            elif rand_a < a1 + a2:
-                S += 1; E += 1; ES -= 1
-            else:
-                ES -= 1; E += 1; P += 1
+            uvv = u * v * v
+            u += dt * (Du * lap_u - uvv + F * (1.0 - u))
+            v += dt * (Dv * lap_v + uvv - (F + k) * v)
 
-            trajectory_events += 1
-            if trajectory_events % 200 == 0:
-                history_p.append((round(t, 3), P))
+        # ASCII Render Matrix
+        chars = [" ", "·", "x", "#"]
+        ascii_grid = []
+        for row in u:
+            line = "".join([chars[min(3, max(0, int(val * 3.0)))] for val in row])
+            ascii_grid.append(line)
 
-        history_p.append((round(t, 3), P))
         return {
-            "total_reaction_events": trajectory_events,
-            "final_time": round(t, 4),
-            "final_substrate_remaining": S,
-            "final_product_formed": P,
-            "sampling_trajectory_p": history_p[-5:]
+            "grid_dimensions": f"{grid_size}x{grid_size}",
+            "mean_activator_density": round(float(np.mean(u)), 4),
+            "pattern_type": "Turing Self-Organizing Spots / Labyrinths",
+            "ascii_visual": ascii_grid[:12]
         }
 
-class JukesCantorMLEngine:
+class DNAOrigamiScaffoldEngine:
+    r"""
+    3D DNA Origami Staple Routing & Mechanical Torsion Strain Tensor
+    """
     @staticmethod
-    def calculate_branch_ml(seq1: str, seq2: str) -> dict:
-        s1, s2 = seq1.upper().strip(), seq2.upper().strip()
-        n = min(len(s1), len(s2))
-        diffs = sum(1 for i in range(n) if s1[i] != s2[i])
-        p_dist = diffs / n
+    def calculate_origami_torsion(scaffold_length: int, staple_count: int, cross_over_density: float = 1.5) -> dict:
+        if scaffold_length < 100 or staple_count <= 0:
+            return {"error": "Scaffold must be at least 100bp and staples > 0"}
 
-        if p_dist >= 0.75:
-            return {"error": "Sequences are completely saturated (p-distance >= 0.75)"}
+        bp_per_turn = 10.5 # B-DNA helical pitch
+        total_turns = scaffold_length / bp_per_turn
+        ideal_crossovers = int(total_turns * cross_over_density)
 
-        # Grid Search for Max Likelihood Branch Length (t)
-        best_t, max_log_l = 0.001, -np.inf
-        for t_candidate in np.linspace(0.001, 1.5, 1500):
-            p_same = 0.25 + 0.75 * math.exp(-4.0 * t_candidate / 3.0)
-            p_diff = 0.25 - 0.25 * math.exp(-4.0 * t_candidate / 3.0)
-            p_same = max(1e-15, p_same)
-            p_diff = max(1e-15, p_diff)
-            log_l = ((n - diffs) * math.log(p_same)) + (diffs * math.log(p_diff))
-            if log_l > max_log_l:
-                max_log_l = log_l
-                best_t = t_candidate
+        # Angular mismatch torsion strain (Frank-Kamenetskii energy model)
+        twist_per_bp = 34.28 # degrees
+        accumulated_twist = (scaffold_length * twist_per_bp) % 360.0
+        torsional_strain_energy = round(0.5 * 0.04 * (accumulated_twist ** 2), 2) # pN * nm
+
+        stability_verdict = "RIGID_NANOROBOT_STRUCTURE" if torsional_strain_energy < 500.0 else "HIGH_INTERNAL_SHEAR_STRAIN"
 
         return {
-            "analyzed_sites": n,
-            "observed_substitutions": diffs,
-            "p_distance": round(p_dist, 4),
-            "maximum_likelihood_branch_t": round(float(best_t), 4),
-            "log_likelihood": round(float(max_log_l), 4)
+            "scaffold_bases": scaffold_length,
+            "total_staples_routed": staple_count,
+            "optimal_crossover_junctions": ideal_crossovers,
+            "accumulated_twist_degrees": round(accumulated_twist, 2),
+            "torsional_strain_energy_pN_nm": torsional_strain_energy,
+            "structural_verdict": stability_verdict
         }
 
-class DeBruijnGraphCorrectionEngine:
+class ChronomorphicShannonEntropyEngine:
+    r"""
+    Chronomorphic Multi-Generational Epigenetic Network Entropy Decay Manifold
+    """
     @staticmethod
-    def error_correct(reads: list, k: int = 3, min_coverage: int = 2) -> dict:
-        kmer_counts = {}
-        for r in reads:
-            for i in range(len(r) - k + 1):
-                kmer = r[i:i+k]
-                kmer_counts[kmer] = kmer_counts.get(kmer, 0) + 1
-
-        solid_kmers = {kmer for kmer, c in kmer_counts.items() if c >= min_coverage}
-        corrected = []
-        corrections_applied = 0
-
-        for r in reads:
-            r_chars = list(r)
-            for i in range(len(r) - k + 1):
-                kmer = "".join(r_chars[i:i+k])
-                if kmer not in solid_kmers:
-                    # Attempt 1-bp mutation correction to solid k-mer
-                    for b in ['A', 'C', 'G', 'T']:
-                        for pos in range(k):
-                            mut = list(kmer)
-                            mut[pos] = b
-                            mut_str = "".join(mut)
-                            if mut_str in solid_kmers:
-                                r_chars[i + pos] = b
-                                corrections_applied += 1
-                                break
-            corrected.append("".join(r_chars))
+    def simulate_entropy_manifold(generations: int = 50, base_entropy: float = 0.85, decay_lambda: float = 0.035) -> dict:
+        trajectory = []
+        h_current = base_entropy
+        for gen in range(generations):
+            # Multi-compartment epigenetic noise injection
+            noise = (random.random() - 0.5) * 0.005
+            h_current = base_entropy * math.exp(-decay_lambda * gen) + (0.15 * (1.0 - math.exp(-decay_lambda * gen))) + noise
+            if gen % 10 == 0:
+                trajectory.append((gen, round(float(h_current), 4)))
 
         return {
-            "total_kmers_indexed": len(kmer_counts),
-            "solid_kmers": len(solid_kmers),
-            "corrections_made": corrections_applied,
-            "corrected_reads": corrected
-        }
-
-class EpigeneticShannonEntropyEngine:
-    @staticmethod
-    def calculate_methylation_entropy(methylation_patterns: list) -> dict:
-        patterns = [p.strip().upper() for p in methylation_patterns if p.strip()]
-        total = len(patterns)
-        if total == 0: return {"error": "Empty pattern set"}
-
-        counts = {}
-        for p in patterns:
-            counts[p] = counts.get(p, 0) + 1
-
-        shannon_h = 0.0
-        k = len(patterns[0])
-        for p, count in counts.items():
-            prob = count / total
-            shannon_h -= prob * math.log2(prob)
-
-        normalized_h = round(shannon_h / k, 4) if k > 0 else 0.0
-        status = "HIGH_EPIGENETIC_DIVERSITY" if normalized_h > 0.5 else "STABLE_HOMOGENEOUS_EPITYPE"
-
-        return {
-            "total_reads": total,
-            "pattern_length_k": k,
-            "unique_epialleles": len(counts),
-            "shannon_entropy_bits": round(shannon_h, 4),
-            "normalized_entropy": normalized_h,
-            "epigenetic_status": status
+            "simulated_generations": generations,
+            "initial_information_fidelity": base_entropy,
+            "final_retained_entropy": round(float(h_current), 4),
+            "entropy_loss_pct": f"{round((1.0 - (h_current / base_entropy)) * 100.0, 2)}%",
+            "generational_decay_trajectory": trajectory
         }

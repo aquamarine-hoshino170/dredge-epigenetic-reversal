@@ -1,24 +1,21 @@
 import argparse
 import sys
 import unittest
-import numpy as np
 from dredge.bio_kernel import (
-    ParallelFMIndexEngine,
-    Constrained3DRNAEngine,
-    GillespieStochasticKineticsEngine,
-    JukesCantorMLEngine,
-    DeBruijnGraphCorrectionEngine,
-    EpigeneticShannonEntropyEngine
+    HodgkinHuxleyCompartmentalEngine,
+    QuantumFMOExcitonEngine,
+    TuringMorphogenesisEngine,
+    DNAOrigamiScaffoldEngine,
+    ChronomorphicShannonEntropyEngine
 )
 
 def main():
-    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Domain-Breaker Suite (v54.0.0)')
-    parser.add_argument('--parallel-fm', nargs='+', help='Usage: --parallel-fm <TEXT> <PAT1> <PAT2> ...')
-    parser.add_argument('--rna-3d', type=str, help='3D Constrained Nussinov Folding for sequence')
-    parser.add_argument('--gillespie', action='store_true', help='Run Stochastic Gillespie Enzyme Simulation')
-    parser.add_argument('--jc69-ml', nargs=2, metavar=('SEQ1', 'SEQ2'), help='Jukes-Cantor Maximum Likelihood Branch Estimation')
-    parser.add_argument('--debruijn-correct', nargs='+', help='Correct reads via de Bruijn Graph: --debruijn-correct <READ1> <READ2> ...')
-    parser.add_argument('--meth-entropy', nargs='+', help='Shannon Methylation Entropy: --meth-entropy 1100 1100 1010 1111')
+    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Quantum-Coherent & Neuromorphic Suite (v55.0.0)')
+    parser.add_argument('--hh-cable', action='store_true', help='Run Multi-Compartment Hodgkin-Huxley Cable PDE Simulation')
+    parser.add_argument('--fmo-quantum', action='store_true', help='Simulate Quantum FMO Complex Exciton Coherence Dynamics')
+    parser.add_argument('--turing-pattern', action='store_true', help='Render Turing Morphogenesis 2D Reaction-Diffusion Lattice')
+    parser.add_argument('--origami-strain', nargs=2, type=int, metavar=('SCAFFOLD_BP', 'STAPLES'), help='Calculate 3D DNA Origami Torsion Strain')
+    parser.add_argument('--chrono-entropy', nargs=1, type=int, metavar=('GENERATIONS',), help='Predict Epigenetic Shannon Manifold Decay')
     parser.add_argument('--test', action='store_true', help='Run Tests')
 
     args = parser.parse_args()
@@ -28,38 +25,35 @@ def main():
         unittest.TextTestRunner(verbosity=2).run(suite)
         return
 
-    if args.parallel_fm:
-        text = args.parallel_fm[0]
-        pats = args.parallel_fm[1:]
-        res = ParallelFMIndexEngine.parallel_search(text, pats)
-        print(f"\n • Multithreaded FM Results: {res['match_results']} | Model: {res['engine']}\n")
+    if args.hh_cable:
+        res = HodgkinHuxleyCompartmentalEngine.simulate_axon_cable(compartments=8, total_time_ms=3.0)
+        print(f"\n • Hodgkin-Huxley Cable: Soma V={res['final_soma_voltage']} mV | Terminal V={res['final_terminal_voltage']} mV\n • Propagation Sample:\n   {res['sampled_voltage_propagation']}\n")
         return
 
-    if args.rna_3d:
-        n = len(args.rna_3d)
-        dist_mat = [[abs(i - j) * 3.8 for j in range(n)] for i in range(n)]
-        res = Constrained3DRNAEngine.fold_with_spatial_constraints(args.rna_3d, dist_mat)
-        print(f"\n • 3D Constrained Nussinov Score: {res['max_constrained_energy_score']} | Model: {res['folding_model']}\n")
+    if args.fmo_quantum:
+        res = QuantumFMOExcitonEngine.simulate_coherence_dynamics(steps=40)
+        print(f"\n • Quantum FMO Master Step: Site 1 Pop={res['site_1_population']}, Site 2={res['site_2_population']}, Site 3={res['site_3_population']}\n • Final Coherence |rho_12|: {res['final_off_diagonal_coherence']}\n")
         return
 
-    if args.gillespie:
-        res = GillespieStochasticKineticsEngine.simulate_enzyme_system(s_init=500, e_init=50)
-        print(f"\n • Gillespie Markov Chain: {res['total_reaction_events']} Events | Final Product: {res['final_product_formed']} | Remaining Substrate: {res['final_substrate_remaining']}\n")
+    if args.turing_pattern:
+        res = TuringMorphogenesisEngine.render_turing_tissue(grid_size=20, iterations=100)
+        print("\n" + "="*45)
+        print("  TURING REACTION-DIFFUSION 2D LATTICE")
+        print("="*45)
+        for row in res['ascii_visual']:
+            print("  " + row)
+        print("="*45)
+        print(f" • Pattern Type: {res['pattern_type']} | Mean Density: {res['mean_activator_density']}\n")
         return
 
-    if args.jc69-ml if False else args.jc69_ml:
-        res = JukesCantorMLEngine.calculate_branch_ml(args.jc69_ml[0], args.jc69_ml[1])
-        print(f"\n • JC69 ML Branch Length (t): {res['maximum_likelihood_branch_t']} | Log-Likelihood: {res['log_likelihood']} (p-dist: {res['p_distance']})\n")
+    if args.origami_strain:
+        res = DNAOrigamiScaffoldEngine.calculate_origami_torsion(args.origami_strain[0], args.origami_strain[1])
+        print(f"\n • DNA Origami: {res['scaffold_bases']}bp | Twist: {res['accumulated_twist_degrees']}° | Torsion Energy: {res['torsional_strain_energy_pN_nm']} pN·nm ({res['structural_verdict']})\n")
         return
 
-    if args.debruijn_correct:
-        res = DeBruijnGraphCorrectionEngine.error_correct(args.debruijn_correct, k=3, min_coverage=2)
-        print(f"\n • de Bruijn Correction: {res['corrections_made']} Fixes | Corrected: {res['corrected_reads']}\n")
-        return
-
-    if args.meth_entropy:
-        res = EpigeneticShannonEntropyEngine.calculate_methylation_entropy(args.meth_entropy)
-        print(f"\n • Shannon Epigenetic Entropy: {res['shannon_entropy_bits']} bits (Norm: {res['normalized_entropy']}) | Status: {res['epigenetic_status']}\n")
+    if args.chrono_entropy:
+        res = ChronomorphicShannonEntropyEngine.simulate_entropy_manifold(generations=args.chrono_entropy[0])
+        print(f"\n • Chronomorphic Epigenetic Decay: Retained Entropy = {res['final_retained_entropy']} bits (Loss: {res['entropy_loss_pct']})\n")
         return
 
     parser.print_help()
