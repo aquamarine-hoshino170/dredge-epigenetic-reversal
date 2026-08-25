@@ -1,171 +1,201 @@
 import numpy as np
 import math
+import hashlib
+import time
+import asyncio
 import random
 
-class QuantumMolecularDockingEngine:
+class AsyncP2PBioLedgerEngine:
     r"""
-    Empirical Binding Free Energy & Hybrid Potential Model
-    dG_bind = dG_vdW + dG_elec + dG_hbond + dG_tor
+    Asynchronous Non-Blocking P2P Bio-Consensus Ledger via Proof-of-Sequence
     """
     @staticmethod
-    def calculate_binding_affinity(num_heavy_atoms: int = 15, rotatable_bonds: int = 4, contact_distance_angstrom: float = 2.8) -> dict:
-        r = max(1.5, contact_distance_angstrom)
-        
-        # Lennard-Jones 12-6 Potential (vdW)
-        A, B = 1e5, 1e3
-        vdw_energy = (A / (r**12)) - (B / (r**6))
-        
-        # Electrostatic Screened Coulombic Potential (dielectric constant eps(r) = 4r)
-        q1, q2 = 0.4, -0.4
-        coulombic_energy = (332.0 * q1 * q2) / (4.0 * (r**2))
-        
-        # Hydrogen bonding 12-10 potential
-        hbond_energy = -2.5 * math.exp(-((r - 2.8)**2) / 0.2)
-        
-        # Torsional conformational entropy loss penalty
-        torsion_penalty = 0.31 * rotatable_bonds # kcal/mol per rotatable bond
-        
-        dg_total = round(vdw_energy + coulombic_energy + hbond_energy + torsion_penalty, 3)
-        
-        # Dissociation Constant: Kd = exp(dG / RT) at 298.15K (RT = 0.592 kcal/mol)
-        rt = 0.592
-        kd_molar = math.exp(dg_total / rt)
-        
-        if kd_molar < 1e-6:
-            kd_str = f"{round(kd_molar * 1e9, 2)} nM"
-        elif kd_molar < 1e-3:
-            kd_str = f"{round(kd_molar * 1e6, 2)} uM"
-        else:
-            kd_str = f"{round(kd_molar * 1e3, 2)} mM"
+    async def _mine_block_async(index: int, prev_hash: str, mutation_data: str, node_id: int, latency_ms: float = 10.0) -> dict:
+        await asyncio.sleep(latency_ms / 1000.0)
+        nonce = 0
+        target_prefix = "0"
+        ts = time.time()
+        while True:
+            payload = f"{index}{prev_hash}{mutation_data}{ts}{nonce}{node_id}"
+            h = hashlib.sha256(payload.encode('utf-8')).hexdigest()
+            if h.startswith(target_prefix):
+                return {
+                    "block_index": index,
+                    "mined_by_node": node_id,
+                    "timestamp": round(ts, 2),
+                    "mutation_payload": mutation_data,
+                    "previous_hash": prev_hash,
+                    "block_hash": h,
+                    "nonce": nonce
+                }
+            nonce += 1
 
+    @staticmethod
+    def run_consensus_mesh(mutations: list, num_nodes: int = 3) -> dict:
+        async def main_mesh():
+            chain = [{
+                "block_index": 0,
+                "mined_by_node": 0,
+                "timestamp": round(time.time(), 2),
+                "mutation_payload": "GENESIS_ROOT_EPIGENOME",
+                "previous_hash": "0"*64,
+                "block_hash": hashlib.sha256(b"GENESIS").hexdigest(),
+                "nonce": 0
+            }]
+            for idx, mut in enumerate(mutations, 1):
+                prev_h = chain[-1]["block_hash"]
+                # Dispatch mining tasks across asynchronous nodes with variable latency
+                tasks = [
+                    AsyncP2PBioLedgerEngine._mine_block_async(idx, prev_h, mut, node, latency_ms=random.uniform(5.0, 20.0))
+                    for node in range(num_nodes)
+                ]
+                # First node to achieve consensus appends the block
+                done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+                for task in pending:
+                    task.cancel()
+                mined_block = list(done)[0].result()
+                chain.append(mined_block)
+            return chain
+
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        result_chain = loop.run_until_complete(main_mesh())
+        loop.close()
         return {
-            "contact_distance_A": r,
-            "vdw_potential_kcal_mol": round(vdw_energy, 3),
-            "electrostatic_potential_kcal_mol": round(coulombic_energy, 3),
-            "hbond_energy_kcal_mol": round(hbond_energy, 3),
-            "torsion_entropy_penalty_kcal_mol": round(torsion_penalty, 3),
-            "total_binding_free_energy_dG": f"{dg_total} kcal/mol",
-            "predicted_dissociation_constant_Kd": kd_str,
-            "affinity_class": "HIGH_AFFINITY_DRUG_CANDIDATE" if dg_total < -7.0 else "MODERATE_OR_WEAK_BINDER"
+            "total_blocks": len(result_chain),
+            "participating_nodes": num_nodes,
+            "chain_ledger": result_chain
         }
 
-class DirectedEvolutionDAGEngine:
+class QuantumLindbladDensityVisualizerEngine:
     r"""
-    Directed Acyclic Graph (DAG) Evolutionary Lineage & Fitness Trajectory
+    Time-Dependent Open Quantum System Lindblad Master Equation & ASCII Coherence Matrix
+    d\rho/dt = -i[H, \rho] + \sum (L \rho L^\dagger - 0.5 {L^\dagger L, \rho})
     """
     @staticmethod
-    def simulate_evolution(generations: int = 5, population_size: int = 4, mutation_rate: float = 0.15) -> dict:
-        nodes = {}
-        lineage_tree = []
-        
-        # Root sequence
-        current_pop = [{"id": f"G0_M{i}", "seq": "ATGCGATCGCTA", "fitness": 1.0} for i in range(population_size)]
-        
-        for g in range(1, generations + 1):
-            next_pop = []
-            for i, parent in enumerate(current_pop):
-                child_seq = list(parent["seq"])
-                mutated = False
-                for idx in range(len(child_seq)):
-                    if random.random() < mutation_rate:
-                        child_seq[idx] = random.choice(['A', 'C', 'G', 'T'])
-                        mutated = True
-                
-                # Fitness function: GC content and optimal motif proximity
-                seq_str = "".join(child_seq)
-                gc_ratio = (seq_str.count('G') + seq_str.count('C')) / len(seq_str)
-                fitness_score = round(parent["fitness"] * (1.0 + (gc_ratio - 0.5) * 0.8), 3)
-                
-                child_id = f"G{g}_M{i}"
-                child_node = {"id": child_id, "parent": parent["id"], "seq": seq_str, "fitness": fitness_score}
-                next_pop.append(child_node)
-                
-                lineage_tree.append(f"  [{parent['id']} (fit:{parent['fitness']})] ──> [{child_id} (fit:{fitness_score}) | {seq_str[:6]}...]")
-            current_pop = next_pop
+    def simulate_and_visualize(sites: int = 4, total_time_fs: float = 40.0, dt_fs: float = 1.0, dephasing_rate: float = 0.01) -> dict:
+        H = np.zeros((sites, sites), dtype=complex)
+        for i in range(sites):
+            H[i, i] = 12100.0 + i * 120.0
+            if i < sites - 1:
+                H[i, i+1] = -75.0
+                H[i+1, i] = -75.0
+        H /= 1000.0
 
-        best_variant = max(current_pop, key=lambda x: x["fitness"])
+        rho = np.zeros((sites, sites), dtype=complex)
+        rho[0, 0] = 1.0
+
+        steps = int(total_time_fs / dt_fs)
+        for _ in range(steps):
+            d_rho = -1j * (H @ rho - rho @ H)
+            for i in range(sites):
+                for j in range(sites):
+                    if i != j:
+                        d_rho[i, j] -= dephasing_rate * rho[i, j]
+            rho += d_rho * (dt_fs / 10.0)
+            rho /= np.trace(rho)
+
+        # High-density ASCII grid mapping of final density matrix magnitude
+        chars = [" ", "·", "x", "#"]
+        matrix_ascii = []
+        for r in range(sites):
+            row_str = ""
+            for c in range(sites):
+                mag = abs(rho[r, c])
+                idx = min(3, max(0, int(mag * 3.5)))
+                row_str += f"[{chars[idx]}] "
+            matrix_ascii.append(row_str.strip())
 
         return {
-            "total_generations": generations,
-            "final_population_count": len(current_pop),
-            "top_fitness_score": best_variant["fitness"],
-            "top_evolved_sequence": best_variant["seq"],
-            "lineage_dag_ascii": lineage_tree[:10]
+            "sites": sites,
+            "site_populations": [round(float(rho[i, i].real), 4) for i in range(sites)],
+            "max_cross_coherence": round(float(np.max(np.abs(rho - np.diag(np.diag(rho))))), 5),
+            "density_matrix_ascii": matrix_ascii
         }
 
-class NonNewtonianVascularEngine:
+class TuringMorphogenesisDynamicGridEngine:
     r"""
-    Non-Newtonian Blood Hemodynamics (Casson Fluid Capillary Shear & Pressure Gradient)
+    2D Reaction-Diffusion PDE with Evolving Boundary Shape Masks
     """
     @staticmethod
-    def calculate_hemodynamics(vessel_radius_um: float = 15.0, flow_rate_nl_s: float = 2.5, hematocrit: float = 0.45) -> dict:
-        r_m = vessel_radius_um * 1e-6
-        q_m3_s = flow_rate_nl_s * 1e-12
-        
-        # Casson yield stress for blood (function of hematocrit)
-        tau_yield = 0.005 * (hematocrit ** 3) # Pa
-        plasma_viscosity = 0.0012 # Pa*s
-        
-        # Poiseuille base shear rate: gamma_dot = 4 * Q / (pi * R^3)
-        shear_rate = (4.0 * q_m3_s) / (math.pi * (r_m ** 3))
-        
-        # Casson Apparent Viscosity: sqrt(tau) = sqrt(tau_y) + sqrt(mu * gamma_dot)
-        wall_shear_stress = (math.sqrt(tau_yield) + math.sqrt(plasma_viscosity * shear_rate)) ** 2
-        apparent_viscosity = wall_shear_stress / max(1e-6, shear_rate)
-        
-        # Pressure drop per millimeter length (dp/dx = 2 * tau_w / R)
-        pressure_drop_pa_mm = (2.0 * wall_shear_stress / r_m) * 1e-3
-        pressure_drop_mmhg_mm = pressure_drop_pa_mm * 0.00750062
+    def render_morphogenesis(grid_size: int = 20, iterations: int = 80) -> dict:
+        np.random.seed(42)
+        u = np.ones((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
+        v = np.zeros((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
+
+        # Dynamic circular boundary constraint mask
+        center = grid_size / 2.0
+        mask = np.zeros((grid_size, grid_size), dtype=bool)
+        for r in range(grid_size):
+            for c in range(grid_size):
+                if math.sqrt((r - center)**2 + (c - center)**2) <= (grid_size / 2.0 - 1.0):
+                    mask[r, c] = True
+
+        Du, Dv = 0.16, 0.08
+        F, k = 0.035, 0.065
+        dt = 1.0
+
+        for _ in range(iterations):
+            lap_u = (np.roll(u, 1, 0) + np.roll(u, -1, 0) + np.roll(u, 1, 1) + np.roll(u, -1, 1) - 4 * u)
+            lap_v = (np.roll(v, 1, 0) + np.roll(v, -1, 0) + np.roll(v, 1, 1) + np.roll(v, -1, 1) - 4 * v)
+            uvv = u * v * v
+            u += dt * (Du * lap_u - uvv + F * (1.0 - u))
+            v += dt * (Dv * lap_v + uvv - (F + k) * v)
+            u[~mask] = 0.0
+            v[~mask] = 0.0
+
+        chars = [" ", "·", "x", "#"]
+        render = []
+        for r in range(grid_size):
+            line = "".join([chars[min(3, max(0, int(u[r, c] * 3.0)))] if mask[r, c] else " " for c in range(grid_size)])
+            render.append(line)
 
         return {
-            "vessel_radius": f"{vessel_radius_um} um",
-            "wall_shear_rate_s1": round(float(shear_rate), 2),
-            "wall_shear_stress_Pa": round(float(wall_shear_stress), 4),
-            "apparent_blood_viscosity_cP": round(float(apparent_viscosity * 1000.0), 3),
-            "pressure_gradient_mmHg_mm": round(float(pressure_drop_mmhg_mm), 3),
-            "flow_regime": "LAMINAR_MICROVASCULAR_CAPILLARY" if shear_rate < 1000.0 else "HIGH_SHEAR_MICROCIRCULATION"
+            "grid_dimensions": f"{grid_size}x{grid_size}",
+            "active_tissue_area_pct": f"{round((np.sum(mask)/(grid_size**2))*100.0, 2)}%",
+            "mean_activator_density": round(float(np.mean(u[mask])), 4),
+            "ascii_tissue_render": render
         }
 
-class XenobiologyCircuitCompilerEngine:
+class DNAOrigamiTorsionRouterEngine:
     r"""
-    Synthetic Xenobiology Compiler (Hachimoji 6-Letter DNA: A, T, G, C, P, Z)
+    3D DNA Origami Matrix Routing & Mechanical Torsion Energy
     """
-    HACHIMOJI_PAIRS = {
-        'A': 'T', 'T': 'A',
-        'G': 'C', 'C': 'G',
-        'P': 'Z', 'Z': 'P'  # Non-standard synthetic letters (2-amino-8-(1'-beta-D-2'-deoxyribofuranosyl)-imidazo-[1,2-a]-1,3,5-triazin-4(8H)-one)
-    }
-
     @staticmethod
-    def compile_xeno_circuit(synthetic_seq: str, induction_level: float = 1.0) -> dict:
-        seq = synthetic_seq.upper().strip()
-        n = len(seq)
-        
-        # Synthesize complementary strand
-        comp_strand = []
-        synthetic_bases_count = 0
-        for b in seq:
-            if b in XenobiologyCircuitCompilerEngine.HACHIMOJI_PAIRS:
-                comp_strand.append(XenobiologyCircuitCompilerEngine.HACHIMOJI_PAIRS[b])
-                if b in ('P', 'Z'):
-                    synthetic_bases_count += 1
-            else:
-                comp_strand.append('?')
-
-        # Metabolic transcription load (Hill function logic: V = Vmax * I^n / (K^n + I^n))
-        hill_n = 2.5
-        k_m = 0.5
-        promoter_activity = (induction_level ** hill_n) / ((k_m ** hill_n) + (induction_level ** hill_n))
-        metabolic_tax = (synthetic_bases_count * 1.5) + (n * 0.1)
-        
-        signal_delay_ms = round(12.0 + (synthetic_bases_count * 2.4), 2)
+    def calculate_routing_strain(scaffold_bp: int, staple_strands: int, target_planes: int = 3) -> dict:
+        turns = scaffold_bp / 10.5
+        ideal_crossovers = int(turns * 1.5 * (target_planes / 2.0))
+        twist_deviation = (scaffold_bp * 34.28) % 360.0
+        strain_energy_pN_nm = round(0.5 * 0.04 * (twist_deviation ** 2) * (target_planes / 2.0), 2)
 
         return {
-            "xeno_sequence_length": f"{n} bp",
-            "synthetic_hachimoji_bases": synthetic_bases_count,
-            "complementary_xeno_strand": "".join(comp_strand),
-            "promoter_transcription_efficiency": f"{round(promoter_activity * 100.0, 2)}%",
-            "metabolic_chassis_burden_index": round(metabolic_tax, 2),
-            "circuit_propagation_delay_ms": signal_delay_ms,
-            "orthogonal_chassis_status": "HIGHLY_ORTHOGONAL_SYNTHETIC_CELL" if synthetic_bases_count >= 2 else "PARTIALLY_CANONICAL"
+            "scaffold_length_bp": scaffold_bp,
+            "staple_strands_routed": staple_strands,
+            "spatial_target_planes": target_planes,
+            "optimal_crossovers": ideal_crossovers,
+            "accumulated_twist_deg": round(twist_deviation, 2),
+            "torsion_strain_energy_pN_nm": strain_energy_pN_nm,
+            "stability_status": "HIGH_RIGIDITY_NANO_STRUCTURE" if strain_energy_pN_nm < 800.0 else "SHEAR_STRAIN_LIMIT_EXCEEDED"
+        }
+
+class ChronomorphicShannonManifoldEngine:
+    r"""
+    Multi-Generational Epigenetic Network Shannon Information Decay Manifold
+    """
+    @staticmethod
+    def simulate_entropy_manifold(generations: int = 50, base_entropy: float = 0.92, decay_constant: float = 0.028) -> dict:
+        trajectory = []
+        h = base_entropy
+        for g in range(generations):
+            noise = (random.random() - 0.5) * 0.003
+            h = base_entropy * math.exp(-decay_constant * g) + 0.12 * (1.0 - math.exp(-decay_constant * g)) + noise
+            if g % 10 == 0:
+                trajectory.append((g, round(float(h), 4)))
+
+        return {
+            "generations_simulated": generations,
+            "initial_shannon_fidelity": base_entropy,
+            "final_retained_entropy": round(float(h), 4),
+            "entropy_loss_pct": f"{round((1.0 - (h / base_entropy)) * 100.0, 2)}%",
+            "decay_trajectory": trajectory
         }

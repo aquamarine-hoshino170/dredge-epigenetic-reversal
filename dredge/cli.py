@@ -2,18 +2,20 @@ import argparse
 import sys
 import unittest
 from dredge.bio_kernel import (
-    QuantumMolecularDockingEngine,
-    DirectedEvolutionDAGEngine,
-    NonNewtonianVascularEngine,
-    XenobiologyCircuitCompilerEngine
+    AsyncP2PBioLedgerEngine,
+    QuantumLindbladDensityVisualizerEngine,
+    TuringMorphogenesisDynamicGridEngine,
+    DNAOrigamiTorsionRouterEngine,
+    ChronomorphicShannonManifoldEngine
 )
 
 def main():
-    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Cosmic Quantum Bio-Network Suite (v59.0.0)')
-    parser.add_argument('--docking-affinity', nargs=3, type=float, metavar=('ATOMS', 'ROT_BONDS', 'DIST_A'), help='Compute Molecular Docking Binding Affinity')
-    parser.add_argument('--directed-evolution', nargs=2, type=int, metavar=('GENS', 'POP_SIZE'), help='Run Directed Evolution Lineage DAG')
-    parser.add_argument('--vascular-pde', nargs=3, type=float, metavar=('RADIUS_UM', 'FLOW_NL_S', 'HEMATOCRIT'), help='Non-Newtonian Vascular Biomechanics')
-    parser.add_argument('--xeno-compiler', nargs=2, metavar=('XENO_SEQ', 'INDUCTION'), help='Compile Hachimoji Synthetic Genetic Circuit')
+    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Hyper-Dimensional Quantum Automata Suite (v60.0.0)')
+    parser.add_argument('--async-ledger', nargs='+', help='Run Asynchronous P2P Bio-Consensus: --async-ledger MUT_A12T MUT_G88C')
+    parser.add_argument('--lindblad-vis', action='store_true', help='Visualize Quantum Lindblad Density Matrix & Coherence')
+    parser.add_argument('--turing-mask', action='store_true', help='Render 2D Turing Morphogenesis with Boundary Mask')
+    parser.add_argument('--origami-3d', nargs=3, type=int, metavar=('SCAFFOLD', 'STAPLES', 'PLANES'), help='3D DNA Origami Torsion Router')
+    parser.add_argument('--chrono-shannon', nargs=1, type=int, metavar=('GENERATIONS',), help='Chronomorphic Shannon Manifold Decay')
     parser.add_argument('--test', action='store_true', help='Run unit tests')
 
     args = parser.parse_args()
@@ -23,30 +25,46 @@ def main():
         unittest.TextTestRunner(verbosity=2).run(suite)
         return
 
-    if args.docking_affinity:
-        res = QuantumMolecularDockingEngine.calculate_binding_affinity(int(args.docking_affinity[0]), int(args.docking_affinity[1]), args.docking_affinity[2])
-        print(f"\n • Binding Free Energy (dG): {res['total_binding_free_energy_dG']} | Kd: {res['predicted_dissociation_constant_Kd']}\n   Potentials: vdW={res['vdw_potential_kcal_mol']} kcal/mol, Elec={res['electrostatic_potential_kcal_mol']} kcal/mol, H-Bond={res['hbond_energy_kcal_mol']} kcal/mol\n • Status: {res['affinity_class']}\n")
-        return
-
-    if args.directed_evolution:
-        res = DirectedEvolutionDAGEngine.simulate_evolution(generations=args.directed_evolution[0], population_size=args.directed_evolution[1])
+    if args.async_ledger:
+        res = AsyncP2PBioLedgerEngine.run_consensus_mesh(args.async_ledger, num_nodes=3)
         print("\n" + "="*55)
-        print("  DIRECTED EVOLUTION LINEAGE DAG")
+        print("  ASYNCHRONOUS P2P PROOF-OF-SEQUENCE CONSENSUS LEDGER")
         print("="*55)
-        for line in res['lineage_dag_ascii']:
-            print(line)
-        print("="*55)
-        print(f" • Top Fitness: {res['top_fitness_score']} | Best Variant: {res['top_evolved_sequence']}\n")
+        for b in res['chain_ledger']:
+            print(f" Block #{b['block_index']} | Node: {b['mined_by_node']} | Data: {b['mutation_payload']} | Hash: {b['block_hash'][:14]}... | Nonce: {b['nonce']}")
+        print("="*55 + "\n")
         return
 
-    if args.vascular_pde:
-        res = NonNewtonianVascularEngine.calculate_hemodynamics(args.vascular_pde[0], args.vascular_pde[1], args.vascular_pde[2])
-        print(f"\n • Microvascular Biomechanics: Shear Stress = {res['wall_shear_stress_Pa']} Pa | Apparent Viscosity = {res['apparent_blood_viscosity_cP']} cP\n • Pressure Drop: {res['pressure_gradient_mmHg_mm']} mmHg/mm ({res['flow_regime']})\n")
+    if args.lindblad_vis:
+        res = QuantumLindbladDensityVisualizerEngine.simulate_and_visualize(sites=4, total_time_fs=40.0)
+        print("\n" + "="*45)
+        print("  QUANTUM LINDBLAD DENSITY MATRIX MAGNITUDE")
+        print("="*45)
+        for row in res['density_matrix_ascii']:
+            print("   " + row)
+        print("="*45)
+        print(f" • Site Exciton Populations: {res['site_populations']}\n • Max Cross-Coherence |rho_ij|: {res['max_cross_coherence']}\n")
         return
 
-    if args.xeno_compiler:
-        res = XenobiologyCircuitCompilerEngine.compile_xeno_circuit(args.xeno_compiler[0], float(args.xeno_compiler[1]))
-        print(f"\n • Hachimoji Xeno-Circuit: {res['xeno_sequence_length']} (Synthetic Bases: {res['synthetic_hachimoji_bases']})\n • Complementary Strand: {res['complementary_xeno_strand']}\n • Transcription Efficiency: {res['promoter_transcription_efficiency']} | Delay: {res['circuit_propagation_delay_ms']} ms ({res['orthogonal_chassis_status']})\n")
+    if args.turing_mask:
+        res = TuringMorphogenesisDynamicGridEngine.render_morphogenesis(grid_size=20, iterations=80)
+        print("\n" + "="*45)
+        print("  2D TURING MORPHOGENESIS BOUNDARY LATTICE")
+        print("="*45)
+        for r in res['ascii_tissue_render']:
+            print("  " + r)
+        print("="*45)
+        print(f" • Active Tissue Area: {res['active_tissue_area_pct']} | Mean Activator: {res['mean_activator_density']}\n")
+        return
+
+    if args.origami_3d:
+        res = DNAOrigamiTorsionRouterEngine.calculate_routing_strain(args.origami_3d[0], args.origami_3d[1], args.origami_3d[2])
+        print(f"\n • 3D DNA Origami: {res['scaffold_length_bp']} bp ({res['spatial_target_planes']} Planes) | Crossovers: {res['optimal_crossovers']}\n • Torsion Strain Energy: {res['torsion_strain_energy_pN_nm']} pN·nm ({res['stability_status']})\n")
+        return
+
+    if args.chrono_shannon:
+        res = ChronomorphicShannonManifoldEngine.simulate_entropy_manifold(generations=args.chrono_shannon[0])
+        print(f"\n • Chronomorphic Epigenetic Shannon: Retained = {res['final_retained_entropy']} bits (Loss: {res['entropy_loss_pct']})\n • Trajectory: {res['decay_trajectory']}\n")
         return
 
     parser.print_help()
