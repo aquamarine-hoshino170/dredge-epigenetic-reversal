@@ -1,34 +1,33 @@
 import unittest
 from dredge.bio_kernel import (
-    HodgkinHuxleyCompartmentalEngine,
-    QuantumFMOExcitonEngine,
+    BioConsensusBlockchainEngine,
+    QuantumLindbladMasterEngine,
     TuringMorphogenesisEngine,
-    DNAOrigamiScaffoldEngine,
-    ChronomorphicShannonEntropyEngine
+    DNAOrigamiTorsionEngine,
+    HyperLatticeShannonEngine
 )
 
-class TestQuantumNeuromorphicCore(unittest.TestCase):
-    def test_hh_compartmental_propagation(self):
-        res = HodgkinHuxleyCompartmentalEngine.simulate_axon_cable(compartments=5, total_time_ms=2.0)
-        self.assertEqual(res['compartments_count'], 5)
-        self.assertTrue('final_soma_voltage' in res)
+class TestCloudSmashingCore(unittest.TestCase):
+    def test_bio_blockchain(self):
+        blocks = BioConsensusBlockchainEngine.simulate_p2p_bio_chain(["MUT_A12G", "MUT_T44C"])
+        self.assertEqual(len(blocks), 3)
+        self.assertEqual(blocks[0]['previous_hash'], "0"*64)
 
-    def test_quantum_fmo_exciton(self):
-        res = QuantumFMOExcitonEngine.simulate_coherence_dynamics(steps=20)
-        self.assertTrue(0.0 <= res['site_1_population'] <= 1.0)
-        self.assertTrue(res['final_off_diagonal_coherence'] >= 0.0)
+    def test_quantum_lindblad(self):
+        res = QuantumLindbladMasterEngine.simulate_fmo_lattice(sites=3, total_time_fs=20.0)
+        self.assertEqual(len(res['site_exciton_populations']), 3)
 
-    def test_turing_morphogenesis(self):
-        res = TuringMorphogenesisEngine.render_turing_tissue(grid_size=12, iterations=30)
-        self.assertEqual(len(res['ascii_visual']), 12)
+    def test_turing_tissue(self):
+        res = TuringMorphogenesisEngine.generate_patterns(grid_size=10, iterations=20)
+        self.assertEqual(len(res['ascii_render']), 10)
 
-    def test_dna_origami_torsion(self):
-        res = DNAOrigamiScaffoldEngine.calculate_origami_torsion(7249, 180)
-        self.assertTrue(res['optimal_crossover_junctions'] > 0)
+    def test_dna_origami(self):
+        res = DNAOrigamiTorsionEngine.calculate_torsion(7249, 190)
+        self.assertTrue(res['crossover_junctions'] > 0)
 
-    def test_chronomorphic_entropy_manifold(self):
-        res = ChronomorphicShannonEntropyEngine.simulate_entropy_manifold(generations=30)
-        self.assertTrue(res['final_retained_entropy'] < res['initial_information_fidelity'])
+    def test_hyper_shannon(self):
+        res = HyperLatticeShannonEngine.simulate_decay(generations=30)
+        self.assertTrue(res['final_retained_entropy'] < res['initial_entropy'])
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,15 +1,15 @@
-__version__ = '55.0.0'
+__version__ = '56.0.0'
 from dredge.bio_kernel import (
-    HodgkinHuxleyCompartmentalEngine,
-    QuantumFMOExcitonEngine,
+    BioConsensusBlockchainEngine,
+    QuantumLindbladMasterEngine,
     TuringMorphogenesisEngine,
-    DNAOrigamiScaffoldEngine,
-    ChronomorphicShannonEntropyEngine
+    DNAOrigamiTorsionEngine,
+    HyperLatticeShannonEngine
 )
 __all__ = [
-    'HodgkinHuxleyCompartmentalEngine',
-    'QuantumFMOExcitonEngine',
+    'BioConsensusBlockchainEngine',
+    'QuantumLindbladMasterEngine',
     'TuringMorphogenesisEngine',
-    'DNAOrigamiScaffoldEngine',
-    'ChronomorphicShannonEntropyEngine'
+    'DNAOrigamiTorsionEngine',
+    'HyperLatticeShannonEngine'
 ]
