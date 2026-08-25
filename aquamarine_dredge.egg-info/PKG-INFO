@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: aquamarine-dredge
-Version: 41.0.0
+Version: 42.0.0
 Summary: In-Silico Epigenetic Entropy Reversal & Targeted TET2 Modulation Pipeline by Aquamarine
 Author-email: Aquamarine Hoshino <aquamarine.hoshino170@github.io>
 Requires-Python: >=3.10
