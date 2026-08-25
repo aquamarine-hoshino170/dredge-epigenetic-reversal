@@ -1,11 +1,11 @@
 import numpy as np
 import math
-import inspect
 import hashlib
+import os
 
 class PurePythonPatternRecognitionEngine:
     r"""
-    Zero-Dependency 2D Template Matching via Normalized Cross-Correlation (NCC)
+    Zero-Dependency 2D Pattern Recognition via Normalized Cross-Correlation & Cosine Similarity
     """
     @staticmethod
     def match_template(image_grid: list, template_grid: list) -> dict:
@@ -16,12 +16,9 @@ class PurePythonPatternRecognitionEngine:
         h, w = tpl.shape
 
         if H < h or W < w:
-            return {"error": "Image dimensions must be greater than or equal to template dimensions"}
+            return {"error": "Image dimensions must be larger than or equal to template dimensions"}
 
-        tpl_mean = np.mean(tpl)
-        tpl_norm = tpl - tpl_mean
-        tpl_denom = np.sum(tpl_norm ** 2)
-
+        tpl_norm = np.linalg.norm(tpl)
         best_score = -1.0
         best_coord = (0, 0)
         correlation_map = np.zeros((H - h + 1, W - w + 1), dtype=float)
@@ -29,13 +26,13 @@ class PurePythonPatternRecognitionEngine:
         for i in range(H - h + 1):
             for j in range(W - w + 1):
                 patch = img[i:i+h, j:j+w]
-                patch_mean = np.mean(patch)
-                patch_norm = patch - patch_mean
-                patch_denom = np.sum(patch_norm ** 2)
+                patch_norm = np.linalg.norm(patch)
 
-                denom = math.sqrt(patch_denom * tpl_denom)
-                if denom > 1e-12:
-                    score = float(np.sum(patch_norm * tpl_norm) / denom)
+                # Robust Cosine Normalized Correlation
+                if patch_norm > 1e-12 and tpl_norm > 1e-12:
+                    score = float(np.sum(patch * tpl) / (patch_norm * tpl_norm))
+                elif patch_norm <= 1e-12 and tpl_norm <= 1e-12:
+                    score = 1.0
                 else:
                     score = 0.0
 
@@ -50,12 +47,12 @@ class PurePythonPatternRecognitionEngine:
             "best_match_coordinate": best_coord,
             "max_confidence_score": round(float(best_score), 4),
             "correlation_matrix_preview": correlation_map.tolist(),
-            "detection_verdict": "MATCH_CONFIRMED" if best_score > 0.85 else "UNCERTAIN_MATCH"
+            "detection_verdict": "MATCH_CONFIRMED" if best_score >= 0.95 else "UNCERTAIN_MATCH"
         }
 
 class SelfIntrospectionEngine:
     r"""
-    Runtime Code Self-Inspection & Memory Reversal Architecture
+    Runtime Code Self-Inspection & Reverse Stream Engine
     """
     @staticmethod
     def inspect_and_reverse_source(source_path: str) -> dict:
@@ -67,14 +64,12 @@ class SelfIntrospectionEngine:
 
         total_lines = len(lines)
         file_sha256 = hashlib.sha256("".join(lines).encode('utf-8')).hexdigest()
-        
-        # In-memory bottom-to-top traversal
-        reversed_lines_preview = [l.strip() for l in reversed(lines[-5:])]
+        reversed_preview = [l.strip() for l in reversed(lines[-5:])]
 
         return {
             "inspected_file": source_path,
             "total_lines_read": total_lines,
             "source_sha256": file_sha256,
-            "bottom_up_memory_stream": reversed_lines_preview,
+            "bottom_up_memory_stream": reversed_preview,
             "state_status": "SECURE_INTROSPECTION_COMPLETED"
         }
