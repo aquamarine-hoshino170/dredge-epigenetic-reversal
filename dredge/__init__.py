@@ -1,13 +1,13 @@
-__version__ = '58.0.0'
+__version__ = '59.0.0'
 from dredge.bio_kernel import (
-    ExactMultiSequenceAlignmentEngine,
-    AbInitioProteinPhysicsEngine,
-    MultiScaleTissueMorphogenesisEngine,
-    VectorizedNLSOptimizerEngine
+    QuantumMolecularDockingEngine,
+    DirectedEvolutionDAGEngine,
+    NonNewtonianVascularEngine,
+    XenobiologyCircuitCompilerEngine
 )
 __all__ = [
-    'ExactMultiSequenceAlignmentEngine',
-    'AbInitioProteinPhysicsEngine',
-    'MultiScaleTissueMorphogenesisEngine',
-    'VectorizedNLSOptimizerEngine'
+    'QuantumMolecularDockingEngine',
+    'DirectedEvolutionDAGEngine',
+    'NonNewtonianVascularEngine',
+    'XenobiologyCircuitCompilerEngine'
 ]
