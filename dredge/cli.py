@@ -1,95 +1,78 @@
 import argparse
 import sys
 from dredge.bio_kernel import (
-    UniversalBioKernel, 
-    SequenceAlignmentEngine, 
-    GenIntelBioinformaticsEngine, 
-    UnifiedPsiEMAMasterEngine, 
-    AutonomousCodeSynthesizerEngine
+    PureThermodynamicsEngine, 
+    PureBiochemistryProteinEngine, 
+    PureMolecularGenomicsEngine
 )
 
 def main():
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Pure Scientific (v46.0.0): Computational Genomics & Algorithmic Bio-Engine"
+        description="DREDGE Pure Sciences (v47.0.0): Biophysical Thermodynamics, Protein Chemistry & Genomic Algorithms"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 46.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 47.0.0")
     
-    # Real Scientific Flags
-    parser.add_argument("--transcribe", type=str, default=None, help="Transcribe DNA sequence to mRNA")
-    parser.add_argument("--translate", type=str, default=None, help="Translate nucleotide sequence into Amino Acid Peptide")
+    # Pure Biophysics & Biochemistry
+    parser.add_argument("--dna-tm", type=str, default=None, help="Calculate Nearest-Neighbor DNA Melting Temp (Tm) & Gibbs Free Energy (dG)")
+    parser.add_argument("--protein-pi", type=str, default=None, help="Calculate Isoelectric Point (pI), Net Charge at pH 7.4 & Hydropathy")
+    parser.add_argument("--translate", type=str, default=None, help="Exact Ribosomal In-Silico Translation to Peptide")
     parser.add_argument("--align", nargs=2, metavar=('SEQ1', 'SEQ2'), help="Run Smith-Waterman Local Sequence Alignment")
-    parser.add_argument("--genintel", "-gi", type=str, default=None, help="Fetch real gene data and analyze from NCBI (e.g. BRCA1, TP53)")
-    parser.add_argument("--psi-ema", type=str, default=None, help="Compute Unified Psi_EMA Master Invariant on DNA sequence")
-    parser.add_argument("--code", type=str, default=None, help="Synthesize clean scientific algorithm code")
-    parser.add_argument("--sandbox", type=str, default=None, help="Execute Python script in isolated runtime sandbox")
     parser.add_argument("--cite", action="store_true", help="Print official scientific BibTeX citation")
 
     args = parser.parse_args()
 
-    if args.transcribe:
-        res = UniversalBioKernel.transcribe(args.transcribe)
-        print(f"\n • mRNA: {res}\n")
+    if args.dna_tm:
+        res = PureThermodynamicsEngine.calculate_melting_temp(args.dna_tm)
+        print("\n" + "="*70)
+        print("  🔬 DNA NEAREST-NEIGHBOR THERMODYNAMICS (SantaLucia 1998)")
+        print("="*70)
+        print(f" • Sequence Length : {res['sequence_length']}")
+        print(f" • Enthalpy (ΔH)   : {res['enthalpy_dH_kcal_mol']} kcal/mol")
+        print(f" • Entropy (ΔS)    : {res['entropy_dS_cal_K_mol']} cal/(K·mol)")
+        print(f" • Free Energy (ΔG): {res['gibbs_free_energy_dG_37C']}")
+        print(f" • Melting Temp Tm : {res['melting_temperature_Tm']}")
+        print(f" • Thermodynamic   : {res['thermodynamic_state']}")
+        print("="*70 + "\n")
+        return
+
+    if args.protein_pi:
+        res = PureBiochemistryProteinEngine.calculate_isoelectric_point(args.protein_pi)
+        print("\n" + "="*70)
+        print("  🧪 PROTEIN BIOCHEMISTRY & TITRATION PROFILE")
+        print("="*70)
+        print(f" • Peptide Length  : {res['peptide_length']} aa")
+        print(f" • Isoelectric pI  : {res['isoelectric_point_pI']}")
+        print(f" • Net Charge pH7.4: {res['net_charge_physiological_pH7_4']} e")
+        print(f" • GRAVY Hydropathy: {res['gravy_hydrophobicity_index']}")
+        print(f" • Physical Nature : {res['biophysical_nature']}")
+        print("="*70 + "\n")
         return
 
     if args.translate:
-        res = UniversalBioKernel.translate(args.translate)
+        res = PureMolecularGenomicsEngine.translate(args.translate)
         print(f"\n • Peptide: {res}\n")
         return
 
     if args.align:
-        res = SequenceAlignmentEngine.local_align(args.align[0], args.align[1])
+        res = PureMolecularGenomicsEngine.smith_waterman_align(args.align[0], args.align[1])
         print("\n" + "="*70)
-        print("  🧬 SMITH-WATERMAN LOCAL SEQUENCE ALIGNMENT")
+        print("  🧬 SMITH-WATERMAN DYNAMIC PROGRAMMING ALIGNMENT")
         print("="*70)
-        print(f" • Score       : {res['alignment_score']}")
-        print(f" • Max Identity: {res['max_identity_pct']}%")
+        print(f" • Alignment Score : {res['optimal_alignment_score']}")
+        print(f" • Matrix Shape    : {res['sequence_matrix_shape']}")
         print("="*70 + "\n")
-        return
-
-    if args.genintel:
-        res = GenIntelBioinformaticsEngine.analyze_gene(args.genintel)
-        print("\n" + "="*70)
-        print("  🧬 GENINTEL: NCBI GENOME DATA ANALYSIS")
-        print("="*70)
-        print(f" • Gene Symbol   : {res['gene_symbol']}")
-        print(f" • Entrez ID     : {res['ncbi_gene_id']}")
-        print(f" • Sequence Len  : {res['sequence_length_bp']} bp")
-        print(f" • GC Content    : {res['gc_content']}")
-        print(f" • Peptide Sample: {res['synthesized_peptide']}")
-        print("="*70 + "\n")
-        return
-
-    if args.psi_ema:
-        res = UnifiedPsiEMAMasterEngine.compute_psi_ema(args.psi_ema)
-        print("\n" + "="*70)
-        print("  ♾️ UNIFIED Ψ_EMA MASTER INVARIANT ENGINE")
-        print("="*70)
-        print(f" • Formula        : {res['mathematical_formula']}")
-        print(f" • Input Sequence : {res['input_length']}")
-        print(f" • Minimizer Seeds: {res['minimizer_seeds']}")
-        print(f" • Polar Bias     : {res['polar_phase_bias']}")
-        print(f" • Latent Tensor  : {res['tensor_shape']}")
-        print(f" • Convergence    : {res['convergence_confidence']}")
-        print("="*70 + "\n")
-        return
-
-    if args.code:
-        res = AutonomousCodeSynthesizerEngine.synthesize_code(args.code)
-        print(f"\n[Synthesized {res['language']} Code]:\n{res['code']}\n")
-        return
-
-    if args.sandbox:
-        res = AutonomousCodeSynthesizerEngine.run_sandbox(args.sandbox)
-        print(f"\n[Sandbox Output]:\n{res['output']}\n")
         return
 
     if args.cite:
-        print("""@software{aquamarine_dredge_2026,
-  author = {Hoshino, Aquamarine},
-  title = {DREDGE: High-Performance Computational Genomics & Invariant Bio-Framework},
-  year = {2026},
-  url = {https://pypi.org/project/aquamarine-dredge/}
+        print("""@article{santaluccia1998,
+  title={A unified view of polymer, dumbbell, and oligonucleotide DNA nearest-neighbor thermodynamics},
+  author={SantaLucia, John},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={95},
+  number={4},
+  pages={1460--1465},
+  year={1998}
 }""")
     else:
         parser.print_help()
