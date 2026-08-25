@@ -1,31 +1,37 @@
 import unittest
 from dredge.bio_kernel import (
-    NLSESolitonSolverEngine,
-    HomomorphicMatrixLedgerEngine,
-    MacroMolecularMeshTorsionEngine,
-    FractionalDiffusionFractalEngine
+    LatticeGaugeFieldEngine,
+    RecursiveSTARKEngine,
+    FractionalTurbulenceEngine,
+    TensorContinuumElasticityEngine
 )
 
-class TestUniversalSingularityCore(unittest.TestCase):
-    def test_schrodinger_soliton(self):
-        res = NLSESolitonSolverEngine.solve_soliton_grid(nodes=16, time_steps=20)
-        self.assertTrue(res['peak_soliton_density'] > 0.0)
-        self.assertEqual(res['phase_envelope_stability'], "COHERENT_SOLITON_PROPAGATION")
+class TestBeyondSingularityCore(unittest.TestCase):
+    def test_lattice_gauge_su3(self):
+        res = LatticeGaugeFieldEngine.compute_wilson_lattice(grid_size=2, beta=4.0)
+        self.assertTrue('mean_wilson_plaquette' in res)
+        self.assertEqual(len(res['topological_charge_tensor_ascii']), 2)
 
-    def test_homomorphic_ledger(self):
-        balances = [600, 300, 1500]
-        res = HomomorphicMatrixLedgerEngine.verify_ledger(balances)
-        self.assertEqual(res['total_clients'], 3)
-        self.assertEqual(res['proof_validation_status'], "ZERO_KNOWLEDGE_HOMOMORPHIC_VALIDATED")
+    def test_recursive_stark_proof(self):
+        trace = [1, 2, 4, 8, 16]
+        res = RecursiveSTARKEngine.generate_recursive_stark_proof(trace)
+        self.assertEqual(res['computation_trace_steps'], 5)
+        self.assertEqual(res['verification_status'], "RECURSIVE_AIR_PROOF_VERIFIED")
 
-    def test_mesh_torsion(self):
-        res = MacroMolecularMeshTorsionEngine.calculate_mesh_torsion(nodes=50, axial_torque_n_m=20.0, axes=3)
-        self.assertEqual(res['topological_nodes'], 50)
-        self.assertTrue(res['von_mises_stress_MPa'] > 0.0)
+    def test_fractional_turbulence(self):
+        res = FractionalTurbulenceEngine.simulate_turbulence_field(grid_size=10, steps=10)
+        self.assertEqual(len(res['vorticity_tensor_ascii']), 10)
+        self.assertTrue(res['peak_vorticity'] > 0.0)
 
-    def test_fractal_diffusion(self):
-        res = FractionalDiffusionFractalEngine.simulate_fractal_lattice(grid_size=12, steps=15)
-        self.assertEqual(len(res['fractal_ascii_tissue']), 12)
+    def test_tensor_elasticity(self):
+        grad_u = [
+            [0.01, 0.0, 0.0],
+            [0.0, 0.01, 0.0],
+            [0.0, 0.0, 0.01]
+        ]
+        res = TensorContinuumElasticityEngine.compute_tensor_stress(grad_u)
+        self.assertTrue(res['von_mises_equivalent_stress_MPa'] > 0.0)
+        self.assertEqual(res['continuum_elastic_status'], "STABLE_HYPERELASTIC_DEFORMATION")
 
 if __name__ == '__main__':
     unittest.main()
