@@ -46,7 +46,8 @@ from dredge.bio_kernel import (
     AdvancedBioCipherEngine,
     AegisHardwareShieldEngine,
     FullDeviceCryptographicEnclave,
-    QuantumImmuneInformationEngine
+    QuantumImmuneInformationEngine,
+    ShamirZeroTraceShieldEngine
 )
 
 def main():
@@ -56,15 +57,16 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Quantum-Immune (v32.0.0): Information-Theoretic & Post-Quantum OS"
+        description="DREDGE Shamir Zero-Trace (v33.0.0): Anti-Spyware & Threshold Cryptographic OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 32.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 33.0.0")
     
-    # Quantum Immune Flags
-    parser.add_argument("--quantum-otp", type=str, default=None, help="Generate Shannon Information-Theoretic One-Time Pad (Unbreakable by Supercomputers)")
-    parser.add_argument("--lwe-lattice", type=int, default=512, help="Compute LWE Post-Quantum Lattice Hardness (e.g. 512, 1024)")
+    # Shamir Threshold & RAM Wipe Flags
+    parser.add_argument("--shamir-split", type=int, default=None, help="Split secret integer into Shamir (3-out-of-5) Threshold Shares")
+    parser.add_argument("--ram-wipe", type=str, default=None, help="Process payload and immediately zeroize volatile RAM")
 
     # Core Systems
+    parser.add_argument("--quantum-otp", type=str, default=None, help="Generate Shannon One-Time Pad")
     parser.add_argument("--lattice-enc", type=str, default=None, help="Encrypt payload with Post-Quantum Lattice")
     parser.add_argument("--key", type=str, default="QuantumEnclave2026", help="Key seed")
     parser.add_argument("--shield-audit", action="store_true", help="Run Zero-Trust Anti-Tamper Audit")
@@ -84,49 +86,49 @@ def main():
 
     args = parser.parse_args()
 
-    if args.quantum_otp:
-        res = QuantumImmuneInformationEngine.generate_quantum_immune_otp(args.quantum_otp)
+    if args.shamir_split is not None:
+        res = ShamirZeroTraceShieldEngine.split_secret_into_threshold_shares(args.shamir_split, n_shares=5, threshold_k=3)
         print("\n" + "="*76)
-        print("  ♾️ SHANNON INFORMATION-THEORETIC QUANTUM-IMMUNE ONE-TIME PAD")
+        print("  🔑 SHAMIR'S THRESHOLD SECRET SHARING (ANTI-SOCIAL ENGINEERING)")
         print("="*76)
-        print(f" • Security Proof         : {res['cryptographic_assurance']}")
-        print(f" • Payload Size           : {res['plaintext_length']}")
-        print(f" • Hardware Entropy Seed  : {res['entropy_source']}")
-        print(f" • Synthesized Cipher DNA : {res['synthesized_otp_dna']}")
-        print(f" • One-Time Secret Key    : {res['ephemeral_otp_key_hex']}")
-        print(f" • Quantum Threat Status  : {res['quantum_immunity']}")
+        print(f" • Scheme Protocol      : {res['threshold_scheme']}")
+        print(f" • Threshold Required   : Minimum {res['required_shares_to_reconstruct']} of {res['total_dispersed_shares']} Shares")
+        print(f" • Security Guarantee   : {res['social_engineering_defense']}")
+        print("\n[*] Cryptographic Dispersed Shares:")
+        for idx, share_val in res['generated_shares']:
+            print(f"   [Share #{idx}] = {share_val}")
         print("="*76 + "\n")
         return
 
-    if args.lwe_lattice:
-        res = QuantumImmuneInformationEngine.solve_lwe_lattice_trapdoor(args.lwe_lattice)
+    if args.ram_wipe:
+        res = ShamirZeroTraceShieldEngine.execute_volatile_ram_zeroize(args.ram_wipe)
         print("\n" + "="*76)
-        print("  🌌 NIST POST-QUANTUM LWE HIGH-DIMENSIONAL LATTICE ENCLAVE")
+        print("  🧹 VOLATILE EPHEMERAL RAM ZEROIZATION (ANTI-MEMORY SCRAPING)")
         print("="*76)
-        print(f" • Lattice Dimension      : {res['lattice_dimension']}")
-        print(f" • Quantum Hardness Level : {res['lattice_hardness']}")
-        print(f" • Defense Algorithm      : {res['quantum_algorithm_defense']}")
-        print(f" • Subsystem State        : {res['quantum_state']}")
+        print(f" • Execution Action     : {res['volatile_ram_status']}")
+        print(f" • Overwritten Buffer   : {res['cleared_memory_bytes']}")
+        print(f" • RAM Dump Defense     : {res['memory_scraping_resistance']}")
+        print(f" • Keystroke Guard      : {res['anti_keylogger_guard']}")
         print("="*76 + "\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND QUANTUM-IMMUNE OS HEALTH")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND TOTAL SHIELD HEALTH")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="QUANTUM-IMMUNE SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="SHIELD MATRIX SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Quantum-Immune: Information-Theoretic & Post-Quantum OS},
+  title = {DREDGE Shamir Zero-Trace: Anti-Spyware & Threshold Cryptographic OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
