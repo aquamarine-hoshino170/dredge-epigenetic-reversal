@@ -51,7 +51,8 @@ from dredge.bio_kernel import (
     DeepSiliconHardwareFortress,
     BareMetalKernelImageBuilder,
     ChronomorphicHyperLatticeEngine,
-    AutonomousBioCognitiveTransformer
+    AutonomousBioCognitiveTransformer,
+    UniversalAutonomousOmniEngine
 )
 
 def main():
@@ -61,16 +62,16 @@ def main():
 
     parser = argparse.ArgumentParser(
         prog="aquamarine-dredge",
-        description="DREDGE Autonomous AI (v37.0.0): On-Device Genomic Transformer & Bio-OS"
+        description="DREDGE Universal Omni-AI (v38.0.0): Autonomous General Cognitive Agent & Bio-OS"
     )
-    parser.add_argument("--version", action="version", version="aquamarine-dredge 37.0.0")
+    parser.add_argument("--version", action="version", version="aquamarine-dredge 38.0.0")
     
-    # AI Cognitive Directives
-    parser.add_argument("--ai-repair", type=str, default=None, help="Run On-Device AI Transformer to detect mutation hotspots & repair DNA")
-    parser.add_argument("--ai-evolve", type=str, default=None, help="Predict future evolutionary mutations of protein sequence")
-    parser.add_argument("--generations", type=int, default=10000, help="Generations to forecast (default: 10000)")
+    # Universal Omni AI Directive
+    parser.add_argument("--do", type=str, default=None, help="Execute ANY arbitrary task or command autonomously via Universal Omni-AI")
 
     # Core Systems
+    parser.add_argument("--ai-repair", type=str, default=None, help="Run AI Genomic Transformer Repair")
+    parser.add_argument("--ai-evolve", type=str, default=None, help="Predict evolutionary mutations")
     parser.add_argument("--time-crystal", action="store_true", help="Simulate Discrete Time-Crystal")
     parser.add_argument("--braid", type=str, default=None, help="Execute Topological Braid Gate")
     parser.add_argument("--hypervector", type=str, default=None, help="Holographic Hypervector Bind")
@@ -84,59 +85,51 @@ def main():
     parser.add_argument("--top", action="store_true", help="Bio-TOP monitor")
     parser.add_argument("--pipe", nargs="+", help="POSIX Bio-Stream Pipeline")
     parser.add_argument("--turbo-scan", type=str, default=None, help="2-Bit Assembly Scan")
-    parser.add_argument("--lucas", type=str, default=None, help="Lucas Reaper")
+    parser.add_argument("--lucas", type=str, default=None, help="Trigger Lucas Reaper")
     parser.add_argument("--infinity", action="store_true", help="Master Kernel")
-    parser.add_argument("--cite", action="store_true", help="BibTeX citation")
+    parser.add_argument("--cite", action="store_true", help="Print BibTeX citation")
 
     args = parser.parse_args()
 
-    if args.ai_repair:
-        res = AutonomousBioCognitiveTransformer.predict_and_repair_genome(args.ai_repair)
+    if args.do:
+        res = UniversalAutonomousOmniEngine.execute_universal_task(args.do)
         print("\n" + "="*76)
-        print("  🧠 AUTONOMOUS ON-DEVICE BIO-TRANSFORMER (AI REPAIR ENGINE)")
+        print("  🤖 UNIVERSAL AUTONOMOUS OMNI-COGNITIVE AGENT EXECUTION")
         print("="*76)
-        print(f" • Cognitive Architecture : {res['ai_engine']}")
-        print(f" • Strand Input Length    : {res['analyzed_strand_length']}")
-        print(f" • Detected Hotspot Locus : {res['detected_oncogenic_hotspot']}")
-        print(f" • Attention Confidence   : {res['mutation_risk_confidence']}")
-        print(f" • AI Optimized Sequence  : {res['autonomous_repaired_dna']}")
-        print(f" • Thermodynamic Delta    : {res['epigenetic_stability_gain']}")
-        print(f" • Model Verdict          : {res['ai_verdict']}")
+        print(f" • Input Goal / Prompt   : \"{res['input_objective']}\"")
+        print(f" • Identified Domain     : {res['cognitive_task_domain']}")
+        print("\n[*] Chain-of-Logic Planning Trace:")
+        for step in res['task_decomposition_steps']:
+            print(f"   {step}")
+        print(f"\n • Final Resolution Payload:\n   ▶ {res['autonomous_resolution']}")
+        print(f" • Task Completion State : {res['agent_status']}")
         print("="*76 + "\n")
         return
 
-    if args.ai_evolve:
-        res = AutonomousBioCognitiveTransformer.generate_evolutionary_forecast(args.ai_evolve, generations=args.generations)
-        print("\n" + "="*76)
-        print("  🔮 AI EVOLUTIONARY TRAJECTORY FORECAST ENGINE")
-        print("="*76)
-        print(f" • Simulation Horizon     : {res['forecast_generations']} Generations")
-        print(f" • Ancestral Protein      : {res['ancestral_sequence']}")
-        print(f" • Predicted Evolved Seq  : {res['predicted_evolved_sequence']}")
-        print(f" • Mutation Entropy       : {res['mutation_entropy']}")
-        print(f" • Evolutionary Fitness   : {res['predicted_fitness_delta']}")
-        print("="*76 + "\n")
+    if args.ai_repair:
+        res = AutonomousBioCognitiveTransformer.predict_and_repair_genome(args.ai_repair)
+        print(f"\n • AI Repaired DNA: {res['autonomous_repaired_dna']} | Hotspot: {res['detected_oncogenic_hotspot']}\n")
         return
 
     if args.infinity:
         print("\n" + "="*76)
-        print("  ♾️ AQUAMARINE DREDGE: GRAND AUTONOMOUS AI KERNEL HEALTH")
+        print("  ♾️ AQUAMARINE DREDGE: GRAND UNIVERSAL OMNI-AI OS HEALTH")
         print("="*76)
         q_res = QuantumBiologyEngine.simulate_quantum_fmo_transfer()
         print(f" • [Quantum Biology]  : FMO Coherence Efficiency = {q_res['quantum_exciton_efficiency']}")
         n_res = HodgkinHuxleyNeuronSimulator.simulate_action_potential(12.0)
         print(f" • [Neuro-Physics]    : Action Potential Firing = {n_res['firing_frequency_Hz']}")
-        ai_res = AutonomousBioCognitiveTransformer.predict_and_repair_genome("ATGCGATCGATCG")
-        print(f" • [Autonomous AI]    : Transformer Attention = {ai_res['mutation_risk_confidence']}")
+        omni_res = UniversalAutonomousOmniEngine.execute_universal_task("Self-Test Core Invariants")
+        print(f" • [Universal Omni-AI]: Status = {omni_res['agent_status']}")
         dummy_wave = [np.sin(x/3.0) + np.cos(x/2.0) + 2.0 for x in range(50)]
-        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="AUTONOMOUS AI SPECTRUM"))
+        print(BioSpectralVisualizer.render_ascii_spectrum(dummy_wave, title="OMNI-COGNITIVE SPECTRUM"))
         print("="*76 + "\n")
         return
 
     if args.cite:
         print("""@software{aquamarine_dredge_2026,
   author = {Hoshino, Aquamarine},
-  title = {DREDGE Autonomous AI: On-Device Genomic Transformer & Bio-OS},
+  title = {DREDGE Universal Omni-AI: Autonomous Cognitive Agent & Bio-OS},
   year = {2026},
   url = {https://pypi.org/project/aquamarine-dredge/}
 }""")
