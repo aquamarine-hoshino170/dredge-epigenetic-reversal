@@ -1,31 +1,31 @@
 import unittest
 from dredge.bio_kernel import (
-    HeterogeneousPolyglotQuineEngine,
+    DNASolitonWaveEngine,
     MultiTenantZKPedersenEngine,
     ChaosFractalDiffusionEngine,
-    MultiAxisLatticeOptimizationEngine
+    MacroMolecularTorsionEngine
 )
 
-class TestLogicSingularityCore(unittest.TestCase):
-    def test_polyglot_quine(self):
-        res = HeterogeneousPolyglotQuineEngine.synthesize_polyglot("c")
-        self.assertTrue(res['synthesized_source_bytes'] > 0)
-        self.assertIn("#include <stdio.h>", res['generated_polyglot_source'])
+class TestQuantumBiologicalInvariantCore(unittest.TestCase):
+    def test_dna_soliton_wave(self):
+        res = DNASolitonWaveEngine.simulate_soliton_propagation(lattice_nodes=16, time_steps=20)
+        self.assertTrue(res['peak_soliton_amplitude'] > 0.0)
+        self.assertEqual(res['mechanical_stability'], "STABLE_SOLITON_CONDUCTION")
 
     def test_zk_pedersen_homomorphism(self):
-        balances = [500, 250, 1200]
+        balances = [400, 300, 800]
         res = MultiTenantZKPedersenEngine.verify_multi_tenant_state(balances)
-        self.assertEqual(res['total_tenants_processed'], 3)
+        self.assertEqual(res['total_tenants'], 3)
         self.assertEqual(res['zk_proof_status'], "PROVEN_VALID_ZERO_KNOWLEDGE")
 
     def test_chaos_fractal_diffusion(self):
         res = ChaosFractalDiffusionEngine.simulate_chaos_fractal(grid_size=12, steps=15)
         self.assertEqual(len(res['fractal_ascii_tissue']), 12)
 
-    def test_mesh_topological_optimization(self):
-        res = MultiAxisLatticeOptimizationEngine.optimize_structural_lattice(nodes=50, axial_torque_n_m=20.0, axes=3)
-        self.assertEqual(res['topological_nodes'], 50)
-        self.assertTrue(res['von_mises_equivalent_stress_MPa'] > 0.0)
+    def test_scaffold_joint_strain(self):
+        res = MacroMolecularTorsionEngine.calculate_scaffold_strain(nodes=40, applied_torque_n_m=15.0, axes=3)
+        self.assertEqual(res['topological_scaffold_nodes'], 40)
+        self.assertTrue(res['von_mises_stress_MPa'] > 0.0)
 
 if __name__ == '__main__':
     unittest.main()

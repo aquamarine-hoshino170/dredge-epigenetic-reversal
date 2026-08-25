@@ -1,13 +1,13 @@
-__version__ = '67.0.0'
+__version__ = '68.0.0'
 from dredge.bio_kernel import (
-    HeterogeneousPolyglotQuineEngine,
+    DNASolitonWaveEngine,
     MultiTenantZKPedersenEngine,
     ChaosFractalDiffusionEngine,
-    MultiAxisLatticeOptimizationEngine
+    MacroMolecularTorsionEngine
 )
 __all__ = [
-    'HeterogeneousPolyglotQuineEngine',
+    'DNASolitonWaveEngine',
     'MultiTenantZKPedersenEngine',
     'ChaosFractalDiffusionEngine',
-    'MultiAxisLatticeOptimizationEngine'
+    'MacroMolecularTorsionEngine'
 ]

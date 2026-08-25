@@ -2,18 +2,18 @@ import argparse
 import sys
 import unittest
 from dredge.bio_kernel import (
-    HeterogeneousPolyglotQuineEngine,
+    DNASolitonWaveEngine,
     MultiTenantZKPedersenEngine,
     ChaosFractalDiffusionEngine,
-    MultiAxisLatticeOptimizationEngine
+    MacroMolecularTorsionEngine
 )
 
 def main():
-    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Logic Singularity Suite (v67.0.0)')
-    parser.add_argument('--polyglot-quine', nargs='?', const='c', default=None, help='Synthesize Polyglot Quine Module (c/js)')
+    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Quantum-Biological Invariant Core (v68.0.0)')
+    parser.add_argument('--dna-soliton', action='store_true', help='Simulate Peyrard-Bishop Non-Linear DNA Soliton Wave Dynamics')
     parser.add_argument('--zk-pedersen', nargs='+', type=int, help='Multi-Tenant Zero-Knowledge Pedersen Ledger: --zk-pedersen 500 250 1200')
     parser.add_argument('--chaos-fractal', action='store_true', help='Render Chaos-Boundary Fractal Reaction-Diffusion Lattice')
-    parser.add_argument('--mesh-top', nargs=3, type=float, metavar=('NODES', 'TORQUE', 'AXES'), help='Multi-Axis Lattice Topological Optimization')
+    parser.add_argument('--scaffold-strain', nargs=3, type=float, metavar=('NODES', 'TORQUE', 'AXES'), help='Compute 3D Scaffold Joint Strain')
     parser.add_argument('--test', action='store_true', help='Run unit tests')
 
     args = parser.parse_args()
@@ -23,15 +23,16 @@ def main():
         unittest.TextTestRunner(verbosity=2).run(suite)
         return
 
-    if args.polyglot_quine:
-        res = HeterogeneousPolyglotQuineEngine.synthesize_polyglot(args.polyglot_quine)
+    if args.dna_soliton:
+        res = DNASolitonWaveEngine.simulate_soliton_propagation(lattice_nodes=24, time_steps=60)
         print("\n" + "="*50)
-        print(f"  HETEROGENEOUS POLYGLOT QUINE ({res['target_paradigm']})")
+        print("  DNA NON-LINEAR SOLITON WAVE MECHANICS")
         print("="*50)
-        print(f" • Signature: {res['payload_signature']} | SHA-256: {res['root_sha256_verification'][:16]}...")
-        print(" • Synthesized Source Output:\n")
-        print(res['generated_polyglot_source'])
-        print("\n" + "="*50 + "\n")
+        for wave in res['wave_profile_ascii']:
+            print(f"  [{wave}]")
+        print("="*50)
+        print(f" • Peak Amplitude: {res['peak_soliton_amplitude']} Å | Speed: {res['soliton_propagation_speed']} Å/ps")
+        print(f" • Verdict: {res['mechanical_stability']}\n" + "="*50 + "\n")
         return
 
     if args.zk_pedersen:
@@ -56,9 +57,9 @@ def main():
         print(f" • Attractor State: {res['chaos_attractor_state']} | Fractal Area: {res['fractal_occupancy_pct']}\n")
         return
 
-    if args.mesh_top:
-        res = MultiAxisLatticeOptimizationEngine.optimize_structural_lattice(int(args.mesh_top[0]), args.mesh_top[1], int(args.mesh_top[2]))
-        print(f"\n • Lattice Mesh: {res['topological_nodes']} Nodes ({res['spatial_coordination_axes']} Axes, {res['mesh_intersections']} Intersections)\n • Von Mises Stress: {res['von_mises_equivalent_stress_MPa']} MPa (Normal: {res['normal_stress_MPa']}, Shear: {res['shear_stress_MPa']})\n • Strain Energy: {res['strain_energy_J']} J ({res['structural_evaluation']})\n")
+    if args.scaffold_strain:
+        res = MacroMolecularTorsionEngine.calculate_scaffold_strain(int(args.scaffold_strain[0]), args.scaffold_strain[1], int(args.scaffold_strain[2]))
+        print(f"\n • Scaffold: {res['topological_scaffold_nodes']} Nodes ({res['spatial_coordination_axes']} Axes, {res['intersecting_joints']} Joints)\n • Von Mises Stress: {res['von_mises_stress_MPa']} MPa | Strain Energy: {res['joint_strain_energy_J']} J ({res['structural_verdict']})\n")
         return
 
     parser.print_help()

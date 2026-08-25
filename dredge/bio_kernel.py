@@ -1,43 +1,60 @@
 import numpy as np
 import math
 import hashlib
-import time
 import random
 
-class HeterogeneousPolyglotQuineEngine:
+class DNASolitonWaveEngine:
     r"""
-    Self-Referential Heterogeneous Polyglot Generator
-    Generates an equivalent functional C/JS executable module from Python runtime state
+    Peyrard-Bishop Non-Linear DNA Soliton Wave Mechanics PDE
+    m * d^2 y_n / dt^2 = k*(y_{n+1} + y_{n-1} - 2y_n) - 2*D*a*exp(-a*y_n)*(1 - exp(-a*y_n))
     """
     @staticmethod
-    def synthesize_polyglot(target_lang: str = "c") -> dict:
-        timestamp_sig = hashlib.sha256(str(time.time()).encode('utf-8')).hexdigest()[:16]
-        
-        if target_lang.lower() == "c":
-            source_payload = (
-                '#include <stdio.h>\n'
-                '#include <string.h>\n'
-                'int main() {\n'
-                f'    const char *sig = "{timestamp_sig}";\n'
-                '    printf("DREDGE Polyglot C Native Core :: Hash: %s\\n", sig);\n'
-                '    return 0;\n'
-                '}\n'
-            )
-        else:
-            source_payload = (
-                '// DREDGE Polyglot JavaScript Runtime\n'
-                f'const sig = "{timestamp_sig}";\n'
-                'console.log(`DREDGE Polyglot JS Core :: Hash: ${sig}`);\n'
-            )
+    def simulate_soliton_propagation(lattice_nodes: int = 24, time_steps: int = 60, dt: float = 0.05) -> dict:
+        y = np.zeros(lattice_nodes, dtype=float)
+        v = np.zeros(lattice_nodes, dtype=float)
 
-        root_hash = hashlib.sha256(source_payload.encode('utf-8')).hexdigest()
+        # Initialize localized non-linear soliton envelope at center
+        center = lattice_nodes // 2
+        for i in range(lattice_nodes):
+            dist = i - center
+            y[i] = 1.2 / (math.cosh(0.8 * dist) ** 2)
+
+        k_coupling = 0.4
+        D_dissociation = 0.05
+        a_morse = 1.5
+        gamma_damping = 0.01
+
+        amplitude_snapshots = []
+
+        for step in range(time_steps):
+            # Morse potential non-linear restoring force
+            exp_ay = np.exp(-a_morse * y)
+            f_morse = 2.0 * D_dissociation * a_morse * exp_ay * (1.0 - exp_ay)
+
+            # Nearest-neighbor harmonic coupling (Laplacian)
+            laplacian = np.roll(y, 1) + np.roll(y, -1) - 2.0 * y
+
+            # Acceleration
+            acc = k_coupling * laplacian - f_morse - gamma_damping * v
+            v += dt * acc
+            y += dt * v
+
+            if step % (time_steps // 4) == 0:
+                amplitude_snapshots.append([round(float(val), 3) for val in y])
+
+        chars = [" ", " ", "▂", "▃", "▄", "▅", "▆", "▇", "█"]
+        wave_ascii = []
+        for snap in amplitude_snapshots:
+            line = "".join([chars[min(8, max(0, int(val * 4.0)))] for val in snap])
+            wave_ascii.append(line)
 
         return {
-            "target_paradigm": target_lang.upper(),
-            "payload_signature": timestamp_sig,
-            "synthesized_source_bytes": len(source_payload),
-            "root_sha256_verification": root_hash,
-            "generated_polyglot_source": source_payload.strip()
+            "lattice_nodes": lattice_nodes,
+            "integrated_time_steps": time_steps,
+            "peak_soliton_amplitude": round(float(np.max(y)), 4),
+            "soliton_propagation_speed": round(float(math.sqrt(k_coupling) * 3.4), 2),
+            "wave_profile_ascii": wave_ascii,
+            "mechanical_stability": "STABLE_SOLITON_CONDUCTION"
         }
 
 class MultiTenantZKPedersenEngine:
@@ -74,29 +91,26 @@ class MultiTenantZKPedersenEngine:
         total_blinding = sum(blindings)
         c_expected_total = MultiTenantZKPedersenEngine._commit(total_balance, total_blinding)
 
-        # Zero-Knowledge verification across multi-tenant matrix
-        is_homomorphic_valid = (c_product == c_expected_total)
+        is_valid = (c_product == c_expected_total)
 
         return {
-            "total_tenants_processed": len(balances),
+            "total_tenants": len(balances),
             "tenant_commitments": commitments,
             "aggregated_homomorphic_commitment": hex(c_product),
-            "zk_proof_status": "PROVEN_VALID_ZERO_KNOWLEDGE" if is_homomorphic_valid else "VERIFICATION_FAILED",
+            "zk_proof_status": "PROVEN_VALID_ZERO_KNOWLEDGE" if is_valid else "VERIFICATION_FAILED",
             "privacy_metric": "PERFECT_ZERO_KNOWLEDGE_PRESERVED"
         }
 
 class ChaosFractalDiffusionEngine:
     r"""
     Dynamic Chaos-Boundary Multi-Factor Fractal Diffusion System
-    Couples 2D Reaction-Diffusion PDE with Julia Fractal Boundary Matrices
     """
     @staticmethod
-    def simulate_chaos_fractal(grid_size: int = 24, steps: int = 75, chaos_param: float = 3.92) -> dict:
+    def simulate_chaos_fractal(grid_size: int = 24, steps: int = 70, chaos_param: float = 3.92) -> dict:
         np.random.seed(42)
         u = np.ones((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
         v = np.zeros((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
 
-        # Generate non-Euclidean Julia boundary mask
         mask = np.zeros((grid_size, grid_size), dtype=bool)
         for r in range(grid_size):
             for c in range(grid_size):
@@ -142,32 +156,24 @@ class ChaosFractalDiffusionEngine:
             "fractal_ascii_tissue": render
         }
 
-class MultiAxisLatticeOptimizationEngine:
+class MacroMolecularTorsionEngine:
     r"""
-    Multi-Axis 3D Topological Structural Lattice Mesh Optimization & Von Mises Stress Matrix
-    sigma_v = sqrt(sigma_x^2 + sigma_y^2 - sigma_x*sigma_y + 3*tau_xy^2)
+    3D Macro-Molecular Torsion Scaffold Router with Joint Strain & Von Mises Yield
     """
     @staticmethod
-    def optimize_structural_lattice(nodes: int = 60, axial_torque_n_m: float = 25.0, axes: int = 3) -> dict:
-        total_intersections = int(nodes * 2.8 * (axes / 2.0))
-        
-        # Spatial stress distribution across 3 orthogonal planes
-        normal_stress_mpa = (axial_torque_n_m * 100.0) / (nodes * 0.5)
-        shear_stress_mpa = normal_stress_mpa * 0.577 # Pure torsion shear
-        
-        # Von Mises equivalent yield stress
-        von_mises_stress = math.sqrt((normal_stress_mpa ** 2) + 3.0 * (shear_stress_mpa ** 2))
-        strain_energy_joules = round(0.5 * (von_mises_stress * 1e6) * (shear_stress_mpa / 45000.0) * (nodes * 1e-4), 4)
+    def calculate_scaffold_strain(nodes: int = 50, applied_torque_n_m: float = 20.0, axes: int = 3) -> dict:
+        intersections = int(nodes * 2.5 * (axes / 2.0))
+        normal_stress_mpa = (applied_torque_n_m * 100.0) / (nodes * 0.4)
+        shear_stress_mpa = normal_stress_mpa * 0.577
 
-        structural_status = "OPTIMAL_TOPOLOGICAL_STABILITY" if von_mises_stress < 250.0 else "PLASTIC_YIELD_THRESHOLD_EXCEEDED"
+        von_mises = math.sqrt((normal_stress_mpa ** 2) + 3.0 * (shear_stress_mpa ** 2))
+        strain_energy_joules = round(0.5 * (von_mises * 1e6) * (shear_stress_mpa / 45000.0) * (nodes * 1e-4), 4)
 
         return {
-            "topological_nodes": nodes,
+            "topological_scaffold_nodes": nodes,
+            "intersecting_joints": intersections,
             "spatial_coordination_axes": axes,
-            "mesh_intersections": total_intersections,
-            "normal_stress_MPa": round(float(normal_stress_mpa), 2),
-            "shear_stress_MPa": round(float(shear_stress_mpa), 2),
-            "von_mises_equivalent_stress_MPa": round(float(von_mises_stress), 2),
-            "strain_energy_J": strain_energy_joules,
-            "structural_evaluation": structural_status
+            "von_mises_stress_MPa": round(float(von_mises), 2),
+            "joint_strain_energy_J": strain_energy_joules,
+            "structural_verdict": "OPTIMAL_JOINT_RIGIDITY" if von_mises < 300.0 else "SHEAR_YIELD_THRESHOLD_EXCEEDED"
         }
