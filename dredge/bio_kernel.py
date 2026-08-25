@@ -185,3 +185,36 @@ class PureSpectrophotometryEngine:
             "concentration_ng_ul": round(conc, 2),
             "purity_assessment": purity
         }
+
+class BigDataGenomicsEngine:
+    @staticmethod
+    def burrows_wheeler_transform(sequence: str) -> dict:
+        seq = sequence.upper().strip() + "$"
+        rotations = sorted([seq[i:] + seq[:i] for i in range(len(seq))])
+        bwt_str = "".join([r[-1] for r in rotations])
+        return {
+            'original_length': len(sequence),
+            'bwt_transformed': bwt_str,
+            'compression_readiness': f"{round((1.0 - len(set(bwt_str))/len(bwt_str))*100, 2)}% Entropy Density"
+        }
+
+    @staticmethod
+    def needleman_wunsch_global_align(seq1: str, seq2: str, match: int = 1, mismatch: int = -1, gap: int = -1) -> dict:
+        n, m = len(seq1), len(seq2)
+        score_matrix = np.zeros((n + 1, m + 1), dtype=int)
+        for i in range(n + 1): score_matrix[i][0] = i * gap
+        for j in range(m + 1): score_matrix[0][j] = j * gap
+
+        for i in range(1, n + 1):
+            for j in range(1, m + 1):
+                s = match if seq1[i-1] == seq2[j-1] else mismatch
+                score_matrix[i][j] = max(
+                    score_matrix[i-1][j-1] + s,
+                    score_matrix[i-1][j] + gap,
+                    score_matrix[i][j-1] + gap
+                )
+        return {
+            'global_alignment_score': int(score_matrix[n][m]),
+            'alignment_dimensions': f'{n}x{m}',
+            'algorithm': 'Needleman-Wunsch Dynamic Programming'
+        }
