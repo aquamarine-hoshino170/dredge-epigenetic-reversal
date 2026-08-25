@@ -1,33 +1,37 @@
 import unittest
 from dredge.bio_kernel import (
-    BioConsensusBlockchainEngine,
-    QuantumLindbladMasterEngine,
-    TuringMorphogenesisEngine,
-    DNAOrigamiTorsionEngine,
-    HyperLatticeShannonEngine
+    MultithreadedBWTEngine,
+    Constrained3DRNAEngine,
+    GillespieStochasticKineticsEngine,
+    JukesCantorMLEngine,
+    DeBruijnGraphCorrectionEngine
 )
 
-class TestCloudSmashingCore(unittest.TestCase):
-    def test_bio_blockchain(self):
-        blocks = BioConsensusBlockchainEngine.simulate_p2p_bio_chain(["MUT_A12G", "MUT_T44C"])
-        self.assertEqual(len(blocks), 3)
-        self.assertEqual(blocks[0]['previous_hash'], "0"*64)
+class TestUltimateTheoreticalCore(unittest.TestCase):
+    def test_parallel_bwt(self):
+        res = MultithreadedBWTEngine.parallel_bwt_search("BANANABANANA", ["ANA", "BAN", "XYZ"])
+        self.assertEqual(res['matches']['ANA'], 4)
+        self.assertEqual(res['matches']['XYZ'], 0)
 
-    def test_quantum_lindblad(self):
-        res = QuantumLindbladMasterEngine.simulate_fmo_lattice(sites=3, total_time_fs=20.0)
-        self.assertEqual(len(res['site_exciton_populations']), 3)
+    def test_3d_rna_folding(self):
+        seq = "GGGAAACCC"
+        n = len(seq)
+        dist_mat = [[abs(i - j) * 3.8 for j in range(n)] for i in range(n)]
+        res = Constrained3DRNAEngine.fold_3d_constrained(seq, dist_mat)
+        self.assertTrue(res['max_constrained_energy_score'] > 0.0)
 
-    def test_turing_tissue(self):
-        res = TuringMorphogenesisEngine.generate_patterns(grid_size=10, iterations=20)
-        self.assertEqual(len(res['ascii_render']), 10)
+    def test_gillespie_simulation(self):
+        res = GillespieStochasticKineticsEngine.simulate_trajectory(s_init=100, e_init=20, t_max=1.5)
+        self.assertTrue(res['total_stochastic_events'] > 0)
 
-    def test_dna_origami(self):
-        res = DNAOrigamiTorsionEngine.calculate_torsion(7249, 190)
-        self.assertTrue(res['crossover_junctions'] > 0)
+    def test_jc69_ml(self):
+        res = JukesCantorMLEngine.calculate_ml_branch("ACGTACGTACGT", "ACGTACGTACGA")
+        self.assertTrue(res['max_likelihood_branch_t'] > 0.0)
 
-    def test_hyper_shannon(self):
-        res = HyperLatticeShannonEngine.simulate_decay(generations=30)
-        self.assertTrue(res['final_retained_entropy'] < res['initial_entropy'])
+    def test_debruijn_repair(self):
+        reads = ["ACGT", "ACGT", "ACGA"]
+        res = DeBruijnGraphCorrectionEngine.repair_reads(reads, k=3, min_cov=2)
+        self.assertTrue(res['corrections_applied'] >= 1)
 
 if __name__ == '__main__':
     unittest.main()

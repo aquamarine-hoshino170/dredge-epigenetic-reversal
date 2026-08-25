@@ -1,157 +1,207 @@
 import numpy as np
 import math
-import hashlib
-import time
 import random
+from concurrent.futures import ThreadPoolExecutor
 
-class BioConsensusBlockchainEngine:
+class MultithreadedBWTEngine:
     r"""
-    Multi-Agent Decentralized Bio-Consensus via Proof-of-Sequence (PoS-Bio)
+    Multithreaded FM-Index Search Engine with Array Optimization
     """
     @staticmethod
-    def create_block(index: int, prev_hash: str, genomic_data: str, difficulty: int = 2) -> dict:
-        nonce = 0
-        target = "0" * difficulty
-        timestamp = time.time()
-        while True:
-            payload = f"{index}{prev_hash}{genomic_data}{timestamp}{nonce}"
-            block_hash = hashlib.sha256(payload.encode('utf-8')).hexdigest()
-            if block_hash.startswith(target):
-                return {
-                    "index": index,
-                    "timestamp": round(timestamp, 2),
-                    "genomic_data": genomic_data,
-                    "previous_hash": prev_hash,
-                    "block_hash": block_hash,
-                    "nonce": nonce,
-                    "status": "CONSENSUS_VALIDATED"
-                }
-            nonce += 1
+    def _build_index(text: str):
+        s = text.strip()
+        if "$" not in s:
+            s += "$"
+        n = len(s)
+        rotations = sorted([s[i:] + s[:i] for i in range(n)])
+        bwt_str = "".join([r[-1] for r in rotations])
+        alphabet = sorted(list(set(bwt_str)))
+        
+        counts = {char: bwt_str.count(char) for char in alphabet}
+        C = {}
+        total = 0
+        for char in alphabet:
+            C[char] = total
+            total += counts[char]
+            
+        Occ = {char: np.zeros(n + 1, dtype=int) for char in alphabet}
+        for i, char in enumerate(bwt_str):
+            for c in alphabet:
+                Occ[c][i + 1] = Occ[c][i] + (1 if char == c else 0)
+                
+        return bwt_str, C, Occ, n
 
     @staticmethod
-    def simulate_p2p_bio_chain(mutations: list) -> list:
-        chain = []
-        genesis = BioConsensusBlockchainEngine.create_block(0, "0"*64, "GENESIS_ROOT_GENOME", difficulty=1)
-        chain.append(genesis)
-        for i, mut in enumerate(mutations, 1):
-            prev_hash = chain[-1]["block_hash"]
-            block = BioConsensusBlockchainEngine.create_block(i, prev_hash, mut, difficulty=1)
-            chain.append(block)
-        return chain
+    def _search_single(pattern: str, C: dict, Occ: dict, n: int) -> int:
+        l, r = 0, n
+        for char in reversed(pattern):
+            if char not in C:
+                return 0
+            l = C[char] + Occ[char][l]
+            r = C[char] + Occ[char][r]
+            if l >= r:
+                return 0
+        return int(r - l)
 
-class QuantumLindbladMasterEngine:
-    r"""
-    Multi-Site Quantum Hamiltonian & Lindblad Open-System Dephasing Master Equation
-    """
     @staticmethod
-    def simulate_fmo_lattice(sites: int = 4, total_time_fs: float = 60.0, dt_fs: float = 1.0, dephasing_gamma: float = 0.008) -> dict:
-        # Construct site Hamiltonian (cm^-1 scaled)
-        H = np.zeros((sites, sites), dtype=complex)
-        for i in range(sites):
-            H[i, i] = 12000.0 + i * 150.0 # Site excitation energies
-            if i < sites - 1:
-                H[i, i+1] = -80.0         # Electronic coupling
-                H[i+1, i] = -80.0
-
-        H /= 1000.0 # Energy normalization
-
-        # Pure initial state: localized excitation at site 0
-        rho = np.zeros((sites, sites), dtype=complex)
-        rho[0, 0] = 1.0
-
-        steps = int(total_time_fs / dt_fs)
-        coherence_trace = []
-
-        for _ in range(steps):
-            # von Neumann commutator: -i [H, rho]
-            d_rho = -1j * (H @ rho - rho @ H)
-
-            # Lindblad dephasing operator
-            for i in range(sites):
-                for j in range(sites):
-                    if i != j:
-                        d_rho[i, j] -= dephasing_gamma * rho[i, j]
-
-            rho += d_rho * (dt_fs / 10.0)
-            rho /= np.trace(rho) # Trace preservation
-            coherence_trace.append(round(float(abs(rho[0, 1])), 5))
-
-        populations = [round(float(rho[i, i].real), 4) for i in range(sites)]
+    def parallel_bwt_search(text: str, patterns: list, workers: int = 4) -> dict:
+        bwt_str, C, Occ, n = MultithreadedBWTEngine._build_index(text)
+        results = {}
+        with ThreadPoolExecutor(max_workers=workers) as executor:
+            future_to_pat = {executor.submit(MultithreadedBWTEngine._search_single, pat, C, Occ, n): pat for pat in patterns}
+            for future in future_to_pat:
+                pat = future_to_pat[future]
+                results[pat] = future.result()
         return {
-            "total_sites": sites,
-            "site_exciton_populations": populations,
-            "final_cross_coherence": coherence_trace[-1],
-            "coherence_trajectory": coherence_trace[::int(steps/5)] if steps >= 5 else coherence_trace
+            "bwt_length": n,
+            "patterns_queried": len(patterns),
+            "matches": results,
+            "engine": "Multithreaded Parallel FM-Index"
         }
 
-class TuringMorphogenesisEngine:
+class Constrained3DRNAEngine:
     r"""
-    2D Reaction-Diffusion Turing Pattern Formation
+    3D Spatial Constraint-Aware Nussinov Folding Energy Minimizer
     """
+    CANONICAL = {('A', 'U'), ('U', 'A'), ('G', 'C'), ('C', 'G'), ('G', 'U'), ('U', 'G')}
+
     @staticmethod
-    def generate_patterns(grid_size: int = 24, iterations: int = 120) -> dict:
-        np.random.seed(42)
-        u = np.ones((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
-        v = np.zeros((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
+    def fold_3d_constrained(rna_seq: str, distance_matrix: list, opt_dist: float = 12.0, max_tol: float = 20.0) -> dict:
+        seq = rna_seq.upper().strip().replace('T', 'U')
+        n = len(seq)
+        D = np.array(distance_matrix, dtype=float)
+        DP = np.zeros((n, n), dtype=float)
 
-        Du, Dv = 0.16, 0.08
-        F, k = 0.035, 0.065
-        dt = 1.0
-
-        for _ in range(iterations):
-            lap_u = (np.roll(u, 1, 0) + np.roll(u, -1, 0) + np.roll(u, 1, 1) + np.roll(u, -1, 1) - 4 * u)
-            lap_v = (np.roll(v, 1, 0) + np.roll(v, -1, 0) + np.roll(v, 1, 1) + np.roll(v, -1, 1) - 4 * v)
-            uvv = u * v * v
-            u += dt * (Du * lap_u - uvv + F * (1.0 - u))
-            v += dt * (Dv * lap_v + uvv - (F + k) * v)
-
-        chars = [" ", "·", "x", "#"]
-        ascii_grid = []
-        for row in u:
-            line = "".join([chars[min(3, max(0, int(val * 3.0)))] for val in row])
-            ascii_grid.append(line)
+        for length in range(4, n):
+            for i in range(n - length):
+                j = i + length
+                DP[i, j] = max(DP[i + 1, j], DP[i, j - 1])
+                if (seq[i], seq[j]) in Constrained3DRNAEngine.CANONICAL:
+                    dist = D[i, j]
+                    spatial_score = max(0.0, 1.0 - (abs(dist - opt_dist) / max_tol))
+                    DP[i, j] = max(DP[i, j], DP[i + 1, j - 1] + 1.0 + spatial_score)
+                for k in range(i + 1, j):
+                    DP[i, j] = max(DP[i, j], DP[i, k] + DP[k + 1, j])
 
         return {
-            "grid_dimensions": f"{grid_size}x{grid_size}",
-            "mean_activator_concentration": round(float(np.mean(u)), 4),
-            "ascii_render": ascii_grid[:12]
+            "rna_length": n,
+            "max_constrained_energy_score": round(float(DP[0, n - 1]), 4),
+            "folding_model": "3D Distance-Constrained Nussinov Lattice"
         }
 
-class DNAOrigamiTorsionEngine:
+class GillespieStochasticKineticsEngine:
     r"""
-    3D DNA Origami Matrix Routing & Torsion Energy
+    Continuous-Time Stochastic Markov Simulation via Gillespie Direct Method
     """
     @staticmethod
-    def calculate_torsion(scaffold_bp: int, staple_strands: int) -> dict:
-        turns = scaffold_bp / 10.5
-        crossovers = int(turns * 1.5)
-        accumulated_twist = (scaffold_bp * 34.28) % 360.0
-        energy_strain = round(0.5 * 0.04 * (accumulated_twist ** 2), 2)
+    def simulate_trajectory(s_init: int = 1000, e_init: int = 100, k1: float = 0.001, k2: float = 0.1, k3: float = 0.5, t_max: float = 5.0) -> dict:
+        S, E, ES, P = s_init, e_init, 0, 0
+        t = 0.0
+        events = 0
+        p_trajectory = []
+
+        while t < t_max and (S > 0 or ES > 0):
+            a1 = k1 * S * E
+            a2 = k2 * ES
+            a3 = k3 * ES
+            a0 = a1 + a2 + a3
+            if a0 <= 0:
+                break
+
+            r1 = max(1e-12, random.random())
+            r2 = random.random()
+            tau = -math.log(r1) / a0
+            t += tau
+
+            rand_a = r2 * a0
+            if rand_a < a1:
+                S -= 1; E -= 1; ES += 1
+            elif rand_a < a1 + a2:
+                S += 1; E += 1; ES -= 1
+            else:
+                ES -= 1; E += 1; P += 1
+
+            events += 1
+            if events % 100 == 0:
+                p_trajectory.append((round(t, 4), P))
+
+        p_trajectory.append((round(t, 4), P))
         return {
-            "scaffold_length": f"{scaffold_bp} bp",
-            "routed_staples": staple_strands,
-            "crossover_junctions": crossovers,
-            "torsion_energy_pN_nm": energy_strain,
-            "structural_stability": "STABLE_ORIGAMI_NANOSTRUCTURE" if energy_strain < 600.0 else "SHEAR_STRAIN_DETECTED"
+            "total_stochastic_events": events,
+            "final_simulation_time": round(t, 4),
+            "final_substrate": S,
+            "final_product": P,
+            "trajectory_samples": p_trajectory[-4:]
         }
 
-class HyperLatticeShannonEngine:
+class JukesCantorMLEngine:
     r"""
-    Multi-Generational Epigenetic Network Shannon Entropy Manifold
+    Jukes-Cantor (JC69) Maximum Likelihood Branch Estimation via Grid Optimization
     """
     @staticmethod
-    def simulate_decay(generations: int = 50, initial_entropy: float = 0.90, lambda_decay: float = 0.03) -> dict:
-        manifold = []
-        h = initial_entropy
-        for g in range(generations):
-            noise = (random.random() - 0.5) * 0.004
-            h = initial_entropy * math.exp(-lambda_decay * g) + 0.10 * (1.0 - math.exp(-lambda_decay * g)) + noise
-            if g % 10 == 0:
-                manifold.append((g, round(float(h), 4)))
+    def calculate_ml_branch(seq1: str, seq2: str) -> dict:
+        s1, s2 = seq1.upper().strip(), seq2.upper().strip()
+        n = min(len(s1), len(s2))
+        diffs = sum(1 for i in range(n) if s1[i] != s2[i])
+        p_dist = diffs / n if n > 0 else 0.0
+
+        if p_dist >= 0.75:
+            return {"error": "Saturation limit reached (p-distance >= 0.75)"}
+
+        best_t = 0.001
+        max_log_l = -np.inf
+        
+        for t in np.linspace(0.001, 1.5, 1500):
+            p_same = max(1e-15, 0.25 + 0.75 * math.exp(-4.0 * t / 3.0))
+            p_diff = max(1e-15, 0.25 - 0.25 * math.exp(-4.0 * t / 3.0))
+            log_l = ((n - diffs) * math.log(p_same)) + (diffs * math.log(p_diff))
+            if log_l > max_log_l:
+                max_log_l = log_l
+                best_t = t
+
         return {
-            "generations": generations,
-            "initial_entropy": initial_entropy,
-            "final_retained_entropy": round(float(h), 4),
-            "entropy_loss_percentage": f"{round((1.0 - (h / initial_entropy)) * 100.0, 2)}%",
-            "decay_manifold": manifold
+            "aligned_sites": n,
+            "observed_mutations": diffs,
+            "p_distance": round(p_dist, 4),
+            "max_likelihood_branch_t": round(float(best_t), 4),
+            "log_likelihood": round(float(max_log_l), 4)
+        }
+
+class DeBruijnGraphCorrectionEngine:
+    r"""
+    Next-Gen Sequencing Error Correction via de Bruijn Directional k-mer Networks
+    """
+    @staticmethod
+    def repair_reads(reads: list, k: int = 3, min_cov: int = 2) -> dict:
+        kmer_counts = {}
+        for r in reads:
+            for i in range(len(r) - k + 1):
+                kmer = r[i:i+k]
+                kmer_counts[kmer] = kmer_counts.get(kmer, 0) + 1
+
+        solid_kmers = {kmer for kmer, c in kmer_counts.items() if c >= min_cov}
+        repaired = []
+        corrections_count = 0
+
+        for r in reads:
+            r_chars = list(r)
+            for i in range(len(r) - k + 1):
+                kmer = "".join(r_chars[i:i+k])
+                if kmer not in solid_kmers:
+                    for base in ['A', 'C', 'G', 'T']:
+                        for pos in range(k):
+                            mut = list(kmer)
+                            mut[pos] = base
+                            candidate = "".join(mut)
+                            if candidate in solid_kmers:
+                                r_chars[i + pos] = base
+                                corrections_count += 1
+                                break
+            repaired.append("".join(r_chars))
+
+        return {
+            "total_kmers": len(kmer_counts),
+            "solid_kmers": len(solid_kmers),
+            "corrections_applied": corrections_count,
+            "repaired_sequences": repaired
         }

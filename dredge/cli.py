@@ -2,20 +2,20 @@ import argparse
 import sys
 import unittest
 from dredge.bio_kernel import (
-    BioConsensusBlockchainEngine,
-    QuantumLindbladMasterEngine,
-    TuringMorphogenesisEngine,
-    DNAOrigamiTorsionEngine,
-    HyperLatticeShannonEngine
+    MultithreadedBWTEngine,
+    Constrained3DRNAEngine,
+    GillespieStochasticKineticsEngine,
+    JukesCantorMLEngine,
+    DeBruijnGraphCorrectionEngine
 )
 
 def main():
-    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Cloud-Smashing Bio-Operating Core (v56.0.0)')
-    parser.add_argument('--bio-chain', nargs='+', help='Create Bio-Blockchain: --bio-chain MUT_A12G MUT_C34T')
-    parser.add_argument('--quantum-fmo', action='store_true', help='Run Multi-Site Quantum Lindblad Solver')
-    parser.add_argument('--turing-tissue', action='store_true', help='Render 2D Turing Morphogenesis Reaction Lattice')
-    parser.add_argument('--origami-router', nargs=2, type=int, metavar=('SCAFFOLD', 'STAPLES'), help='3D DNA Origami Torsion Strain')
-    parser.add_argument('--hyper-shannon', nargs=1, type=int, metavar=('GENERATIONS',), help='Hyper-Lattice Epigenetic Shannon Decay')
+    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Ultimate Theoretical Core (v57.0.0)')
+    parser.add_argument('--bwt-parallel', nargs='+', help='Parallel BWT Search: --bwt-parallel <TEXT> <PAT1> <PAT2> ...')
+    parser.add_argument('--rna-3d', type=str, help='3D Nussinov Folding with Distance Matrix')
+    parser.add_argument('--gillespie-sim', action='store_true', help='Run Gillespie Continuous-Time Stochastic Simulation')
+    parser.add_argument('--jc69-ml', nargs=2, metavar=('SEQ1', 'SEQ2'), help='Jukes-Cantor ML Branch Estimation')
+    parser.add_argument('--debruijn-repair', nargs='+', help='de Bruijn Graph Error Repair: --debruijn-repair <R1> <R2> ...')
     parser.add_argument('--test', action='store_true', help='Run unit tests')
 
     args = parser.parse_args()
@@ -25,40 +25,33 @@ def main():
         unittest.TextTestRunner(verbosity=2).run(suite)
         return
 
-    if args.bio_chain:
-        blocks = BioConsensusBlockchainEngine.simulate_p2p_bio_chain(args.bio_chain)
-        print("\n" + "="*55)
-        print("  DECENTRALIZED PROOF-OF-SEQUENCE BIO-BLOCKCHAIN")
-        print("="*55)
-        for b in blocks:
-            print(f" Block #{b['index']} | Data: {b['genomic_data']} | Hash: {b['block_hash'][:16]}... | Nonce: {b['nonce']}")
-        print("="*55 + "\n")
+    if args.bwt_parallel:
+        text = args.bwt_parallel[0]
+        pats = args.bwt_parallel[1:]
+        res = MultithreadedBWTEngine.parallel_bwt_search(text, pats)
+        print(f"\n • Multithreaded BWT Matches: {res['matches']} | Model: {res['engine']}\n")
         return
 
-    if args.quantum_fmo:
-        res = QuantumLindbladMasterEngine.simulate_fmo_lattice(sites=4, total_time_fs=50.0)
-        print(f"\n • Quantum FMO Lattice ({res['total_sites']} Sites): Populations = {res['site_exciton_populations']} | Coherence = {res['final_cross_coherence']}\n")
+    if args.rna_3d:
+        n = len(args.rna_3d)
+        dist_mat = [[abs(i - j) * 3.8 for j in range(n)] for i in range(n)]
+        res = Constrained3DRNAEngine.fold_3d_constrained(args.rna_3d, dist_mat)
+        print(f"\n • 3D Constrained Nussinov Score: {res['max_constrained_energy_score']} | Model: {res['folding_model']}\n")
         return
 
-    if args.turing_tissue:
-        res = TuringMorphogenesisEngine.generate_patterns(grid_size=20, iterations=100)
-        print("\n" + "="*45)
-        print("  2D TURING MORPHOGENESIS TISSUE RENDER")
-        print("="*45)
-        for r in res['ascii_render']:
-            print("  " + r)
-        print("="*45)
-        print(f" • Mean Activator Density: {res['mean_activator_concentration']}\n")
+    if args.gillespie_sim:
+        res = GillespieStochasticKineticsEngine.simulate_trajectory(s_init=600, e_init=60)
+        print(f"\n • Gillespie Simulation: {res['total_stochastic_events']} Events | Product Formed: {res['final_product']} | Substrate Remaining: {res['final_substrate']}\n")
         return
 
-    if args.origami_router:
-        res = DNAOrigamiTorsionEngine.calculate_torsion(args.origami_router[0], args.origami_router[1])
-        print(f"\n • DNA Origami: {res['scaffold_length']} | Crossovers: {res['crossover_junctions']} | Strain: {res['torsion_energy_pN_nm']} pN·nm ({res['structural_stability']})\n")
+    if args.jc69_ml:
+        res = JukesCantorMLEngine.calculate_ml_branch(args.jc69_ml[0], args.jc69_ml[1])
+        print(f"\n • JC69 ML Branch Length (t): {res['max_likelihood_branch_t']} | Log-Likelihood: {res['log_likelihood']} (p-dist: {res['p_distance']})\n")
         return
 
-    if args.hyper_shannon:
-        res = HyperLatticeShannonEngine.simulate_decay(generations=args.hyper_shannon[0])
-        print(f"\n • Epigenetic Shannon Decay: Retained = {res['final_retained_entropy']} bits (Loss: {res['entropy_loss_percentage']})\n")
+    if args.debruijn_repair:
+        res = DeBruijnGraphCorrectionEngine.repair_reads(args.debruijn_repair, k=3, min_cov=2)
+        print(f"\n • de Bruijn Repair: {res['corrections_applied']} Fixes Applied | Repaired Reads: {res['repaired_sequences']}\n")
         return
 
     parser.print_help()

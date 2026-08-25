@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aquamarine-dredge",
-    version="56.0.0",
+    version="57.0.0",
     packages=find_packages(),
     include_package_data=True,
     install_requires=["numpy"],
