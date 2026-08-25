@@ -1,15 +1,13 @@
-__version__ = '61.0.0'
+__version__ = '62.0.0'
 from dredge.bio_kernel import (
-    DynamicTopologyP2PLedgerEngine,
-    OpenQuantumLindbladVisualizerEngine,
-    FractalTuringMorphogenesisEngine,
-    MultiAxisOrigamiTorsionEngine,
-    DeepChronomorphicShannonEngine
+    ExactHamiltonianAssemblerEngine,
+    TruncatedHilbertLindbladEngine,
+    StochasticTuringLatticeEngine,
+    OpenSpaceDNAOrigamiEngine
 )
 __all__ = [
-    'DynamicTopologyP2PLedgerEngine',
-    'OpenQuantumLindbladVisualizerEngine',
-    'FractalTuringMorphogenesisEngine',
-    'MultiAxisOrigamiTorsionEngine',
-    'DeepChronomorphicShannonEngine'
+    'ExactHamiltonianAssemblerEngine',
+    'TruncatedHilbertLindbladEngine',
+    'StochasticTuringLatticeEngine',
+    'OpenSpaceDNAOrigamiEngine'
 ]

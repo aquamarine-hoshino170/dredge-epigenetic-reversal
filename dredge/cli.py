@@ -2,20 +2,18 @@ import argparse
 import sys
 import unittest
 from dredge.bio_kernel import (
-    DynamicTopologyP2PLedgerEngine,
-    OpenQuantumLindbladVisualizerEngine,
-    FractalTuringMorphogenesisEngine,
-    MultiAxisOrigamiTorsionEngine,
-    DeepChronomorphicShannonEngine
+    ExactHamiltonianAssemblerEngine,
+    TruncatedHilbertLindbladEngine,
+    StochasticTuringLatticeEngine,
+    OpenSpaceDNAOrigamiEngine
 )
 
 def main():
-    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Trans-Computational Quantum Bio-OS Core (v61.0.0)')
-    parser.add_argument('--mesh-ledger', nargs='+', help='Dynamic P2P Bio-Consensus Mesh: --mesh-ledger MUT_1 MUT_2')
-    parser.add_argument('--lindblad-env', action='store_true', help='Open Quantum Lindblad Visualizer with Environmental Noise')
-    parser.add_argument('--fractal-turing', action='store_true', help='Render 2D Fractal-Boundary Turing Morphogenesis')
-    parser.add_argument('--origami-axes', nargs=4, type=int, metavar=('BP', 'STAPLES', 'AXES', 'HINGES'), help='Multi-Axis DNA Origami Torsion Router')
-    parser.add_argument('--deep-chrono', nargs=1, type=int, metavar=('GENS',), help='Deep Temporal Chronomorphic Shannon Decay')
+    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Singular-Scale Theoretical Core (v62.0.0)')
+    parser.add_argument('--infinite-assemble', nargs='+', help='Exact Hamiltonian Genome Assembly: --infinite-assemble ATGC TGCA GCAT CATA')
+    parser.add_argument('--quantum-collapse', nargs=1, type=int, metavar=('DIMENSION',), help='High-Dimensional Lindblad Solver')
+    parser.add_argument('--fractal-deadlock', action='store_true', help='Stochastic Reaction-Diffusion Lattice')
+    parser.add_argument('--origami-shatter', nargs=3, type=int, metavar=('SCAFFOLD_BP', 'STAPLES', 'AXES'), help='Multi-Axis Origami Strain')
     parser.add_argument('--test', action='store_true', help='Run unit tests')
 
     args = parser.parse_args()
@@ -25,46 +23,35 @@ def main():
         unittest.TextTestRunner(verbosity=2).run(suite)
         return
 
-    if args.mesh_ledger:
-        res = DynamicTopologyP2PLedgerEngine.run_dynamic_mesh(args.mesh_ledger, total_nodes=6, clusters=2)
-        print("\n" + "="*60)
-        print("  DYNAMIC TOPOLOGY P2P PROOF-OF-SEQUENCE CONSENSUS MESH")
-        print("="*60)
-        for b in res['consensus_ledger']:
-            print(f" Block #{b['block_index']} | Cluster: {b['cluster_id']} | Node: {b['mined_by_node']} | Data: {b['mutation']} | Hash: {b['block_hash'][:14]}...")
-        print("="*60 + "\n")
-        return
-
-    if args.lindblad_env:
-        res = OpenQuantumLindbladVisualizerEngine.simulate_and_render(sites=5, total_time_fs=40.0)
+    if args.infinite_assemble:
+        res = ExactHamiltonianAssemblerEngine.assemble_exact(args.infinite_assemble)
         print("\n" + "="*50)
-        print("  OPEN QUANTUM LINDBLAD DENSITY MATRIX LATTICE")
+        print("  EXACT HAMILTONIAN PATH GENOME ASSEMBLY")
         print("="*50)
-        for row in res['ascii_quantum_matrix']:
-            print("   " + row)
-        print("="*50)
-        print(f" • Site Populations: {res['final_site_populations']}\n • Final Cross-Coherence |rho_01|: {res['final_cross_coherence']}\n")
+        print(f" • Assembled Contig: {res['assembled_contig']}")
+        print(f" • Contig Length: {res.get('contig_length', 'N/A')} bp | Path: {res.get('hamiltonian_path', 'N/A')}")
+        print(f" • Optimality: {res.get('optimality', res.get('status', 'OK'))}\n" + "="*50 + "\n")
         return
 
-    if args.fractal_turing:
-        res = FractalTuringMorphogenesisEngine.render_fractal_tissue(grid_size=24, iterations=90)
-        print("\n" + "="*50)
-        print("  2D FRACTAL-BOUNDARY TURING TISSUE LATTICE")
-        print("="*50)
-        for line in res['fractal_ascii_tissue']:
-            print("  " + line)
-        print("="*50)
-        print(f" • Fractal Coverage: {res['fractal_coverage_pct']} | Mean Activator: {res['mean_activator']}\n")
+    if args.quantum_collapse:
+        res = TruncatedHilbertLindbladEngine.solve_master_equation(dimension=args.quantum_collapse[0])
+        print(f"\n • High-Dim Lindblad Solver (Dim: {res['hilbert_space_dimension']}): State Purity = {res['quantum_state_purity']}\n • Fock Populations: {res['fock_level_populations']}\n • Model: {res['solver_model']}\n")
         return
 
-    if args.origami_axes:
-        res = MultiAxisOrigamiTorsionEngine.calculate_multi_axis_strain(args.origami_axes[0], args.origami_axes[1], args.origami_axes[2], args.origami_axes[3])
-        print(f"\n • Multi-Axis Origami: {res['scaffold_bases']} bp ({res['spatial_axes']} Axes, {res['flexible_hinges']} Hinges)\n • Crossovers: {res['optimal_crossovers']} | Torsion Strain: {res['torsion_energy_pN_nm']} pN·nm ({res['mechanical_profile']})\n")
+    if args.fractal_deadlock:
+        res = StochasticTuringLatticeEngine.simulate_stochastic_pde(grid_size=18, steps=50)
+        print("\n" + "="*45)
+        print("  STOCHASTIC TURING REACTION-DIFFUSION LATTICE")
+        print("="*45)
+        for r in res['lattice_render']:
+            print("  " + r)
+        print("="*45)
+        print(f" • Field Density: {res['mean_field_density']} | Noise Variance: {res['variance_activator']}\n")
         return
 
-    if args.deep_chrono:
-        res = DeepChronomorphicShannonEngine.simulate_deep_decay(generations=args.deep_chrono[0])
-        print(f"\n • Deep Chronomorphic Shannon: Retained = {res['final_retained_entropy']} bits (Loss: {res['information_loss_pct']})\n • Trajectory: {res['temporal_trajectory']}\n")
+    if args.origami_shatter:
+        res = OpenSpaceDNAOrigamiEngine.calculate_open_torsion(args.origami_shatter[0], args.origami_shatter[1], args.origami_shatter[2])
+        print(f"\n • Open-Space DNA Origami: {res['scaffold_length']} ({res['active_rotational_axes']} Axes)\n • Torsion Energy: {res['torsion_strain_energy_pN_nm']} pN·nm ({res['structural_verdict']})\n")
         return
 
     parser.print_help()
