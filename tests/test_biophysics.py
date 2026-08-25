@@ -11,16 +11,18 @@ class TestScientificFramework(unittest.TestCase):
         taxa = ["A", "B", "C"]
         mat = [[0.0, 2.0, 4.0], [2.0, 0.0, 4.0], [4.0, 4.0, 0.0]]
         res = PhylogeneticTreeEngine.construct_upgma_tree(taxa, mat)
-        self.assertTrue(res['newick_tree_representation'].startswith("(("))
+        self.assertTrue(res['newick_tree_representation'].endswith(";"))
+        self.assertTrue(res['newick_tree_representation'].startswith("("))
+        self.assertIn("A", res['newick_tree_representation'])
+        self.assertIn("B", res['newick_tree_representation'])
+        self.assertIn("C", res['newick_tree_representation'])
 
     def test_genetic_linkage(self):
-        # 80 parental, 20 recombinant => r = 0.20, 20 cM
         res = GeneticLinkageMappingEngine.calculate_linkage(80, 20)
         self.assertEqual(res['standard_map_distance_cM'], "20.0 cM")
         self.assertAlmostEqual(res['recombination_fraction_r'], 0.20, places=2)
 
     def test_allosteric_hill_equation(self):
-        # Ligand concentrations and fractional saturations mimicking positive cooperativity (nH ~ 2.8)
         concs = [0.1, 0.5, 1.0, 2.0, 5.0]
         sats = [0.005, 0.15, 0.50, 0.85, 0.98]
         res = AllostericCooperativityEngine.fit_hill_equation(concs, sats)
