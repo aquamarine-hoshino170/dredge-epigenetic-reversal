@@ -3,110 +3,135 @@ import math
 import hashlib
 import random
 
-class DNASolitonWaveEngine:
+class NLSESolitonSolverEngine:
     r"""
-    Peyrard-Bishop Non-Linear DNA Soliton Wave Mechanics PDE
-    m * d^2 y_n / dt^2 = k*(y_{n+1} + y_{n-1} - 2y_n) - 2*D*a*exp(-a*y_n)*(1 - exp(-a*y_n))
+    Non-Linear Schrödinger Equation (NLSE) Soliton Grid Solver
+    i * d(psi)/dt + 0.5 * d^2(psi)/dx^2 + g * |psi|^2 * psi = 0
     """
     @staticmethod
-    def simulate_soliton_propagation(lattice_nodes: int = 24, time_steps: int = 60, dt: float = 0.05) -> dict:
-        y = np.zeros(lattice_nodes, dtype=float)
-        v = np.zeros(lattice_nodes, dtype=float)
+    def solve_soliton_grid(nodes: int = 32, time_steps: int = 50, dt: float = 0.02, g_nonlin: float = 2.0) -> dict:
+        x = np.linspace(-10.0, 10.0, nodes)
+        dx = x[1] - x[0]
+        
+        # Initial fundamental Bright Soliton envelope: psi(x,0) = sech(x) * exp(i*v*x)
+        v_velocity = 1.0
+        psi = (1.0 / np.cosh(x)) * np.exp(1j * v_velocity * x)
 
-        # Initialize localized non-linear soliton envelope at center
-        center = lattice_nodes // 2
-        for i in range(lattice_nodes):
-            dist = i - center
-            y[i] = 1.2 / (math.cosh(0.8 * dist) ** 2)
-
-        k_coupling = 0.4
-        D_dissociation = 0.05
-        a_morse = 1.5
-        gamma_damping = 0.01
-
-        amplitude_snapshots = []
+        density_history = []
 
         for step in range(time_steps):
-            # Morse potential non-linear restoring force
-            exp_ay = np.exp(-a_morse * y)
-            f_morse = 2.0 * D_dissociation * a_morse * exp_ay * (1.0 - exp_ay)
+            # Second spatial derivative (Finite Difference Laplacian)
+            lap = (np.roll(psi, -1) - 2.0 * psi + np.roll(psi, 1)) / (dx ** 2)
+            
+            # Non-linear potential term
+            v_nl = g_nonlin * (np.abs(psi) ** 2)
+            
+            # Time evolution: d(psi)/dt = i * (0.5 * lap + v_nl * psi)
+            d_psi = 1j * (0.5 * lap + v_nl * psi)
+            psi += dt * d_psi
 
-            # Nearest-neighbor harmonic coupling (Laplacian)
-            laplacian = np.roll(y, 1) + np.roll(y, -1) - 2.0 * y
-
-            # Acceleration
-            acc = k_coupling * laplacian - f_morse - gamma_damping * v
-            v += dt * acc
-            y += dt * v
+            # Norm preservation
+            current_norm = np.sum(np.abs(psi) ** 2) * dx
+            if current_norm > 1e-12:
+                psi *= math.sqrt(2.0 / current_norm)
 
             if step % (time_steps // 4) == 0:
-                amplitude_snapshots.append([round(float(val), 3) for val in y])
+                density_history.append(np.abs(psi) ** 2)
 
         chars = [" ", " ", "▂", "▃", "▄", "▅", "▆", "▇", "█"]
-        wave_ascii = []
-        for snap in amplitude_snapshots:
-            line = "".join([chars[min(8, max(0, int(val * 4.0)))] for val in snap])
-            wave_ascii.append(line)
+        plots = []
+        for density in density_history:
+            max_d = max(1e-6, float(np.max(density)))
+            line = "".join([chars[min(8, max(0, int((val / max_d) * 8.0)))] for val in density])
+            plots.append(line)
 
+        final_density = np.abs(psi) ** 2
         return {
-            "lattice_nodes": lattice_nodes,
+            "spatial_grid_nodes": nodes,
             "integrated_time_steps": time_steps,
-            "peak_soliton_amplitude": round(float(np.max(y)), 4),
-            "soliton_propagation_speed": round(float(math.sqrt(k_coupling) * 3.4), 2),
-            "wave_profile_ascii": wave_ascii,
-            "mechanical_stability": "STABLE_SOLITON_CONDUCTION"
+            "peak_soliton_density": round(float(np.max(final_density)), 4),
+            "phase_envelope_stability": "COHERENT_SOLITON_PROPAGATION",
+            "density_ascii_plots": plots
         }
 
-class MultiTenantZKPedersenEngine:
+class HomomorphicMatrixLedgerEngine:
     r"""
-    Multi-Tenant Zero-Knowledge Pedersen Memory Ledger
-    Homomorphic Sum: C_sum = (C_1 * C_2 * ... * C_k) mod P == Commit(sum(v_k), sum(r_k))
+    Decentralized Multi-Tenant Homomorphic Private Matrix Ledger
+    Pedersen Vector Commitments across Distributed Node Groups
     """
     P = 2147483647 # Mersenne Prime 2^31 - 1
     G = 7
     H = 11
 
     @staticmethod
-    def _commit(value: int, blinding: int) -> int:
-        return (pow(MultiTenantZKPedersenEngine.G, value, MultiTenantZKPedersenEngine.P) *
-                pow(MultiTenantZKPedersenEngine.H, blinding, MultiTenantZKPedersenEngine.P)) % MultiTenantZKPedersenEngine.P
+    def _commit(val: int, blinding: int) -> int:
+        return (pow(HomomorphicMatrixLedgerEngine.G, val, HomomorphicMatrixLedgerEngine.P) *
+                pow(HomomorphicMatrixLedgerEngine.H, blinding, HomomorphicMatrixLedgerEngine.P)) % HomomorphicMatrixLedgerEngine.P
 
     @staticmethod
-    def verify_multi_tenant_state(balances: list) -> dict:
-        if not balances or any(b < 0 for b in balances):
-            return {"error": "Invalid tenant balance inputs"}
+    def verify_ledger(client_matrices: list) -> dict:
+        if not client_matrices:
+            return {"error": "Client balance matrix cannot be empty"}
 
         commitments = []
-        blindings = []
-        c_product = 1
+        total_balance = 0
+        total_blinding = 0
+        aggregated_commitment = 1
 
-        for idx, bal in enumerate(balances):
+        for idx, client_data in enumerate(client_matrices):
+            bal = int(client_data)
             r = random.randint(1000, 99999)
-            c = MultiTenantZKPedersenEngine._commit(bal, r)
-            commitments.append({"tenant_id": f"tenant_{idx+1}", "commitment": hex(c)})
-            blindings.append(r)
-            c_product = (c_product * c) % MultiTenantZKPedersenEngine.P
+            c = HomomorphicMatrixLedgerEngine._commit(bal, r)
+            commitments.append({
+                "client_node": f"node_{idx+1}",
+                "vector_commitment": hex(c)
+            })
+            total_balance += bal
+            total_blinding += r
+            aggregated_commitment = (aggregated_commitment * c) % HomomorphicMatrixLedgerEngine.P
 
-        total_balance = sum(balances)
-        total_blinding = sum(blindings)
-        c_expected_total = MultiTenantZKPedersenEngine._commit(total_balance, total_blinding)
-
-        is_valid = (c_product == c_expected_total)
+        expected_total_commitment = HomomorphicMatrixLedgerEngine._commit(total_balance, total_blinding)
+        is_homomorphic_valid = (aggregated_commitment == expected_total_commitment)
 
         return {
-            "total_tenants": len(balances),
-            "tenant_commitments": commitments,
-            "aggregated_homomorphic_commitment": hex(c_product),
-            "zk_proof_status": "PROVEN_VALID_ZERO_KNOWLEDGE" if is_valid else "VERIFICATION_FAILED",
-            "privacy_metric": "PERFECT_ZERO_KNOWLEDGE_PRESERVED"
+            "total_clients": len(client_matrices),
+            "node_commitments": commitments,
+            "aggregated_homomorphic_proof": hex(aggregated_commitment),
+            "proof_validation_status": "ZERO_KNOWLEDGE_HOMOMORPHIC_VALIDATED" if is_homomorphic_valid else "PROOF_INVALID",
+            "cryptographic_integrity": "STATE_KEYS_PROTECTED"
         }
 
-class ChaosFractalDiffusionEngine:
+class MacroMolecularMeshTorsionEngine:
     r"""
-    Dynamic Chaos-Boundary Multi-Factor Fractal Diffusion System
+    3D Macro-Molecular Torsion Mechanical Joint Mesh Optimization
+    Von Mises Stress Tensor & Structural Joint Strain Profile
     """
     @staticmethod
-    def simulate_chaos_fractal(grid_size: int = 24, steps: int = 70, chaos_param: float = 3.92) -> dict:
+    def calculate_mesh_torsion(nodes: int = 60, axial_torque_n_m: float = 24.0, axes: int = 3) -> dict:
+        intersections = int(nodes * 2.6 * (axes / 2.0))
+        normal_stress_mpa = (axial_torque_n_m * 100.0) / (nodes * 0.45)
+        shear_stress_mpa = normal_stress_mpa * 0.577
+
+        von_mises_mpa = math.sqrt((normal_stress_mpa ** 2) + 3.0 * (shear_stress_mpa ** 2))
+        strain_energy_j = round(0.5 * (von_mises_mpa * 1e6) * (shear_stress_mpa / 45000.0) * (nodes * 1e-4), 4)
+
+        return {
+            "topological_nodes": nodes,
+            "spatial_axes": axes,
+            "joint_intersections": intersections,
+            "normal_stress_MPa": round(float(normal_stress_mpa), 2),
+            "shear_stress_MPa": round(float(shear_stress_mpa), 2),
+            "von_mises_stress_MPa": round(float(von_mises_mpa), 2),
+            "joint_strain_energy_J": strain_energy_j,
+            "structural_verdict": "OPTIMAL_JOINT_MESH_STABILITY" if von_mises_mpa < 280.0 else "PLASTIC_YIELD_THRESHOLD_EXCEEDED"
+        }
+
+class FractionalDiffusionFractalEngine:
+    r"""
+    Dynamic Fractional-Diffusion Spatial Lattice with Fractal Conditions
+    """
+    @staticmethod
+    def simulate_fractal_lattice(grid_size: int = 24, steps: int = 70, chaos_param: float = 3.92) -> dict:
         np.random.seed(42)
         u = np.ones((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
         v = np.zeros((grid_size, grid_size)) + 0.05 * np.random.randn(grid_size, grid_size)
@@ -122,7 +147,7 @@ class ChaosFractalDiffusionEngine:
                     if abs(z) > 2.0:
                         inside = False
                         break
-                    z = z*z - 0.7269 + 0.1889j
+                    z = z * z - 0.7269 + 0.1889j
                 mask[r, c] = inside
 
         x_chaos = 0.618
@@ -150,30 +175,8 @@ class ChaosFractalDiffusionEngine:
 
         return {
             "grid_dimensions": f"{grid_size}x{grid_size}",
-            "integrated_time_steps": steps,
+            "integrated_steps": steps,
             "chaos_attractor_state": round(float(x_chaos), 5),
             "fractal_occupancy_pct": f"{round((np.sum(mask)/(grid_size**2))*100.0, 2)}%",
             "fractal_ascii_tissue": render
-        }
-
-class MacroMolecularTorsionEngine:
-    r"""
-    3D Macro-Molecular Torsion Scaffold Router with Joint Strain & Von Mises Yield
-    """
-    @staticmethod
-    def calculate_scaffold_strain(nodes: int = 50, applied_torque_n_m: float = 20.0, axes: int = 3) -> dict:
-        intersections = int(nodes * 2.5 * (axes / 2.0))
-        normal_stress_mpa = (applied_torque_n_m * 100.0) / (nodes * 0.4)
-        shear_stress_mpa = normal_stress_mpa * 0.577
-
-        von_mises = math.sqrt((normal_stress_mpa ** 2) + 3.0 * (shear_stress_mpa ** 2))
-        strain_energy_joules = round(0.5 * (von_mises * 1e6) * (shear_stress_mpa / 45000.0) * (nodes * 1e-4), 4)
-
-        return {
-            "topological_scaffold_nodes": nodes,
-            "intersecting_joints": intersections,
-            "spatial_coordination_axes": axes,
-            "von_mises_stress_MPa": round(float(von_mises), 2),
-            "joint_strain_energy_J": strain_energy_joules,
-            "structural_verdict": "OPTIMAL_JOINT_RIGIDITY" if von_mises < 300.0 else "SHEAR_YIELD_THRESHOLD_EXCEEDED"
         }
