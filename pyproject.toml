@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aquamarine-dredge"
-version = "85.0.0"
+version = "90.0.0"
 description = "Pure Python Zero-Dependency Autonomous Biophysics & Mathematical Core"
 readme = "README.md"
 authors = [{ name = "Soma Dutta" }]
