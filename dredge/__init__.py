@@ -1,4 +1,4 @@
-__version__ = '75.0.0'
+__version__ = '76.0.0'
 from dredge.bio_kernel import (
     PureTensor,
     NLSESolitonSolverEngine,

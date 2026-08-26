@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="aquamarine-dredge",
-    version="75.0.0",
+    version="76.0.0",
     packages=find_packages(),
     install_requires=[],
     entry_points={
