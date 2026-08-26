@@ -31,13 +31,15 @@ class TestZeroDependencyPureCore(unittest.TestCase):
         self.assertEqual(res['verification_status'], "RECURSIVE_AIR_PROOF_VERIFIED")
 
     def test_pure_tensor_elasticity(self):
+        # Non-isotropic shear displacement gradient
         grad_u = [
-            [0.01, 0.0, 0.0],
-            [0.0, 0.01, 0.0],
-            [0.0, 0.0, 0.01]
+            [0.02, 0.01, 0.00],
+            [0.01, 0.03, 0.00],
+            [0.00, 0.00, 0.01]
         ]
         res = TensorContinuumElasticityEngine.compute_tensor_stress(grad_u)
         self.assertTrue(res['von_mises_equivalent_stress_MPa'] > 0.0)
+        self.assertEqual(res['continuum_elastic_status'], "STABLE_HYPERELASTIC_DEFORMATION")
 
 if __name__ == '__main__':
     unittest.main()
