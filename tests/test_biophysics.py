@@ -1,31 +1,32 @@
 import unittest
 from dredge.bio_kernel import (
-    PureMathCore,
-    PureBiologyCore,
-    PurePhysicsCore,
-    PureChemistryCore
+    QuantumComputingCore,
+    CellularMorphogenesisCore,
+    InformationSignalPhysicsCore,
+    OrbitalAstrophysicsCore
 )
 
-class TestPureOmniscienceCore(unittest.TestCase):
-    def test_pure_math_curvature(self):
-        metric = [[2.0, 0.5], [0.5, 3.0]]
-        res = PureMathCore.calculate_curvature(metric)
-        self.assertTrue(res['metric_determinant'] > 0.0)
-        self.assertTrue('ricci_scalar_curvature' in res)
+class TestOmniscienceSingularitySuite(unittest.TestCase):
+    def test_quantum_bell_state(self):
+        res = QuantumComputingCore.simulate_bell_state()
+        self.assertAlmostEqual(res['basis_probabilities']['|00⟩'], 0.5, places=2)
+        self.assertAlmostEqual(res['basis_probabilities']['|11⟩'], 0.5, places=2)
+        self.assertEqual(res['entanglement_verdict'], "MAXIMALLY_ENTANGLED_BELL_STATE")
 
-    def test_pure_biology_dna_thermo(self):
-        seq = "CGCATGCATGCA"
-        res = PureBiologyCore.calculate_dna_thermodynamics(seq)
-        self.assertTrue(res['melting_temperature_Tm_C'] > 20.0)
-        self.assertTrue(res['free_energy_delta_G_37C'] < 0.0)
+    def test_cellular_morphogenesis(self):
+        res = CellularMorphogenesisCore.simulate_automata(grid_size=10, steps=5)
+        self.assertTrue(res['final_shannon_entropy'] >= 0.0)
+        self.assertEqual(len(res['terminal_morphology_ascii']), 8)
 
-    def test_pure_physics_quantum_wave(self):
-        res = PurePhysicsCore.simulate_quantum_dispersion(nodes=16, time_fs=10.0)
-        self.assertTrue(res['dispersed_width_sigma_t'] > res['initial_width_sigma_0'])
+    def test_signal_fft_psd(self):
+        res = InformationSignalPhysicsCore.analyze_signal(num_samples=32)
+        self.assertTrue(res['dominant_peak_psd'] > 0.0)
+        self.assertEqual(len(res['spectral_density_ascii']), 16)
 
-    def test_pure_chemistry_arrhenius(self):
-        res = PureChemistryCore.compute_reaction_rate(temperature_c=25.0, ea_kj_mol=50.0)
-        self.assertIn("s⁻¹", res['rate_constant_k'])
+    def test_orbital_astrophysics(self):
+        res = OrbitalAstrophysicsCore.simulate_two_body_orbit(time_steps=20)
+        self.assertTrue(res['semi_major_axis'] > 0.0)
+        self.assertEqual(res['symplectic_stability'], "STABLE_ENERGY_PRESERVING_TRAJECTORY")
 
 if __name__ == '__main__':
     unittest.main()

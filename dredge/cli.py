@@ -2,18 +2,18 @@ import argparse
 import sys
 import unittest
 from dredge.bio_kernel import (
-    PureMathCore,
-    PureBiologyCore,
-    PurePhysicsCore,
-    PureChemistryCore
+    QuantumComputingCore,
+    CellularMorphogenesisCore,
+    InformationSignalPhysicsCore,
+    OrbitalAstrophysicsCore
 )
 
 def main():
-    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Pure Science & Mathematical Core (v80.0.0)')
-    parser.add_argument('--math-curvature', action='store_true', help='Compute 2D Manifold Riemann Ricci Scalar Curvature')
-    parser.add_argument('--bio-thermo', nargs=1, type=str, metavar=('DNA_SEQ',), help='DNA Melting Temp & Nearest-Neighbor Free Energy')
-    parser.add_argument('--physics-wave', action='store_true', help='Simulate Quantum Wave Packet Dispersive Expansion')
-    parser.add_argument('--chem-kinetics', nargs=2, type=float, metavar=('TEMP_C', 'EA_KJ'), help='Compute Arrhenius Kinetics & Rate Constant')
+    parser = argparse.ArgumentParser(prog='aquamarine-dredge', description='DREDGE Omniscience Singularity Suite (v85.0.0)')
+    parser.add_argument('--quantum-circuit', action='store_true', help='Simulate 2-Qubit Bell State Entanglement & Gate Matrix')
+    parser.add_argument('--cellular-life', action='store_true', help='Execute Morphogenesis Automata & Shannon Entropy Evolution')
+    parser.add_argument('--signal-fft', action='store_true', help='Compute Cooley-Tukey FFT Power Spectral Density (PSD)')
+    parser.add_argument('--orbital-nbody', action='store_true', help='Simulate Symplectic Velocity-Verlet Orbit & Lagrange Points')
     parser.add_argument('--test', action='store_true', help='Run unit tests')
 
     args = parser.parse_args()
@@ -23,46 +23,52 @@ def main():
         unittest.TextTestRunner(verbosity=2).run(suite)
         return
 
-    if args.math_curvature:
-        metric = [[2.0, 0.5], [0.5, 3.0]]
-        res = PureMathCore.calculate_curvature(metric)
+    if args.quantum_circuit:
+        res = QuantumComputingCore.simulate_bell_state()
         print("\n" + "="*55)
-        print("  PURE MATHEMATICS: RIEMANNIAN RICCI CURVATURE")
+        print("  QUANTUM COMPUTING: 2-QUBIT BELL ENTANGLEMENT")
         print("="*55)
-        print(f" • Determinant: {res['metric_determinant']} | Ricci Scalar: {res['ricci_scalar_curvature']}")
-        print(f" • Manifold Status: {res['manifold_status']}\n" + "="*55 + "\n")
+        print(f" • System: {res['qubit_system']}")
+        print(f" • State Amplitudes: {res['state_vector_amplitudes']}")
+        print(" • Basis Probabilities:")
+        for k, v in res['basis_probabilities'].items():
+            print(f"   {k}: {v * 100:.1f}%")
+        print(f" • Verdict: {res['entanglement_verdict']}\n" + "="*55 + "\n")
         return
 
-    if args.bio_thermo:
-        res = PureBiologyCore.calculate_dna_thermodynamics(args.bio_thermo[0])
+    if args.cellular_life:
+        res = CellularMorphogenesisCore.simulate_automata(grid_size=16, steps=15)
         print("\n" + "="*55)
-        print("  PURE BIOLOGY: DNA THERMODYNAMICS & MELTING CORE")
+        print("  COMPLEX SYSTEMS: CELLULAR MORPHOGENESIS")
         print("="*55)
-        print(f" • Sequence Length: {res['sequence_length']}")
-        print(f" • Enthalpy (ΔH): {res['enthalpy_delta_H_kcal_mol']} kcal/mol | Entropy (ΔS): {res['entropy_delta_S_cal_k_mol']} cal/K·mol")
-        print(f" • Free Energy (ΔG 37°C): {res['free_energy_delta_G_37C']} kcal/mol")
-        print(f" • Melting Temp (Tm): {res['melting_temperature_Tm_C']} °C ({res['thermodynamic_stability']})\n" + "="*55 + "\n")
+        for row in res['terminal_morphology_ascii']:
+            print("  [" + row + "]")
+        print("="*55)
+        print(f" • Final Shannon Entropy: {res['final_shannon_entropy']} bits")
+        print(f" • Entropy Gradient: {res['entropy_gradient']}")
+        print(f" • Dynamics: {res['morphogenesis_verdict']}\n" + "="*55 + "\n")
         return
 
-    if args.physics_wave:
-        res = PurePhysicsCore.simulate_quantum_dispersion(nodes=24, time_fs=20.0)
+    if args.signal_fft:
+        res = InformationSignalPhysicsCore.analyze_signal(num_samples=64, f1=6.0, f2=14.0)
         print("\n" + "="*55)
-        print("  PURE PHYSICS: QUANTUM DISPERSION WAVE PACKET")
+        print("  INFORMATION PHYSICS: COOLEY-TUKEY FFT PSD PLOT")
         print("="*55)
-        print(f"  [{res['quantum_wave_profile']}]")
+        print(f"  [{res['spectral_density_ascii']}]")
         print("="*55)
-        print(f" • Evolution Time: {res['evolution_time_fs']} fs | Wave Width (σ): {res['dispersed_width_sigma_t']}")
-        print(f" • Peak Density: {res['peak_probability_density']}\n" + "="*55 + "\n")
+        print(f" • Samples: {res['total_samples']} | Nyquist: {res['nyquist_frequency_hz']} Hz")
+        print(f" • Peak Power Spectral Density: {res['dominant_peak_psd']}\n" + "="*55 + "\n")
         return
 
-    if args.chem_kinetics:
-        res = PureChemistryCore.compute_reaction_rate(args.chem_kinetics[0], args.chem_kinetics[1])
+    if args.orbital_nbody:
+        res = OrbitalAstrophysicsCore.simulate_two_body_orbit(time_steps=50)
         print("\n" + "="*55)
-        print("  PURE CHEMISTRY: ARRHENIUS REACTION KINETICS")
+        print("  ASTROPHYSICS: SYMPLECTIC ORBITAL MECHANICS")
         print("="*55)
-        print(f" • Temperature: {res['temperature_kelvin']} K | Activation Energy: {res['activation_energy_Ea']}")
-        print(f" • Rate Constant (k): {res['rate_constant_k']}")
-        print(f" • Regime: {res['kinetic_regime']}\n" + "="*55 + "\n")
+        print(f" • Semi-Major Axis Radius: {res['semi_major_axis']} AU")
+        print(f" • Orbital Energy: {res['orbital_energy_conservation']}")
+        print(f" • Lagrange L1 Radius: {res['lagrange_point_L1_radius']} AU")
+        print(f" • Verdict: {res['symplectic_stability']}\n" + "="*55 + "\n")
         return
 
     parser.print_help()
