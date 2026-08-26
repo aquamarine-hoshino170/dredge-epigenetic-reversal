@@ -1,14 +1,11 @@
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
-
 [project]
 name = "aquamarine-dredge"
-version = "121.0.0"
-description = "Pure Python Zero-Dependency Autonomous Biophysics Core - 89KB - Epigenetic Entropy + Kinetics + Topology"
+version = "122.0.0"
+description = "100 Formulas in 8KB - Pure Math Universe - Zero Dep"
 readme = "README.md"
-authors = [{ name = "Aquamarine Hoshino" }]
 dependencies = []
-
 [project.scripts]
 aquamarine-dredge = "dredge.cli:main"
