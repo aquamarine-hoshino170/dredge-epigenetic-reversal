@@ -1,45 +1,31 @@
 import unittest
 from dredge.bio_kernel import (
-    PureTensor,
-    NLSESolitonSolverEngine,
-    LatticeGaugeFieldEngine,
-    RecursiveSTARKEngine,
-    TensorContinuumElasticityEngine
+    PureMathCore,
+    PureBiologyCore,
+    PurePhysicsCore,
+    PureChemistryCore
 )
 
-class TestZeroDependencyPureCore(unittest.TestCase):
-    def test_pure_tensor_matmul(self):
-        A = [[1, 2], [3, 4]]
-        B = [[2, 0], [1, 2]]
-        C = PureTensor.matmul(A, B)
-        self.assertEqual(C, [[4, 4], [10, 8]])
+class TestPureOmniscienceCore(unittest.TestCase):
+    def test_pure_math_curvature(self):
+        metric = [[2.0, 0.5], [0.5, 3.0]]
+        res = PureMathCore.calculate_curvature(metric)
+        self.assertTrue(res['metric_determinant'] > 0.0)
+        self.assertTrue('ricci_scalar_curvature' in res)
 
-    def test_pure_schrodinger_soliton(self):
-        res = NLSESolitonSolverEngine.solve_soliton_grid(nodes=16, time_steps=20)
-        self.assertTrue(res['peak_soliton_density'] > 0.0)
-        self.assertEqual(res['phase_envelope_stability'], "COHERENT_SOLITON_PROPAGATION")
+    def test_pure_biology_dna_thermo(self):
+        seq = "CGCATGCATGCA"
+        res = PureBiologyCore.calculate_dna_thermodynamics(seq)
+        self.assertTrue(res['melting_temperature_Tm_C'] > 20.0)
+        self.assertTrue(res['free_energy_delta_G_37C'] < 0.0)
 
-    def test_pure_su3_gauge_lattice(self):
-        res = LatticeGaugeFieldEngine.compute_wilson_lattice(grid_size=2, beta=4.0)
-        self.assertTrue(res['mean_wilson_plaquette'] > 0.0)
-        self.assertEqual(len(res['topological_charge_tensor_ascii']), 2)
+    def test_pure_physics_quantum_wave(self):
+        res = PurePhysicsCore.simulate_quantum_dispersion(nodes=16, time_fs=10.0)
+        self.assertTrue(res['dispersed_width_sigma_t'] > res['initial_width_sigma_0'])
 
-    def test_pure_stark_enclave(self):
-        trace = [1, 2, 4, 8, 16]
-        res = RecursiveSTARKEngine.generate_recursive_stark_proof(trace)
-        self.assertEqual(res['computation_trace_steps'], 5)
-        self.assertEqual(res['verification_status'], "RECURSIVE_AIR_PROOF_VERIFIED")
-
-    def test_pure_tensor_elasticity(self):
-        # Non-isotropic shear displacement gradient
-        grad_u = [
-            [0.02, 0.01, 0.00],
-            [0.01, 0.03, 0.00],
-            [0.00, 0.00, 0.01]
-        ]
-        res = TensorContinuumElasticityEngine.compute_tensor_stress(grad_u)
-        self.assertTrue(res['von_mises_equivalent_stress_MPa'] > 0.0)
-        self.assertEqual(res['continuum_elastic_status'], "STABLE_HYPERELASTIC_DEFORMATION")
+    def test_pure_chemistry_arrhenius(self):
+        res = PureChemistryCore.compute_reaction_rate(temperature_c=25.0, ea_kj_mol=50.0)
+        self.assertIn("s⁻¹", res['rate_constant_k'])
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,15 +1,13 @@
-__version__ = '76.0.0'
+__version__ = '80.0.0'
 from dredge.bio_kernel import (
-    PureTensor,
-    NLSESolitonSolverEngine,
-    LatticeGaugeFieldEngine,
-    RecursiveSTARKEngine,
-    TensorContinuumElasticityEngine
+    PureMathCore,
+    PureBiologyCore,
+    PurePhysicsCore,
+    PureChemistryCore
 )
 __all__ = [
-    'PureTensor',
-    'NLSESolitonSolverEngine',
-    'LatticeGaugeFieldEngine',
-    'RecursiveSTARKEngine',
-    'TensorContinuumElasticityEngine'
+    'PureMathCore',
+    'PureBiologyCore',
+    'PurePhysicsCore',
+    'PureChemistryCore'
 ]
