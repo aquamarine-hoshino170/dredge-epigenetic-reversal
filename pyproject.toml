@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aquamarine-dredge"
-version = "120.0.0"
-description = "Pure Python Zero-Dependency Autonomous Biophysics & Mathematical Core - Epigenetic Entropy Reversal"
+version = "121.0.0"
+description = "Pure Python Zero-Dependency Autonomous Biophysics Core - 89KB - Epigenetic Entropy + Kinetics + Topology"
 readme = "README.md"
 authors = [{ name = "Aquamarine Hoshino" }]
 dependencies = []
